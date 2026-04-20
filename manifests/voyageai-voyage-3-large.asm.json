@@ -1,0 +1,84 @@
+{
+  "asm_version": "0.3",
+  "service_id": "voyageai/voyage-3-large@3.0",
+  "taxonomy": "ai.llm.embedding",
+  "display_name": "Voyage 3 Large",
+  "updated_at": "2026-04-10T00:00:00Z",
+  "ttl": 3600,
+  "provider": {
+    "name": "Voyage AI",
+    "url": "https://www.voyageai.com"
+  },
+  "capabilities": {
+    "description": "High-performance text embedding optimized for retrieval, code search, and multilingual tasks",
+    "input_modalities": [
+      "text"
+    ],
+    "output_modalities": [
+      "structured_data"
+    ],
+    "supported_languages": [
+      "en",
+      "zh",
+      "ja",
+      "ko",
+      "fr",
+      "de",
+      "es"
+    ],
+    "context_window": 32000
+  },
+  "pricing": {
+    "billing_dimensions": [
+      {
+        "dimension": "token",
+        "unit": "per_1M",
+        "cost_per_unit": 0.18,
+        "currency": "USD"
+      }
+    ],
+    "free_tier": {
+      "dimension": "token",
+      "limit": 50000000,
+      "period": "total"
+    },
+    "batch_discount": 0.67
+  },
+  "quality": {
+    "metrics": [
+      {
+        "name": "MTEB_avg",
+        "score": 66.2,
+        "scale": "0-100",
+        "benchmark": "MTEB",
+        "benchmark_url": "https://huggingface.co/spaces/mteb/leaderboard",
+        "evaluated_at": "2026-02-01",
+        "self_reported": false
+      }
+    ]
+  },
+  "sla": {
+    "latency_p50": "150ms",
+    "latency_p99": "600ms",
+    "throughput": "1000 req/min",
+    "uptime": 0.998
+  },
+  "payment": {
+    "methods": [
+      "api_key_prepaid",
+      "stripe",
+      "onchain_usdc"
+    ],
+    "auth_type": "api_key",
+    "signup_url": "https://dash.voyageai.com",
+    "onchain_address": "0x14D9a01533cecB6FaB0b74C363727f702C259a61",
+    "onchain_network": "eip155:5042002"
+  },
+  "extensions": {
+    "embedding": {
+      "dimensions": 2048,
+      "supports_dimension_reduction": false,
+      "similarity_metric": "cosine"
+    }
+  }
+}

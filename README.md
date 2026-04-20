@@ -1,0 +1,531 @@
+# Agent Service Manifest (ASM)
+
+> **OpenAPI describes what a service *can do*. ASM describes what a service *is worth*.**
+
+ASM is an open protocol that gives AI agents structured, machine-readable data to **evaluate, compare, and automatically select** AI services — covering pricing, quality, SLA, and payment.
+
+```
+MCP  → "what a tool can do"          ✅ Solved (Anthropic)
+A2A  → "how agents communicate"      ✅ Solved (Google)
+AP2  → "how to pay safely"           ✅ Solved (Google)
+ASM  → "what a service is worth"     ❌ Nobody — until now
+```
+
+**ASM is the missing layer between MCP and AP2.**
+
+---
+
+## Why ASM?
+
+When an agent faces multiple services that can fulfill the same task, it has **zero structured data** to choose:
+
+| Without ASM | With ASM |
+|---|---|
+| Blind selection (pick cheapest or most famous) | Structured multi-criteria matching |
+| 3-10x cost overrun or quality underrun | Optimal cost-quality tradeoff |
+| Decisions are non-reproducible | Deterministic, auditable, explainable |
+| Model intelligence = 0 at selection step | Full autonomous decision capability |
+
+**This is not a model intelligence problem — it's a data problem.** No matter how smart the model, unstructured pricing pages are uncomputable.
+
+---
+
+## Quick Start
+
+### Run the Demo
+
+```bash
+git clone https://github.com/calebguo007/asm-spec.git
+cd asm-spec
+
+# End-to-end demo — pure Python, no dependencies
+python3 demo/e2e_demo.py
+```
+
+The demo simulates 5 scenarios where an agent selects services across LLM, image generation, video generation, and TTS categories.
+
+
+### Lint an MCP Server
+
+```bash
+cd tools/asm-lint
+npm install
+npx tsx src/cli.ts npx @modelcontextprotocol/server-filesystem /tmp
+```
+
+`asm-lint` scans any MCP Server and generates a quality report (8 checks, 100-point scoring). See [tools/asm-lint](tools/asm-lint/) for details.
+
+### Run the Scorer
+
+```bash
+python3 scorer/scorer.py
+```
+
+### Start the MCP Server
+
+```bash
+cd registry
+npm install
+npm run build
+npm start
+```
+
+The MCP server exposes 5 tools: `asm_list`, `asm_get`, `asm_query`, `asm_compare`, `asm_score`.
+
+---
+
+## How It Works
+
+### 1. A service publishes an ASM manifest
+
+```json
+{
+  "asm_version": "0.2",
+  "service_id": "anthropic/claude-sonnet-4@4.0",
+  "taxonomy": "ai.llm.chat",
+  "display_name": "Claude Sonnet 4",
+  "pricing": {
+    "billing_dimensions": [
+      { "dimension": "input_token",  "unit": "per_1M", "cost_per_unit": 3.00,  "currency": "USD" },
+      { "dimension": "output_token", "unit": "per_1M", "cost_per_unit": 15.00, "currency": "USD" }
+    ],
+    "batch_discount": 0.5
+  },
+  "quality": {
+    "metrics": [{
+      "name": "LMSYS_Elo", "score": 1290, "scale": "Elo",
+      "benchmark": "LMSYS Chatbot Arena",
+      "self_reported": false
+    }]
+  },
+  "sla": {
+    "latency_p50": "800ms", "uptime": 0.999,
+    "rate_limit": "4000 req/min"
+  }
+}
+```
+
+### 2. An agent queries and scores
+
+```python
+from scorer import select_service, Constraints, Preferences
+
+results = select_service(
+    manifests,
+    constraints=Constraints(min_quality=0.7, max_latency_s=5.0),
+    preferences=Preferences(cost=0.5, quality=0.3, speed=0.15, reliability=0.05),
+    method="topsis",
+)
+
+print(results[0].service.display_name)  # "GPT-4o"
+print(results[0].reasoning)             # "GPT-4o scored 0.914 ..."
+```
+
+### 3. The full pipeline
+
+```
+Agent receives task
+    │
+    ▼
+Task → Taxonomy mapping
+    "subtitles" → ai.video.subtitle
+    │
+    ▼
+ASM Registry Query
+    GET .well-known/asm?taxonomy=ai.video.subtitle
+    → Returns matching service manifests
+    │
+    ▼
+ASM Scorer
+    Filter (hard constraints) → TOPSIS (multi-criteria ranking)
+    → Ranked list + reasoning
+    │
+    ▼
+Selection + Execution
+    Agent calls selected service via MCP
+    AP2 handles payment
+    Signed Receipt verifies delivery
+```
+
+---
+
+## Schema (v0.3)
+
+ASM manifests are JSON documents with **only 3 required fields**:
+
+```json
+{
+  "asm_version": "0.2",
+  "service_id": "anthropic/claude-sonnet-4@4.0",
+  "taxonomy": "ai.llm.chat"
+}
+```
+
+Everything else is optional — services expose what they can:
+
+| Module | What it describes | Key fields |
+|---|---|---|
+| **pricing** | Cost structure | `billing_dimensions` (12 types), `tiers`, `conditions`, `batch_discount` |
+| **quality** | Performance metrics | `metrics` (benchmark + `self_reported` flag), `leaderboard_rank` |
+| **sla** | Reliability | `latency_p50/p99`, `uptime`, `rate_limit`, `cold_start`, `regions` |
+| **payment** | How to pay | `methods`, `auth_type`, `ap2_endpoint` |
+| **extensions** | Category-specific | Namespaced fields (e.g., `llm.supports_vision`, `image_gen.max_resolution`) |
+
+Full schema: [`schema/asm-v0.2.schema.json`](schema/asm-v0.2.schema.json)
+
+### Taxonomy (47 categories)
+
+Hierarchical, prefix-queryable (e.g., `ai.llm.*` returns all LLM services):
+
+```
+ai.llm.chat                     ai.audio.tts
+ai.llm.completion                ai.audio.stt
+ai.llm.embedding                 ai.audio.music
+ai.vision.image_generation       ai.code.generation
+ai.vision.image_editing          ai.data.extraction
+ai.vision.ocr                    ai.data.search
+ai.video.generation              infra.compute.gpu
+ai.video.subtitle                infra.storage.object
+ai.video.editing                 infra.storage.vector
+```
+
+---
+
+## What's Included
+
+```
+asm-spec/
+├── schema/
+│   ├── asm-v0.2.schema.json          # JSON Schema (v0.2)
+│   └── asm-v0.3.schema.json          # JSON Schema (v0.3: +receipts, verification, ttl)
+├── manifests/                         # 70 real-world service manifests
+│   ├── anthropic-claude-sonnet-4.asm.json
+│   ├── openai-gpt-4o.asm.json
+│   ├── google-gemini-2.5-pro.asm.json
+│   └── ... (70 services across 47 categories)
+├── scorer/
+│   ├── scorer.py                      # Filter + TOPSIS + Trust Delta scoring engine
+│   └── test_scorer.py                 # Unit tests (golden, io_ratio, cross-language parity)
+├── registry/
+│   └── src/
+│       ├── index.ts                   # MCP Server (5 tools, TOPSIS + Weighted Average)
+│       ├── http.ts                    # HTTP API (REST endpoints)
+│       ├── test_scorer.ts             # TypeScript unit tests
+│       └── test_topsis.ts             # TOPSIS cross-validation
+├── experiments/
+│   ├── ab_test.py                     # Simulated A/B test (TOPSIS vs Random vs Expensive)
+│   ├── real_ab_test.py                # Real API A/B test (live LLM calls)
+│   ├── analyze.py                     # Analysis & report generation
+│   └── results/                       # Test results (CSV + JSON + reports)
+├── demo/
+│   ├── e2e_demo.py                    # End-to-end demo (5 scenarios)
+│   └── receipts_demo.py               # Signed Receipts trust pipeline demo
+├── integrations/
+│   └── langchain/                     # LangChain integration (callback + tools)
+├── paper/
+│   └── asm-paper-draft.md             # Academic paper draft
+├── sep/
+│   └── sep-asm-service-value.md       # SEP proposal for MCP specification
+└── docs/
+    └── internal/                      # Design notes, strategy docs, etc.
+```
+
+### 70 Services Across 47 Categories
+
+| Domain | Categories | Example Services |
+|---|---|---|
+| **AI — LLM** | chat, completion, embedding | Claude Sonnet 4, GPT-4o, Gemini 2.5 Pro, DeepSeek V3 |
+| **AI — Vision** | image_generation, ocr, editing | FLUX 1.1 Pro, DALL-E 3, Imagen 3, Midjourney |
+| **AI — Video** | generation, subtitle, editing | Veo 3.1, Kling 3.0, Runway Gen-3 |
+| **AI — Audio** | tts, stt, music | ElevenLabs, OpenAI TTS, Whisper |
+| **AI — NLP** | translation, code, extraction | DeepL, Google Translate, GitHub Copilot |
+| **Tools** | email, sms, search, todo, calendar, CI/CD, monitoring | Resend, Twilio, Algolia, Todoist, Linear |
+| **Infra** | postgres, vector DB, KV, storage, auth, DNS, sandbox | Neon, Pinecone, Redis, Cloudflare R2, Auth0 |
+
+---
+
+## Scorer
+
+Two scoring methods, **fully aligned** between Python and TypeScript (verified by cross-language parity tests):
+
+**Weighted Average** — simple, transparent, demo-ready.
+
+**TOPSIS** — multi-criteria decision making that considers distance to both ideal and worst solutions. More robust against extreme values.
+
+Both support:
+- **Hard constraints** (filter): `quality >= 0.8 AND latency <= 5s`
+- **Soft preferences** (rank): `cost=0.4, quality=0.35, speed=0.15, reliability=0.10`
+- **Configurable io_ratio**: `0.3` (chat), `0.8` (RAG), `0.1` (creative writing) — controls input vs output token cost blending
+
+### Run Tests
+
+```bash
+# Python unit tests (3 tests: golden, io_ratio regression, cross-language parity)
+python3 scorer/test_scorer.py
+
+# TypeScript unit tests
+cd registry && npm test
+```
+
+### A/B Test Results (Real API Calls)
+
+ASM TOPSIS selection vs Random vs Most-Expensive strategy, tested with real LLM API calls:
+
+| Metric | ASM TOPSIS | Random | Expensive |
+|---|---|---|---|
+| TOPSIS Score | **0.8679** | 0.4571 | 0.3990 |
+| Response Quality | **0.97** | 0.76 | 0.90 |
+| Keyword Hit Rate | **100%** | 60% | 80% |
+
+Statistical significance: **A vs B p=0.048 ✅ | A vs C p=0.001 ✅**
+
+---
+
+## MCP Server
+
+The `asm-registry` MCP server provides 5 tools:
+
+| Tool | Description |
+|---|---|
+| `asm_list` | List all services in the registry |
+| `asm_get` | Get full manifest for a specific service |
+| `asm_query` | Filter by taxonomy, cost, quality, latency, modality |
+| `asm_compare` | Side-by-side comparison of 2-5 services |
+| `asm_score` | Score and rank with custom preference weights |
+
+### Configure in Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "asm-registry": {
+      "command": "node",
+      "args": ["/path/to/asm-spec/registry/dist/index.js"]
+    }
+  }
+}
+```
+
+---
+
+## Live Payments on Arc (Circle × x402)
+
+ASM is not just a scoring layer — each pick ends in a real USDC settlement to the
+winning provider's on-chain address. The `payments/` package wires the registry
+into Circle's x402 protocol on Arc testnet.
+
+### The 50-tx Benchmark
+
+The canonical demo (see `docs/demo-scenario.md`) runs a **Marketing Campaign
+Agent** that decomposes a single brief into **50 subtasks across 15 service
+categories** — image generation, copywriting, translation, TTS, video, scraping,
+code-gen, and more. For every subtask:
+
+1. The buyer calls `POST /api/score` with the task's taxonomy.
+2. The registry returns 2–5 candidates, ranks them with TOPSIS, and nominates a
+   winner with a one-line `reasoning` string
+   (e.g. *"FLUX 1.1 Pro wins on price ($0.040/call, trust 0.90) among 3
+   candidates; +0.643 ahead of Imagen 3."*).
+3. x402 settles the sub-cent payment directly to the winner's
+   `payment.onchain_address` on Arc testnet.
+
+```bash
+cd payments
+npm install
+npx tsx scripts/seed-onchain-addresses.ts   # one-time: derive per-service receive addresses
+npx tsx scripts/benchmark-50tx.ts           # run the 50-subtask scenario
+```
+
+A representative run produces **50 payments fanning out to ~15 distinct recipient
+addresses** — concrete proof that the selection layer is actually routing money,
+not just reshuffling a ledger:
+
+```
+Top recipients (by volume):
+  openai/gpt-4o              6x   $0.0300
+  google-translate           6x   $0.0300
+  openai/embedding-3-large   5x   $0.0250
+  jina-reader                5x   $0.0250
+  black-forest-labs/flux-1.1 4x   $0.0200
+  ...
+Unique recipients: 15
+Total value moved : $0.25 (target ≤ $0.01 per action)
+```
+
+### Dynamic `payTo` via x402
+
+Each `/api/score` request resolves its recipient **at request time**:
+
+```ts
+const dynamicScorePayTo = async (ctx) => {
+  const { taxonomy } = ctx.getBody();
+  const pick = await pickWinnerForTaxonomy(taxonomy);
+  return pick?.winner?.onchain_address ?? config.sellerAddress;
+};
+```
+
+One route, N recipients — the winning provider is paid without any manual
+wallet wiring per service.
+
+### Why Traditional Gas Fails for Sub-cent Agent Payments
+
+Agent workflows decompose into *hundreds* of micro-purchases, each worth
+fractions of a cent. On a conventional L1 the economics simply do not close:
+
+| Payment size | Ethereum L1 gas (typical) | Viable? |
+|---|---|---|
+| $0.001 per embedding call | $0.50 – $5.00 | ❌ 500× – 5000× overhead |
+| $0.005 per image generation | $0.50 – $5.00 | ❌ 100× – 1000× overhead |
+| $0.01 cap (hackathon bar)  | $0.50 – $5.00 | ❌ still underwater |
+
+A **$0.005 payment that costs $0.50–$5 in gas is economically impossible** — the
+fee dwarfs the transaction 100× to 1000×. Agents cannot transact this way, so
+today's agent ecosystems either (a) pre-fund long-lived API keys (no per-action
+accounting), or (b) settle off-chain (no public verifiability).
+
+**Arc + Circle Nanopayments batch thousands of USDC transfers and collapse
+per-tx fees toward zero**, making per-query agent pricing viable. ASM supplies
+the missing piece: *which* provider should receive each nanopayment.
+
+### Run It
+
+```bash
+# Mock mode — no Circle credentials required (good for hacking on the scorer)
+ASM_MODE=mock npx tsx scripts/benchmark-50tx.ts
+
+# Live mode — real Arc testnet transactions
+#   requires: Circle developer credentials + funded Arc testnet wallet
+ASM_MODE=live npx tsx scripts/benchmark-50tx.ts
+```
+
+Results (including per-task candidates, chosen winner, reasoning, and aggregated
+`fundsFlow`) are written to `payments/benchmark-results/benchmark-*.json`.
+
+---
+
+## Trust Model
+
+ASM implements a 3-layer trust architecture:
+
+```
+L1: self_reported flag          → Agent knows "who says this"
+L2: Third-party benchmarks      → Independently verifiable scores
+L3: Signed Receipts (post-hoc)  → ASM declares → Receipt proves → Trust updates
+```
+
+### L1: Transparency at the Source
+
+Every quality metric carries a `self_reported` boolean. An agent can distinguish a vendor's own claim (`self_reported: true`) from an independent benchmark result (`self_reported: false`).
+
+### L2: External Verification
+
+Quality metrics reference public benchmarks with URLs, evaluation dates, and leaderboard positions — all independently checkable.
+
+### L3: Signed Receipts Integration
+
+ASM manifests declare expected service quality *before* execution. [Signed Receipts](https://datatracker.ietf.org/doc/draft-farley-acta-signed-receipts/) (IETF ACTA) prove what *actually* happened after execution. The combination enables **computable trust**:
+
+```
+trust_delta(service, metric) = |declared_value - actual_value| / declared_value
+```
+
+If a manifest declares `latency_p50: 200ms` but receipts consistently record 450ms, the trust delta is 1.25 — a quantifiable, verifiable credibility signal. No other protocol stack provides this.
+
+The `asm:` namespace is registered for receipt type fields:
+- `asm:service_selection` — records which service was chosen, from which candidate pool, and why
+- Receipt payloads carry `service_id` and `taxonomy` from the manifest for full traceability
+
+Integration status: active collaboration with the [Agent Receipts](https://github.com/nicholasgriffintn/agent-receipts) team. Schema v0.3 will add `receipt_endpoint`, `verification.protocol`, and `verification.public_key` fields.
+
+---
+
+## Design Principles
+
+1. **MCP-compatible** — can embed as `x-asm` annotations in ToolAnnotations
+2. **Minimal required fields** — only `asm_version`, `service_id`, `taxonomy`
+3. **Multi-dimensional pricing** — `billing_dimensions` array (LLM has input + output tokens)
+4. **Trust transparency** — `self_reported` flag distinguishes self-assessed vs third-party verified
+5. **Extensions don't pollute core** — category-specific fields in `extensions` namespace
+6. **Declaration, not execution** — ASM declares value, AP2 executes payment
+
+---
+
+## Integration Path
+
+| Phase | How | Status |
+|---|---|---|
+| Phase 1 | Independent `.well-known/asm` endpoint | Current |
+| Phase 2 | `x-asm` embedded in MCP ToolAnnotations | After SEP |
+| Phase 3 | Native MCP core fields | Long-term |
+
+---
+
+## Related Work
+
+| Project | Solves | Doesn't Solve | ASM Relationship |
+|---|---|---|---|
+| MCP | What tools can do | What tools are worth | ASM extends MCP |
+| A2A | Agent communication | Service selection | Complementary |
+| AP2 | Secure payment | What to buy | ASM is AP2's pre-decision layer |
+| Agent Receipts | Post-execution proof | Pre-selection data | ASM declares, Receipts verify |
+| RouteLLM | Intra-category LLM routing | Cross-category selection | Complementary |
+| AWS Marketplace MCP | Closed platform comparison | Open standard | ASM is the open version |
+
+---
+
+## Roadmap
+
+- [x] Schema v0.2 (JSON Schema)
+- [x] 18-category taxonomy
+- [x] 70 real-world manifests (47 categories)
+- [x] Scorer (Weighted Average + TOPSIS)
+- [x] MCP Server (5 tools) + HTTP API
+- [x] E2E demo (5 scenarios)
+- [x] Schema v0.3 (`receipt_endpoint`, `verification`, `updated_at`, `ttl`)
+- [x] Trust delta scoring with exponential decay
+- [x] Signed Receipts integration demo
+- [x] Configurable io_ratio (chat/RAG/creative cost blending)
+- [x] Python ↔ TypeScript cross-language parity (verified)
+- [x] Unit tests (golden, regression, cross-language)
+- [x] **Real A/B test with live API calls** (TOPSIS vs Random: p<0.05 ✅)
+- [x] arXiv preprint
+- [x] SEP proposal to MCP specification
+- [x] MCP community discussion ([#718](https://github.com/orgs/modelcontextprotocol/discussions/718))
+- [x] On-chain `payment.onchain_address` for every manifest (Arc testnet)
+- [x] `pickWinner` API — candidates + winner + one-line reasoning
+- [x] x402 dynamic `payTo` — per-request routing to scorer-selected winner
+- [x] 50-tx benchmark scenario (Marketing Campaign Agent, 15 categories)
+- [ ] Automated manifest crawler pipeline
+- [ ] LangChain PR / framework integration
+- [ ] Conference submission (AAMAS / WWW)
+
+---
+
+## Contributing
+
+ASM is an open protocol. Contributions welcome:
+
+- **Add a manifest**: Create a `.asm.json` for any AI service
+- **Improve the scorer**: Better normalization, new MCDM methods
+- **Extend taxonomy**: Propose new categories via PR
+- **Build integrations**: Embed ASM in your MCP server
+
+---
+
+## Citation
+
+```bibtex
+@misc{asm2026,
+  title={Agent Service Manifest: A Standardized Value Description Protocol
+         for Autonomous Service Selection in Multi-Agent Systems},
+  author={Guo, Yi},
+  year={2026},
+  howpublished={\url{https://github.com/calebguo007/asm-spec}}
+}
+```
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).

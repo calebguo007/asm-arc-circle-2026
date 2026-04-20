@@ -1,0 +1,81 @@
+{
+  "asm_version": "0.3",
+  "service_id": "kuaishou/kling-3.0@3.0",
+  "taxonomy": "ai.video.generation",
+  "display_name": "Kling 3.0",
+  "updated_at": "2026-04-10T00:00:00Z",
+  "ttl": 3600,
+  "provider": {
+    "name": "Kuaishou (via fal.ai)",
+    "url": "https://klingai.com"
+  },
+  "capabilities": {
+    "description": "High-quality text/image-to-video generation with native 4K support and 15s max duration",
+    "input_modalities": [
+      "text",
+      "image"
+    ],
+    "output_modalities": [
+      "video"
+    ]
+  },
+  "pricing": {
+    "billing_dimensions": [
+      {
+        "dimension": "second",
+        "unit": "per_1",
+        "cost_per_unit": 0.029,
+        "currency": "USD"
+      }
+    ],
+    "free_tier": {
+      "dimension": "request",
+      "limit": 66,
+      "period": "daily"
+    },
+    "estimated": true
+  },
+  "quality": {
+    "metrics": [
+      {
+        "name": "VBench_total",
+        "score": 83.5,
+        "scale": "0-100",
+        "benchmark": "VBench",
+        "self_reported": true
+      }
+    ]
+  },
+  "sla": {
+    "latency_p50": "60s",
+    "latency_p99": "180s",
+    "regions": [
+      "us-east-1",
+      "cn-north-1"
+    ],
+    "uptime": 0.996
+  },
+  "payment": {
+    "methods": [
+      "api_key_prepaid",
+      "stripe",
+      "onchain_usdc"
+    ],
+    "auth_type": "api_key",
+    "signup_url": "https://fal.ai",
+    "onchain_address": "0x45A190637BFF49449131A54054b2fb0DB4B13d30",
+    "onchain_network": "eip155:5042002"
+  },
+  "extensions": {
+    "video_gen": {
+      "max_duration": "15s",
+      "resolutions": [
+        "720p",
+        "1080p",
+        "4k"
+      ],
+      "supports_audio": false,
+      "supports_img2vid": true
+    }
+  }
+}

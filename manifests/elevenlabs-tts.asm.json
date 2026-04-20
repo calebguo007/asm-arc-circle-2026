@@ -1,0 +1,91 @@
+{
+  "asm_version": "0.3",
+  "service_id": "elevenlabs/tts-v2@2.0",
+  "taxonomy": "ai.audio.tts",
+  "display_name": "ElevenLabs TTS v2",
+  "updated_at": "2026-04-10T00:00:00Z",
+  "ttl": 3600,
+  "provider": {
+    "name": "ElevenLabs",
+    "url": "https://elevenlabs.io"
+  },
+  "capabilities": {
+    "description": "Premium text-to-speech with voice cloning, emotional range, and 32 languages",
+    "input_modalities": [
+      "text"
+    ],
+    "output_modalities": [
+      "audio"
+    ],
+    "supported_languages": [
+      "en",
+      "zh",
+      "ja",
+      "ko",
+      "fr",
+      "de",
+      "es",
+      "pt",
+      "ar",
+      "hi",
+      "it",
+      "pl",
+      "nl",
+      "sv",
+      "tr"
+    ],
+    "max_input_size": "5000 characters"
+  },
+  "pricing": {
+    "billing_dimensions": [
+      {
+        "dimension": "character",
+        "unit": "per_1M",
+        "cost_per_unit": 180,
+        "currency": "USD"
+      }
+    ]
+  },
+  "quality": {
+    "metrics": [
+      {
+        "name": "MOS",
+        "score": 4.5,
+        "scale": "1-5",
+        "benchmark": "Internal MOS evaluation",
+        "self_reported": true
+      }
+    ]
+  },
+  "sla": {
+    "latency_p50": "400ms",
+    "latency_p99": "2s",
+    "throughput": "10 req/s",
+    "uptime": 0.999
+  },
+  "payment": {
+    "methods": [
+      "api_key_prepaid",
+      "stripe",
+      "onchain_usdc"
+    ],
+    "auth_type": "api_key",
+    "signup_url": "https://elevenlabs.io/pricing",
+    "onchain_address": "0x3c985A6578134cbB485f97EB8526D2bd6247a1CA",
+    "onchain_network": "eip155:5042002"
+  },
+  "extensions": {
+    "tts": {
+      "voice_count": 1000,
+      "supports_voice_cloning": true,
+      "supports_streaming": true,
+      "supports_ssml": true,
+      "output_formats": [
+        "mp3",
+        "wav",
+        "ogg",
+        "pcm"
+      ]
+    }
+  }
+}

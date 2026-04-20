@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASM × Nanopayments Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; }
+    
+    /* Hero Section */
+    .hero { text-align: center; padding: 40px 24px 32px; border-bottom: 1px solid #2a2a4a; }
+    .hero h1 { font-size: 32px; background: linear-gradient(135deg, #00d4ff, #7b2ff7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .hero .tagline { color: #888; font-size: 15px; max-width: 600px; margin: 0 auto 16px; line-height: 1.5; }
+    .hero .tagline em { color: #00d4ff; font-style: normal; font-weight: 600; }
+    .hero .status-bar { display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .hero .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; border: 1px solid #2a2a4a; background: #1a1a2e; }
+    .hero .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .hero .dot.live { background: #00ff88; box-shadow: 0 0 8px #00ff88; }
+    .hero .dot.mock { background: #ffd700; box-shadow: 0 0 8px #ffd700; }
+
+    /* Architecture Flow */
+    .flow { display: flex; justify-content: center; align-items: center; gap: 4px; padding: 20px 24px; flex-wrap: wrap; }
+    .flow-step { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 8px; padding: 8px 14px; font-size: 12px; text-align: center; }
+    .flow-step .icon { font-size: 18px; display: block; margin-bottom: 2px; }
+    .flow-step.active { border-color: #00d4ff; background: #0a1a2e; }
+    .flow-arrow { color: #2a2a4a; font-size: 18px; }
+
+    /* Demo Button */
+    .demo-section { text-align: center; padding: 16px 24px 24px; }
+    .demo-btn { background: linear-gradient(135deg, #7b2ff7, #00d4ff); color: white; border: none; padding: 12px 28px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+    .demo-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,212,255,0.3); }
+    .demo-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .demo-status { color: #888; font-size: 12px; margin-top: 8px; min-height: 18px; }
+
+    /* Content */
+    .content { padding: 0 24px 24px; max-width: 1200px; margin: 0 auto; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 20px; transition: border-color 0.2s; }
+    .card:hover { border-color: #3a3a5a; }
+    .card .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1.5px; }
+    .card .value { font-size: 36px; font-weight: 700; margin-top: 8px; }
+    .card .value.green { color: #00ff88; }
+    .card .value.blue { color: #00d4ff; }
+    .card .value.purple { color: #7b2ff7; }
+    .card .value.yellow { color: #ffd700; }
+    .card .sub { font-size: 11px; color: #555; margin-top: 4px; }
+
+    .section { background: #1a1a2e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .section h2 { font-size: 16px; margin-bottom: 16px; color: #00d4ff; display: flex; align-items: center; gap: 8px; }
+    .section h2 .badge-count { background: #2a2a4a; color: #888; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 400; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #1a1a2e; font-size: 13px; }
+    th { color: #555; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; border-bottom-color: #2a2a4a; }
+    tr:hover td { background: #12122a; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge.settled { background: #00ff8815; color: #00ff88; }
+    .badge.mock { background: #ffd70015; color: #ffd700; }
+    .mono { font-family: 'SF Mono', 'Consolas', monospace; font-size: 12px; }
+    .refresh-btn { background: transparent; color: #888; border: 1px solid #2a2a4a; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
+    .refresh-btn:hover { border-color: #00d4ff; color: #00d4ff; }
+
+    /* Footer */
+    .footer { text-align: center; padding: 24px; border-top: 1px solid #2a2a4a; color: #333; font-size: 11px; }
+    .footer a { color: #00d4ff; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <!-- Hero -->
+  <div class="hero">
+    <h1>ASM × Circle Nanopayments</h1>
+    <p class="tagline">
+      <em>OpenAPI</em> describes what a service can do.<br>
+      <em>ASM</em> describes what a service is worth.<br>
+      <em>Nanopayments</em> make the evaluation self-sustaining.
+    </p>
+    <div class="status-bar">
+      <span class="status-pill"><span class="dot" id="live-dot"></span><span id="mode-text">Loading...</span></span>
+      <span class="status-pill">Arc Testnet</span>
+      <span class="status-pill">USDC</span>
+      <span class="status-pill" id="pricing-pill">—</span>
+    </div>
+  </div>
+
+  <!-- Architecture Flow -->
+  <div class="flow">
+    <div class="flow-step"><span class="icon">🤖</span>Agent Task</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="icon">🏷️</span>Taxonomy</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="icon">📋</span>Registry</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step active"><span class="icon">⚖️</span>TOPSIS<br><small style="color:#00ff88">$0.005</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="icon">🔗</span>Service</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="icon">🧾</span>Receipt</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step"><span class="icon">🛡️</span>Trust</div>
+  </div>
+
+  <!-- Demo Button -->
+  <div class="demo-section">
+    <button class="demo-btn" id="demo-btn" onclick="runLiveDemo()">▶ Run Live Demo (1 scoring call)</button>
+    <div class="demo-status" id="demo-status"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="content">
+    <div class="grid">
+      <div class="card"><div class="label">Total Transactions</div><div class="value green" id="tx-count">—</div><div class="sub" id="tx-rate"></div></div>
+      <div class="card"><div class="label">Total Volume</div><div class="value blue" id="tx-volume">—</div><div class="sub">USDC on Arc</div></div>
+      <div class="card"><div class="label">Unique Agents</div><div class="value purple" id="tx-buyers">—</div><div class="sub">distinct buyer addresses</div></div>
+      <div class="card"><div class="label">Trust Receipts</div><div class="value yellow" id="trust-count">—</div><div class="sub">service quality proofs</div></div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2>Recent Transactions <span class="badge-count" id="tx-total-badge">0</span></h2>
+        <button class="refresh-btn" onclick="refresh()">↻ Refresh</button>
+      </div>
+      <table>
+        <thead><tr><th>Time</th><th>Agent</th><th>Endpoint</th><th>Taxonomy</th><th>Amount</th><th>Status</th><th>Tx Hash</th></tr></thead>
+        <tbody id="tx-table"></tbody>
+      </table>
+    </div>
+
+    <!-- Breakdown -->
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="section">
+        <h2>By Endpoint</h2>
+        <table><thead><tr><th>Endpoint</th><th>Count</th><th>Volume</th></tr></thead><tbody id="ep-table"></tbody></table>
+      </div>
+      <div class="section">
+        <h2>By Taxonomy</h2>
+        <table><thead><tr><th>Taxonomy</th><th>Count</th><th>Volume</th></tr></thead><tbody id="tax-table"></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    ASM × Circle Nanopayments — <a href="https://github.com/calebguo007/asm-spec" target="_blank">GitHub</a> — Agentic Economy on Arc 2026
+  </div>
+
+  <script>
+    let lastTxCount = 0;
+
+    async function runLiveDemo() {
+      const btn = document.getElementById('demo-btn');
+      const status = document.getElementById('demo-status');
+      btn.disabled = true;
+      btn.textContent = '⏳ Scoring...';
+      status.textContent = 'Sending TOPSIS scoring request with payment...';
+
+      try {
+        const resp = await fetch('/api/score', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            taxonomy: 'ai.llm.chat',
+            w_cost: 0.4, w_quality: 0.3, w_speed: 0.2, w_reliability: 0.1
+          })
+        });
+        const data = await resp.json();
+        const top = data.scoring?.ranking?.[0];
+        const amt = data.payment?.amount || '$0.005';
+        status.innerHTML = `✅ Paid ${amt} USDC → Best: <strong>${top?.display_name || 'N/A'}</strong> (score: ${top?.total_score?.toFixed(4) || 'N/A'})`;
+        setTimeout(refresh, 500);
+      } catch (e) {
+        status.textContent = '❌ Error: ' + e.message;
+      }
+      btn.disabled = false;
+      btn.textContent = '▶ Run Live Demo (1 scoring call)';
+    }
+
+    async function refresh() {
+      try {
+        const [health, stats, ledgerData] = await Promise.all([
+          fetch('/api/health').then(r => r.json()),
+          fetch('/api/stats').then(r => r.json()),
+          fetch('/api/ledger').then(r => r.json()),
+        ]);
+
+        document.getElementById('tx-count').textContent = stats.totalTransactions;
+        document.getElementById('tx-volume').textContent = stats.totalVolume + ' USDC';
+        document.getElementById('tx-buyers').textContent = stats.uniqueBuyers;
+        document.getElementById('trust-count').textContent = health.trust?.totalReceipts ?? 0;
+        document.getElementById('tx-total-badge').textContent = stats.totalTransactions;
+
+        if (stats.totalTransactions >= 50) {
+          document.getElementById('tx-rate').textContent = '✅ 50+ threshold met!';
+          document.getElementById('tx-rate').style.color = '#00ff88';
+        } else {
+          document.getElementById('tx-rate').textContent = `${50 - stats.totalTransactions} more to reach 50`;
+        }
+
+        const dot = document.getElementById('live-dot');
+        const modeText = document.getElementById('mode-text');
+        const pricingPill = document.getElementById('pricing-pill');
+        if (health.mode?.includes('live')) {
+          dot.className = 'dot live';
+          modeText.textContent = 'LIVE — Circle Gateway';
+        } else {
+          dot.className = 'dot mock';
+          modeText.textContent = 'MOCK — Development';
+        }
+        pricingPill.textContent = `Score: ${health.pricing?.score || '$0.005'} | Query: ${health.pricing?.query || '$0.002'}`;
+
+        const tbody = document.getElementById('tx-table');
+        tbody.innerHTML = (ledgerData.recent || []).reverse().slice(0, 20).map(tx =>
+          '<tr>' +
+          '<td>' + new Date(tx.timestamp).toLocaleTimeString() + '</td>' +
+          '<td class="mono">' + (tx.buyerAddress || '').slice(0, 10) + '…</td>' +
+          '<td>' + tx.endpoint + '</td>' +
+          '<td>' + (tx.taxonomy || '—') + '</td>' +
+          '<td class="mono">' + tx.amount + ' USDC</td>' +
+          '<td><span class="badge ' + (tx.txHash?.startsWith('0xmock') ? 'mock' : 'settled') + '">' + tx.status + '</span></td>' +
+          '<td class="mono">' + (tx.txHash || '—').slice(0, 14) + '…</td>' +
+          '</tr>'
+        ).join('');
+
+        const epBody = document.getElementById('ep-table');
+        epBody.innerHTML = Object.entries(stats.byEndpoint || {}).map(([k, v]) =>
+          '<tr><td>' + k + '</td><td>' + v.count + '</td><td>' + v.volume + ' USDC</td></tr>'
+        ).join('');
+
+        const taxBody = document.getElementById('tax-table');
+        taxBody.innerHTML = Object.entries(stats.byTaxonomy || {}).map(([k, v]) =>
+          '<tr><td>' + k + '</td><td>' + v.count + '</td><td>' + v.volume + ' USDC</td></tr>'
+        ).join('');
+
+        lastTxCount = stats.totalTransactions;
+      } catch (e) { console.error('Refresh failed:', e); }
+    }
+
+    refresh();
+    setInterval(refresh, 3000);
+  </script>
+</body>
+</html>

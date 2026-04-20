@@ -1,0 +1,38 @@
+node_modules/
+dist/
+.DS_Store
+*.pyc
+__pycache__/
+.codebuddy/
+.env
+.venv/
+.vscode/
+.idea/
+*.tsbuildinfo
+*.bak
+
+# Internal docs — entire directories (never push to public)
+docs/internal/
+docs/hackathon/
+
+# Legacy root-level internal docs (in case restored from private-full)
+HACKATHON.md
+DEMO-SCRIPT.md
+SUBMISSION-DRAFT.md
+CIRCLE-PRODUCT-FEEDBACK.md
+VIDEO-RECORDING-GUIDE.md
+WORKLOG-*.md
+ASM-STRATEGIC-ANALYSIS.md
+ASM-Pitch-Deck.pptx
+README-HACKATHON-ADDITIONS.md
+
+# Build artifacts
+tools/*/node_modules/
+tools/*/dist/
+
+# Paper internal drafts
+paper/x-twitter-thread.md
+
+# Benchmark run outputs (keep directory, ignore generated JSON)
+payments/benchmark-results/*.json
+!payments/benchmark-results/.gitkeep

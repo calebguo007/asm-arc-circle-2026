@@ -1,0 +1,72 @@
+{
+  "asm_version": "0.3",
+  "service_id": "black-forest-labs/flux-1.1-pro@1.1",
+  "taxonomy": "ai.vision.image_generation",
+  "display_name": "FLUX 1.1 Pro",
+  "updated_at": "2026-04-10T00:00:00Z",
+  "ttl": 3600,
+  "provider": {
+    "name": "Black Forest Labs (via Replicate)",
+    "url": "https://replicate.com/black-forest-labs/flux-1.1-pro"
+  },
+  "capabilities": {
+    "description": "State-of-the-art text-to-image generation with photorealistic quality",
+    "input_modalities": [
+      "text"
+    ],
+    "output_modalities": [
+      "image"
+    ],
+    "max_output_size": "4096x4096"
+  },
+  "pricing": {
+    "billing_dimensions": [
+      {
+        "dimension": "image",
+        "unit": "per_1",
+        "cost_per_unit": 0.04,
+        "currency": "USD"
+      }
+    ]
+  },
+  "quality": {
+    "metrics": [
+      {
+        "name": "FID",
+        "score": 4.8,
+        "scale": "lower_is_better",
+        "benchmark": "COCO-30K",
+        "self_reported": true
+      }
+    ]
+  },
+  "sla": {
+    "latency_p50": "8s",
+    "latency_p99": "25s",
+    "cold_start": "~15s",
+    "uptime": 0.995
+  },
+  "payment": {
+    "methods": [
+      "api_key_prepaid",
+      "stripe",
+      "onchain_usdc"
+    ],
+    "auth_type": "api_key",
+    "signup_url": "https://replicate.com/pricing",
+    "onchain_address": "0x746b0F52b979b18225CC31FC7EB1dd89a67100a9",
+    "onchain_network": "eip155:5042002"
+  },
+  "extensions": {
+    "image_gen": {
+      "styles": [
+        "photorealistic",
+        "artistic",
+        "anime"
+      ],
+      "supports_img2img": false,
+      "supports_inpainting": false,
+      "max_resolution": "4096x4096"
+    }
+  }
+}
