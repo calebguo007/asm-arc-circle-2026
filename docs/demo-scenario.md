@@ -1,14 +1,40 @@
-# ASM-Pay Demo Scenario
+# ASM Demo Scenario — "Campaign"
 
-> **Track**: 🤖 Agent-to-Agent Payment Loop
-> **Title**: Marketing Campaign Agent — 50 subtasks across 15 service categories
-> **Updated**: 2026-04-20
+> **Track**: Agent-to-Agent Payment Loop
+> **Worked example**: Campaign, an AI marketing agent — 50 subtasks across 15 service categories
+> **Updated**: 2026-04-21
 
 ---
 
-## 🎬 The Scenario (one-paragraph pitch)
+## Important — this is one worked example, not the product
 
-A marketing agent receives a brief: *"Launch product X across global social channels."* It breaks the job into 50 concrete subtasks — images, copy, translations, voiceovers, video snippets, sentiment checks, competitor scrapes, deploy scripts. For each subtask, the agent calls `asm_registry_lookup`. ASM returns ranked candidates from its registry of 70 real services, the scorer picks the best by price × quality × SLA, and Circle Nanopayments settles the fee on Arc in USDC. Fifty on-chain transactions complete in seconds. The dashboard shows the total cost versus what the same 50 transactions would cost on Ethereum mainnet at live gas — a ratio in the thousands.
+**ASM is a general-purpose protocol.** The Campaign persona below is a
+narrative vehicle that makes the demo concrete and measurable — 50
+purchases at sub-cent prices across 15 categories, exactly what the
+hackathon brief asks for.
+
+The exact same ten lines of code route **any agent's any sub-task to any
+provider** in the ASM registry. Coding agents can pick IDEs. Research
+agents can pick search APIs. Support agents can pick knowledge bases.
+ASM does not care what domain the caller is in — it only reads
+`taxonomy` and a preference vector.
+
+---
+
+## Meet Campaign (one-paragraph pitch)
+
+**Campaign** is an AI marketing agent. A founder hands her a brief —
+*"Launch FocusBear globally."* — and she decomposes it into 50 concrete
+subtasks: images, copy, translations, voiceovers, video snippets,
+sentiment checks, competitor scrapes, deploy scripts.
+
+For each subtask, Campaign calls `asm_registry_lookup`. ASM returns
+ranked candidates from its registry of 70 real services, the scorer
+picks the best by price × quality × SLA, and Circle Nanopayments
+settles the fee on Arc in USDC. Fifty on-chain transactions complete
+in seconds. The dashboard shows the total cost versus what the same
+50 transactions would cost on Ethereum mainnet at live gas — a ratio
+of about 200×.
 
 ---
 

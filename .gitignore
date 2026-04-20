@@ -34,5 +34,7 @@ tools/*/dist/
 paper/x-twitter-thread.md
 
 # Benchmark run outputs (keep directory, ignore generated JSON)
+# Exception: sample-for-frontend.json is a pinned sample for the frontend team
 payments/benchmark-results/*.json
 !payments/benchmark-results/.gitkeep
+!payments/benchmark-results/sample-for-frontend.json
