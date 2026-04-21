@@ -12,6 +12,9 @@
  * Uses Gemini Free Tier (gemini-2.5-flash, no credit card needed)
  */
 
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
 
 // ── Gemini Request/Response Types ──────────────────────────────
 
@@ -80,13 +83,78 @@ interface AgentDecision {
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
+type TaxonomyIndexEntry = {
+  taxonomy: string;
+  aliases?: string[];
+};
+
+let cachedTaxonomies: TaxonomyIndexEntry[] | null = null;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+function loadTaxonomyUniverse(): TaxonomyIndexEntry[] {
+  if (cachedTaxonomies) return cachedTaxonomies;
+
+  const indexPath = path.resolve(__dirname, "..", "..", "discovery", "data", "taxonomy-index.json");
+  if (fs.existsSync(indexPath)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(indexPath, "utf-8")) as {
+        taxonomies?: TaxonomyIndexEntry[];
+      };
+      if (parsed.taxonomies && parsed.taxonomies.length > 0) {
+        cachedTaxonomies = parsed.taxonomies;
+        return cachedTaxonomies;
+      }
+    } catch (_e) {
+      // fall through to manifest scan
+    }
+  }
+
+  const manifestDir = path.resolve(__dirname, "..", "..", "manifests");
+  const set = new Set<string>();
+  if (fs.existsSync(manifestDir)) {
+    for (const file of fs.readdirSync(manifestDir).filter((f: string) => f.endsWith(".asm.json"))) {
+      try {
+        const raw = fs.readFileSync(path.join(manifestDir, file), "utf-8");
+        const parsed = JSON.parse(raw) as { taxonomy?: string };
+        if (parsed.taxonomy) set.add(parsed.taxonomy);
+      } catch (_e) {
+        // ignore invalid manifest
+      }
+    }
+  }
+  cachedTaxonomies = Array.from(set).sort().map((taxonomy) => ({ taxonomy }));
+  return cachedTaxonomies;
+}
+
+function normalizeTaxonomy(taxonomy: string | null, request: string): string | null {
+  if (!taxonomy) return null;
+  const universe = loadTaxonomyUniverse();
+  const exact = universe.find((t) => t.taxonomy === taxonomy);
+  if (exact) return exact.taxonomy;
+
+  const lowered = taxonomy.toLowerCase();
+  const aliasMatch = universe.find((t) => (t.aliases ?? []).some((a) => a.toLowerCase() === lowered));
+  if (aliasMatch) return aliasMatch.taxonomy;
+
+  // Last resort: simple lexical similarity against task words
+  const words = new Set(request.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean));
+  let best: { taxonomy: string; score: number } | null = null;
+  for (const t of universe) {
+    const tokens = t.taxonomy.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+    const overlap = tokens.filter((token) => words.has(token)).length;
+    const score = overlap / Math.max(tokens.length, 1);
+    if (!best || score > best.score) best = { taxonomy: t.taxonomy, score };
+  }
+  return best && best.score > 0 ? best.taxonomy : null;
+}
+
 const SYSTEM_PROMPT = `You are an AI service procurement engine. Your job is to parse a natural language request from an AI Agent and extract structured parameters for a multi-criteria service selection system called ASM (Agent Service Manifest).
 
 You must output ONLY valid JSON with this exact schema:
 {
   "taxonomy": string or null,  // Service category. Must be one of:
-  // AI Models: "ai.llm.chat", "ai.vision.image_generation", "ai.video.generation", "ai.audio.tts", "ai.audio.stt", "ai.llm.embedding", "infra.compute.gpu"
-  // Tools: "tool.productivity.todo", "tool.productivity.knowledge", "tool.productivity.project", "tool.automation.browser", "tool.devops.ci", "tool.communication.email", "tool.data.search"
+  // Use valid ASM taxonomy names from the registry manifest set
   // Use null for cross-category search
   "weights": {
     "w_cost": number,      // 0-1, importance of low cost
@@ -170,7 +238,7 @@ export async function parseAgentIntent(
 
     // Parse JSON
     const parsed = JSON.parse(text);
-    return normalizeIntent(parsed);
+    return normalizeIntent(parsed, naturalLanguageRequest);
   } catch (err: unknown) {
     console.warn(`⚠️  Gemini call failed: ${(err instanceof Error ? err.message : String(err))}，using rule engine`);
     return ruleBasedParse(naturalLanguageRequest);
@@ -339,7 +407,7 @@ function ruleBasedParse(request: string): ParsedIntent {
   if (/\b(generat|create|write|writing|create)\b/.test(lower)) io_ratio = 0.15;
 
   return {
-    taxonomy,
+    taxonomy: normalizeTaxonomy(taxonomy, request),
     weights: { w_cost, w_quality, w_speed, w_reliability },
     constraints: {},
     io_ratio,
@@ -350,7 +418,7 @@ function ruleBasedParse(request: string): ParsedIntent {
 /**
  * Normalize intent parameters
  */
-function normalizeIntent(raw: any): ParsedIntent {
+function normalizeIntent(raw: any, request: string): ParsedIntent {
   const weights = raw.weights || {};
   let w_cost = parseFloat(weights.w_cost) || 0.25;
   let w_quality = parseFloat(weights.w_quality) || 0.25;
@@ -367,7 +435,7 @@ function normalizeIntent(raw: any): ParsedIntent {
   }
 
   return {
-    taxonomy: raw.taxonomy || null,
+    taxonomy: normalizeTaxonomy(raw.taxonomy || null, request),
     weights: { w_cost, w_quality, w_speed, w_reliability },
     constraints: raw.constraints || {},
     io_ratio: parseFloat(raw.io_ratio) || 0.3,
