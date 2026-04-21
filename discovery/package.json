@@ -9,7 +9,9 @@
     "demo": "tsx scripts/demo.ts",
     "test:smoke": "tsx --test test/smoke.test.ts"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@langchain/langgraph": "^0.2.74"
+  },
   "devDependencies": {
     "@types/node": "^25.5.2",
     "tsx": "^4.21.0",

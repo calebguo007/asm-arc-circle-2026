@@ -8,6 +8,7 @@
 - Builds an embedding index (`discovery/data/taxonomy-index.json`).
 - Resolves task text to the closest taxonomy with confidence and top-k candidates.
 - Supports deterministic CI runs with `FakeHashEmbedder` (no API keys).
+- Uses a LangGraph workflow (`embedTask -> retrieveCandidates -> selectWinner`) for production-style orchestration.
 
 ## Commands
 

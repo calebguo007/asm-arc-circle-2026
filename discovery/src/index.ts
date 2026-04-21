@@ -117,3 +117,5 @@ export function writeIndex(indexPath: string, index: DiscoveryIndex): void {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(indexPath, JSON.stringify(index, null, 2), "utf-8");
 }
+
+export { discoverTaxonomyWithLangGraph } from "./langgraph-discovery.js";

@@ -1,7 +1,7 @@
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { FakeHashEmbedder } from "../src/embedders.js";
-import { discoverTaxonomy, readIndex } from "../src/index.js";
+import { discoverTaxonomyWithLangGraph, readIndex } from "../src/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,8 +20,7 @@ async function main() {
   ];
 
   for (const task of tasks) {
-    const vector = await embedder.embed(task);
-    const result = discoverTaxonomy(task, index, vector);
+    const result = await discoverTaxonomyWithLangGraph(task, index, embedder, { minConfidence: 0.25 });
     console.log(`Task: ${task}`);
     console.log(`  taxonomy=${result.taxonomy} confidence=${result.confidence.toFixed(3)}`);
     console.log(`  candidates=${result.candidates.map((c) => `${c.taxonomy}:${c.score.toFixed(3)}`).join(", ")}`);

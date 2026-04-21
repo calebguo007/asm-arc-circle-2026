@@ -15,6 +15,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { FakeHashEmbedder } from "../../discovery/src/embedders.js";
+import { discoverTaxonomyWithLangGraph, readIndex } from "../../discovery/src/index.js";
 
 // ── Gemini Request/Response Types ──────────────────────────────
 
@@ -91,6 +93,7 @@ type TaxonomyIndexEntry = {
 let cachedTaxonomies: TaxonomyIndexEntry[] | null = null;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+let cachedLangGraphIndex: ReturnType<typeof readIndex> | null = null;
 
 function loadTaxonomyUniverse(): TaxonomyIndexEntry[] {
   if (cachedTaxonomies) return cachedTaxonomies;
@@ -125,6 +128,30 @@ function loadTaxonomyUniverse(): TaxonomyIndexEntry[] {
   }
   cachedTaxonomies = Array.from(set).sort().map((taxonomy) => ({ taxonomy }));
   return cachedTaxonomies;
+}
+
+async function discoverTaxonomyViaLangGraph(request: string): Promise<{
+  taxonomy: string | null;
+  confidence: number;
+  reasoning: string;
+}> {
+  const indexPath = path.resolve(__dirname, "..", "..", "discovery", "data", "taxonomy-index.json");
+  if (!fs.existsSync(indexPath)) {
+    return { taxonomy: null, confidence: 0, reasoning: "LangGraph discovery index not found" };
+  }
+  cachedLangGraphIndex = cachedLangGraphIndex ?? readIndex(indexPath);
+  const embedder = new FakeHashEmbedder(cachedLangGraphIndex.dimensions || 128);
+  const result = await discoverTaxonomyWithLangGraph(
+    request,
+    cachedLangGraphIndex,
+    embedder,
+    { topK: 5, minConfidence: 0.25 },
+  );
+  return {
+    taxonomy: result.taxonomy,
+    confidence: result.confidence,
+    reasoning: result.reasoning,
+  };
 }
 
 function normalizeTaxonomy(taxonomy: string | null, request: string): string | null {
@@ -190,12 +217,21 @@ export async function parseAgentIntent(
   naturalLanguageRequest: string,
   geminiApiKey?: string
 ): Promise<ParsedIntent> {
+  const graphDiscovery = await discoverTaxonomyViaLangGraph(naturalLanguageRequest);
   const apiKey = geminiApiKey || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     // No API Key → using rule engine fallback
     console.log("⚠️  No Gemini API Key, using rule engine to parse intent");
-    return ruleBasedParse(naturalLanguageRequest);
+    const fallback = ruleBasedParse(naturalLanguageRequest);
+    if (graphDiscovery.taxonomy) {
+      return {
+        ...fallback,
+        taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
+        reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
+      };
+    }
+    return fallback;
   }
 
   try {
@@ -238,10 +274,23 @@ export async function parseAgentIntent(
 
     // Parse JSON
     const parsed = JSON.parse(text);
-    return normalizeIntent(parsed, naturalLanguageRequest);
+    const normalized = normalizeIntent(parsed, naturalLanguageRequest);
+    if (!normalized.taxonomy && graphDiscovery.taxonomy) {
+      normalized.taxonomy = normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest);
+      normalized.reasoning = `${normalized.reasoning}; ${graphDiscovery.reasoning}`;
+    }
+    return normalized;
   } catch (err: unknown) {
     console.warn(`⚠️  Gemini call failed: ${(err instanceof Error ? err.message : String(err))}，using rule engine`);
-    return ruleBasedParse(naturalLanguageRequest);
+    const fallback = ruleBasedParse(naturalLanguageRequest);
+    if (graphDiscovery.taxonomy) {
+      return {
+        ...fallback,
+        taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
+        reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
+      };
+    }
+    return fallback;
   }
 }
 
