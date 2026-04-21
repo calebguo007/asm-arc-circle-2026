@@ -1,6 +1,6 @@
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { FakeHashEmbedder } from "../src/embedders.js";
+import { FakeHashEmbedder, OpenAIEmbedder } from "../src/embedders.js";
 import { discoverTaxonomyWithLangGraph, readIndex } from "../src/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,7 +10,9 @@ async function main() {
   const repoRoot = path.resolve(__dirname, "..", "..");
   const indexPath = path.join(repoRoot, "discovery", "data", "taxonomy-index.json");
   const index = readIndex(indexPath);
-  const embedder = new FakeHashEmbedder(index.dimensions || 128);
+  const embedder = process.env.OPENAI_API_KEY
+    ? new OpenAIEmbedder(process.env.OPENAI_API_KEY)
+    : new FakeHashEmbedder(index.dimensions || 128);
 
   const tasks = [
     "I need to translate launch copy to Japanese and German.",

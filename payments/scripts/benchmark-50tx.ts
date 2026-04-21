@@ -56,6 +56,8 @@ interface TaskResult {
   id: number;
   category: string;
   taxonomy: string;
+  expectedTaxonomy?: string;
+  discoveryCorrect?: boolean;
   prompt: string;
   targetPriceUsd: number;
   /** Actual settled price in USDC (0 if stubbed / failed) */
@@ -113,6 +115,13 @@ interface BenchmarkResult {
     ethPriceUsd?: number;
     totalGasCostUsd?: number;
     overheadRatio?: number;
+  };
+  discoveryAccuracy?: {
+    enabled: boolean;
+    evaluated: number;
+    correct: number;
+    accuracy: number;
+    byCategory: Record<string, { evaluated: number; correct: number; accuracy: number }>;
   };
   tasks: TaskResult[];
 }
@@ -232,6 +241,8 @@ async function main() {
         id: task.id,
         category: task.category,
         taxonomy: resolvedTaxonomy,
+        expectedTaxonomy: discoveryEnabled ? task.taxonomy : undefined,
+        discoveryCorrect: discoveryEnabled ? resolvedTaxonomy === task.taxonomy : undefined,
         prompt: task.prompt,
         targetPriceUsd: task.targetPriceUsd,
         actualPriceUsd,
@@ -248,6 +259,8 @@ async function main() {
         id: task.id,
         category: task.category,
         taxonomy: discoveryEnabled ? "discovery_failed" : task.taxonomy,
+        expectedTaxonomy: discoveryEnabled ? task.taxonomy : undefined,
+        discoveryCorrect: discoveryEnabled ? false : undefined,
         prompt: task.prompt,
         targetPriceUsd: task.targetPriceUsd,
         actualPriceUsd: 0,
@@ -311,6 +324,9 @@ async function main() {
     ethereumHypothetical: {
       note: "Filled in Phase 2 via Etherscan gas + CoinGecko ETH price fetch at runtime.",
     },
+    discoveryAccuracy: discoveryEnabled
+      ? computeDiscoveryAccuracy(results)
+      : undefined,
     tasks: results,
   };
 
@@ -342,6 +358,11 @@ async function main() {
   }
   console.log(`   Wall clock:       ${(wallClockMs / 1000).toFixed(2)}s`);
   console.log(`   Avg latency:      ${benchmark.arcResults.avgLatencyMs}ms`);
+  if (benchmark.discoveryAccuracy?.enabled) {
+    console.log(
+      `   Discovery acc:    ${(benchmark.discoveryAccuracy.accuracy * 100).toFixed(1)}% (${benchmark.discoveryAccuracy.correct}/${benchmark.discoveryAccuracy.evaluated})`,
+    );
+  }
   console.log(`   Output:           ${path.relative(process.cwd(), outFile)}`);
   console.log();
 }
@@ -370,6 +391,39 @@ function logTaskRow(r: TaskResult): void {
 
 function avg(nums: number[]): number {
   return nums.length === 0 ? 0 : nums.reduce((a, b) => a + b, 0) / nums.length;
+}
+
+function computeDiscoveryAccuracy(results: TaskResult[]): {
+  enabled: boolean;
+  evaluated: number;
+  correct: number;
+  accuracy: number;
+  byCategory: Record<string, { evaluated: number; correct: number; accuracy: number }>;
+} {
+  const evaluated = results.filter((r) => r.expectedTaxonomy).length;
+  const correct = results.filter((r) => r.discoveryCorrect).length;
+  const byCategoryAccumulator: Record<string, { evaluated: number; correct: number }> = {};
+  for (const r of results) {
+    if (!r.expectedTaxonomy) continue;
+    const item = byCategoryAccumulator[r.category] ?? { evaluated: 0, correct: 0 };
+    item.evaluated += 1;
+    if (r.discoveryCorrect) item.correct += 1;
+    byCategoryAccumulator[r.category] = item;
+  }
+  const byCategory: Record<string, { evaluated: number; correct: number; accuracy: number }> = {};
+  for (const [category, stats] of Object.entries(byCategoryAccumulator)) {
+    byCategory[category] = {
+      ...stats,
+      accuracy: stats.evaluated === 0 ? 0 : Number((stats.correct / stats.evaluated).toFixed(4)),
+    };
+  }
+  return {
+    enabled: true,
+    evaluated,
+    correct,
+    accuracy: evaluated === 0 ? 0 : Number((correct / evaluated).toFixed(4)),
+    byCategory,
+  };
 }
 
 main().catch((err) => {

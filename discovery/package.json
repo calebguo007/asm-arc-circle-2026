@@ -10,7 +10,9 @@
     "test:smoke": "tsx --test test/smoke.test.ts"
   },
   "dependencies": {
-    "@langchain/langgraph": "^0.2.74"
+    "@langchain/core": "^0.3.80",
+    "@langchain/langgraph": "^0.2.74",
+    "@langchain/openai": "^0.6.16"
   },
   "devDependencies": {
     "@types/node": "^25.5.2",

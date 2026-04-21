@@ -22,8 +22,8 @@ npm run test:smoke
 
 ## Embedding modes
 
-- `OPENAI_API_KEY` set: uses OpenAI `text-embedding-3-small`.
-- no API key: uses deterministic `FakeHashEmbedder`.
+- default: requires `OPENAI_API_KEY` and uses OpenAI `text-embedding-3-small`.
+- fallback mode: set `ASM_ALLOW_FAKE_EMBEDDER=1` to use deterministic `FakeHashEmbedder` (CI/local without keys).
 
 ## Output contract
 

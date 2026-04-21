@@ -59,6 +59,8 @@
   },
   "dependencies": {
     "@circle-fin/x402-batching": "^2.1.0",
+    "@langchain/langgraph": "^0.2.74",
+    "@langchain/openai": "^0.6.16",
     "@types/express-rate-limit": "^5.1.3",
     "@x402/core": "^2.9.0",
     "@x402/evm": "^2.9.0",

@@ -1,4 +1,5 @@
 import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
+import { ChatOpenAI } from "@langchain/openai";
 import type { DiscoveryIndex, DiscoveryResult, Embedder } from "./index.js";
 
 function cosineSimilarity(a: number[], b: number[]): number {
@@ -26,6 +27,14 @@ const DiscoveryState = Annotation.Root({
     reducer: (_prev, next) => next,
     default: () => [],
   }),
+  rerankedTaxonomy: Annotation<string | null>({
+    reducer: (_prev, next) => next,
+    default: () => null,
+  }),
+  rerankReasoning: Annotation<string>({
+    reducer: (_prev, next) => next,
+    default: () => "",
+  }),
   taxonomy: Annotation<string | null>({
     reducer: (_prev, next) => next,
     default: () => null,
@@ -39,6 +48,46 @@ const DiscoveryState = Annotation.Root({
     default: () => "",
   }),
 });
+
+async function llmRerankCandidates(
+  task: string,
+  candidates: Array<{ taxonomy: string; score: number }>,
+): Promise<{ taxonomy: string | null; reasoning: string }> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || candidates.length === 0) {
+    return { taxonomy: null, reasoning: "LLM rerank skipped (missing OPENAI_API_KEY)." };
+  }
+  const model = new ChatOpenAI({
+    apiKey,
+    model: "gpt-4o-mini",
+    temperature: 0,
+  });
+  const prompt = [
+    "You are ranking ASM taxonomy candidates for a user task.",
+    "Return strict JSON only: {\"taxonomy\": string, \"reasoning\": string}.",
+    `Task: ${task}`,
+    `Candidates: ${candidates.map((c) => `${c.taxonomy} (similarity=${c.score.toFixed(4)})`).join(", ")}`,
+    "Pick exactly one taxonomy from Candidates.",
+  ].join("\n");
+  const response = await model.invoke(prompt);
+  const text = typeof response.content === "string"
+    ? response.content
+    : Array.isArray(response.content)
+      ? response.content.map((p: any) => (typeof p === "string" ? p : p?.text ?? "")).join("")
+      : "";
+  try {
+    const parsed = JSON.parse(text) as { taxonomy?: string; reasoning?: string };
+    if (parsed.taxonomy && candidates.some((c) => c.taxonomy === parsed.taxonomy)) {
+      return {
+        taxonomy: parsed.taxonomy,
+        reasoning: parsed.reasoning ?? "LLM rerank selected taxonomy.",
+      };
+    }
+  } catch {
+    // ignore malformed output
+  }
+  return { taxonomy: null, reasoning: "LLM rerank returned invalid output." };
+}
 
 export async function discoverTaxonomyWithLangGraph(
   task: string,
@@ -64,24 +113,35 @@ export async function discoverTaxonomyWithLangGraph(
         .slice(0, topK);
       return { candidates };
     })
+    .addNode("rerankCandidates", async (state) => {
+      const reranked = await llmRerankCandidates(state.task, state.candidates);
+      return {
+        rerankedTaxonomy: reranked.taxonomy,
+        rerankReasoning: reranked.reasoning,
+      };
+    })
     .addNode("selectWinner", async (state) => {
-      const best = state.candidates[0];
+      const reranked = state.rerankedTaxonomy
+        ? state.candidates.find((c) => c.taxonomy === state.rerankedTaxonomy)
+        : null;
+      const best = reranked ?? state.candidates[0];
       if (!best || best.score < minConfidence) {
         return {
           taxonomy: null,
           confidence: best?.score ?? 0,
-          reasoning: `LangGraph: low confidence for "${state.task}"`,
+          reasoning: `LangGraph: low confidence for "${state.task}". ${state.rerankReasoning}`.trim(),
         };
       }
       return {
         taxonomy: best.taxonomy,
         confidence: best.score,
-        reasoning: `LangGraph: selected ${best.taxonomy} for "${state.task}" (${best.score.toFixed(3)})`,
+        reasoning: `LangGraph: selected ${best.taxonomy} for "${state.task}" (${best.score.toFixed(3)}). ${state.rerankReasoning}`.trim(),
       };
     })
     .addEdge(START, "embedTask")
     .addEdge("embedTask", "retrieveCandidates")
-    .addEdge("retrieveCandidates", "selectWinner")
+    .addEdge("retrieveCandidates", "rerankCandidates")
+    .addEdge("rerankCandidates", "selectWinner")
     .addEdge("selectWinner", END)
     .compile();
 

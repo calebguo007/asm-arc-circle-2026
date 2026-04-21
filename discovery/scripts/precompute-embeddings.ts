@@ -11,7 +11,12 @@ async function main() {
   const repoRoot = path.resolve(__dirname, "..", "..");
   const catalog = loadTaxonomyCatalogFromManifests(repoRoot);
   const openAiKey = process.env.OPENAI_API_KEY;
-
+  const allowFake = process.env.ASM_ALLOW_FAKE_EMBEDDER === "1";
+  if (!openAiKey && !allowFake) {
+    throw new Error(
+      "OPENAI_API_KEY is required by default. Set ASM_ALLOW_FAKE_EMBEDDER=1 for local/CI fallback.",
+    );
+  }
   const embedder = openAiKey
     ? new OpenAIEmbedder(openAiKey)
     : new FakeHashEmbedder(128);

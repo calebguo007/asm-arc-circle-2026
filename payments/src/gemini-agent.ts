@@ -15,8 +15,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { FakeHashEmbedder } from "../../discovery/src/embedders.js";
-import { discoverTaxonomyWithLangGraph, readIndex } from "../../discovery/src/index.js";
+import crypto from "crypto";
+import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 
 // ── Gemini Request/Response Types ──────────────────────────────
 
@@ -88,12 +89,92 @@ const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models
 type TaxonomyIndexEntry = {
   taxonomy: string;
   aliases?: string[];
+  embedding?: number[];
 };
 
 let cachedTaxonomies: TaxonomyIndexEntry[] | null = null;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-let cachedLangGraphIndex: ReturnType<typeof readIndex> | null = null;
+let cachedLangGraphIndex: { dimensions: number; taxonomies: TaxonomyIndexEntry[] } | null = null;
+
+function readDiscoveryIndex(indexPath: string): { dimensions: number; taxonomies: TaxonomyIndexEntry[] } {
+  const raw = fs.readFileSync(indexPath, "utf-8");
+  const parsed = JSON.parse(raw) as { dimensions?: number; taxonomies?: TaxonomyIndexEntry[] };
+  return {
+    dimensions: parsed.dimensions ?? 128,
+    taxonomies: parsed.taxonomies ?? [],
+  };
+}
+
+class LocalFakeHashEmbedder {
+  constructor(private readonly dimensions: number = 128) {}
+  async embedQuery(text: string): Promise<number[]> {
+    const values = new Array<number>(this.dimensions).fill(0);
+    const digest = crypto.createHash("sha256").update(text).digest();
+    for (let i = 0; i < this.dimensions; i++) {
+      const b = digest[i % digest.length];
+      values[i] = (b / 255) * 2 - 1;
+    }
+    return values;
+  }
+}
+
+function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length === 0 || b.length === 0 || a.length !== b.length) return 0;
+  let dot = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  const denom = Math.sqrt(normA) * Math.sqrt(normB);
+  if (denom === 0) return 0;
+  return dot / denom;
+}
+
+async function llmRerankTaxonomy(
+  task: string,
+  candidates: Array<{ taxonomy: string; score: number }>,
+): Promise<string | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || candidates.length === 0) return null;
+  const model = new ChatOpenAI({ apiKey, model: "gpt-4o-mini", temperature: 0 });
+  const prompt = [
+    "Pick the best taxonomy from candidates for this task.",
+    "Return strict JSON: {\"taxonomy\": \"...\"}.",
+    `Task: ${task}`,
+    `Candidates: ${candidates.map((c) => `${c.taxonomy} (${c.score.toFixed(4)})`).join(", ")}`,
+  ].join("\n");
+  const output = await model.invoke(prompt);
+  const text = typeof output.content === "string"
+    ? output.content
+    : Array.isArray(output.content)
+      ? output.content.map((part: any) => (typeof part === "string" ? part : part?.text ?? "")).join("")
+      : "";
+  try {
+    const parsed = JSON.parse(text) as { taxonomy?: string };
+    if (parsed.taxonomy && candidates.some((c) => c.taxonomy === parsed.taxonomy)) {
+      return parsed.taxonomy;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+const DiscoveryState = Annotation.Root({
+  task: Annotation<string>(),
+  taskEmbedding: Annotation<number[]>({ reducer: (_p: number[], n: number[]) => n, default: () => [] }),
+  candidates: Annotation<Array<{ taxonomy: string; score: number }>>({
+    reducer: (_p: Array<{ taxonomy: string; score: number }>, n: Array<{ taxonomy: string; score: number }>) => n,
+    default: () => [],
+  }),
+  rerankedTaxonomy: Annotation<string | null>({ reducer: (_p: string | null, n: string | null) => n, default: () => null }),
+  taxonomy: Annotation<string | null>({ reducer: (_p: string | null, n: string | null) => n, default: () => null }),
+  confidence: Annotation<number>({ reducer: (_p: number, n: number) => n, default: () => 0 }),
+});
 
 function loadTaxonomyUniverse(): TaxonomyIndexEntry[] {
   if (cachedTaxonomies) return cachedTaxonomies;
@@ -139,18 +220,53 @@ async function discoverTaxonomyViaLangGraph(request: string): Promise<{
   if (!fs.existsSync(indexPath)) {
     return { taxonomy: null, confidence: 0, reasoning: "LangGraph discovery index not found" };
   }
-  cachedLangGraphIndex = cachedLangGraphIndex ?? readIndex(indexPath);
-  const embedder = new FakeHashEmbedder(cachedLangGraphIndex.dimensions || 128);
-  const result = await discoverTaxonomyWithLangGraph(
-    request,
-    cachedLangGraphIndex,
-    embedder,
-    { topK: 5, minConfidence: 0.25 },
-  );
+  cachedLangGraphIndex = cachedLangGraphIndex ?? readDiscoveryIndex(indexPath);
+  const apiKey = process.env.OPENAI_API_KEY;
+  const embedder = apiKey
+    ? new OpenAIEmbeddings({ apiKey, model: "text-embedding-3-small" })
+    : new LocalFakeHashEmbedder(cachedLangGraphIndex.dimensions || 128);
+
+  const graph = new StateGraph(DiscoveryState)
+    .addNode("embedTask", async (state: typeof DiscoveryState.State) => {
+      const taskEmbedding = await embedder.embedQuery(state.task);
+      return { taskEmbedding };
+    })
+    .addNode("retrieveCandidates", async (state: typeof DiscoveryState.State) => {
+      const candidates = cachedLangGraphIndex!.taxonomies
+        .filter((t) => Array.isArray(t.embedding))
+        .map((t) => ({
+          taxonomy: t.taxonomy,
+          score: Number(cosineSimilarity(state.taskEmbedding, t.embedding as number[]).toFixed(4)),
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+      return { candidates };
+    })
+    .addNode("rerankCandidates", async (state: typeof DiscoveryState.State) => {
+      const rerankedTaxonomy = await llmRerankTaxonomy(state.task, state.candidates);
+      return { rerankedTaxonomy };
+    })
+    .addNode("selectWinner", async (state: typeof DiscoveryState.State) => {
+      const best = state.rerankedTaxonomy
+        ? state.candidates.find((c: { taxonomy: string; score: number }) => c.taxonomy === state.rerankedTaxonomy) ?? state.candidates[0]
+        : state.candidates[0];
+      return {
+        taxonomy: best?.taxonomy ?? null,
+        confidence: best?.score ?? 0,
+      };
+    })
+    .addEdge(START, "embedTask")
+    .addEdge("embedTask", "retrieveCandidates")
+    .addEdge("retrieveCandidates", "rerankCandidates")
+    .addEdge("rerankCandidates", "selectWinner")
+    .addEdge("selectWinner", END)
+    .compile();
+
+  const result = await graph.invoke({ task: request });
   return {
     taxonomy: result.taxonomy,
     confidence: result.confidence,
-    reasoning: result.reasoning,
+    reasoning: `LangGraph discovery confidence=${result.confidence.toFixed(3)}`,
   };
 }
 
