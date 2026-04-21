@@ -33,6 +33,7 @@ import {
 } from "../src/benchmark-tasks.js";
 import { loadConfig } from "../src/config.js";
 import { ASMBuyerClient } from "../src/buyer.js";
+import { parseAgentIntent } from "../src/gemini-agent.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -166,7 +167,9 @@ async function main() {
   }
 
   const summary = summarizeTasks(tasks);
+  const discoveryEnabled = process.env.ASM_DISCOVERY_ENABLED === "1";
   console.log(`📋 Generated ${summary.total} subtasks across ${Object.keys(summary.byCategory).length} categories`);
+  console.log(`   Taxonomy source: ${discoveryEnabled ? "nl-discovery (prompt -> taxonomy)" : "static benchmark mapping"}`);
   console.log(`   Target total cost: $${summary.totalTargetCostUsd.toFixed(4)}`);
   console.log(`   By category:`);
   for (const [cat, n] of Object.entries(summary.byCategory)) {
@@ -183,9 +186,13 @@ async function main() {
     let result: TaskResult;
 
     try {
+      const resolvedTaxonomy = discoveryEnabled
+        ? (await parseAgentIntent(task.prompt)).taxonomy || task.taxonomy
+        : task.taxonomy;
+
       // PAYMENT CALL — real buyer.score() via Circle Gateway (live) or
       // direct POST (mock). Each call = one on-chain tx in live mode.
-      const scoreResult = await buyer.score({ taxonomy: task.taxonomy });
+      const scoreResult = await buyer.score({ taxonomy: resolvedTaxonomy });
 
       // Extract tx hash injected by buyer.score() in live mode
       const txHash: string | undefined = scoreResult?._txHash;
@@ -224,7 +231,7 @@ async function main() {
       result = {
         id: task.id,
         category: task.category,
-        taxonomy: task.taxonomy,
+        taxonomy: resolvedTaxonomy,
         prompt: task.prompt,
         targetPriceUsd: task.targetPriceUsd,
         actualPriceUsd,
@@ -240,7 +247,7 @@ async function main() {
       result = {
         id: task.id,
         category: task.category,
-        taxonomy: task.taxonomy,
+        taxonomy: discoveryEnabled ? "discovery_failed" : task.taxonomy,
         prompt: task.prompt,
         targetPriceUsd: task.targetPriceUsd,
         actualPriceUsd: 0,
