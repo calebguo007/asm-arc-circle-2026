@@ -443,6 +443,21 @@ function registerRoutes() {
     }
   });
 
+  app.get("/benchmark", (_req: Request, res: Response) => {
+    res.setHeader("Content-Type", "text/html");
+    const htmlPath = path.resolve(__dirname, "benchmark.html");
+    try {
+      const html = fs.readFileSync(htmlPath, "utf-8");
+      res.send(html);
+    } catch (_e) {
+      res.send("<h1>Benchmark HTML not found</h1><p>Expected at: " + htmlPath + "</p>");
+    }
+  });
+
+  app.get("/workbench", (_req: Request, res: Response) => {
+    res.redirect("/api/dashboard");
+  });
+
   // ── SSE Event Stream (free) ─────────────────────────────────
   app.get("/api/events", (req: Request, res: Response) => {
     res.setHeader("Content-Type", "text/event-stream");
@@ -906,6 +921,8 @@ async function main() {
     console.log(`     GET  /api/trust     — Trust scores`);
     console.log(`     GET  /api/events    — SSE real-time event stream`);
     console.log(`     GET  /api/dashboard — Dashboard`);
+    console.log(`     GET  /benchmark     — Benchmark placeholder`);
+    console.log(`     GET  /workbench     — Workbench shortcut`);
     console.log(`\n   Depends on: ASM Registry → ${config.asmRegistryUrl}`);
     console.log("");
   });

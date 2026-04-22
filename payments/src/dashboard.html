@@ -248,6 +248,101 @@
       min-width: 0;
     }
 
+    .page-jump {
+      position: relative;
+      isolation: isolate;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      padding: 7px 14px 7px 10px;
+      border-radius: 999px;
+      border: 0.5px solid rgba(var(--accent-rgb), 0.24);
+      background: rgba(255,255,255,0.035);
+      color: var(--text);
+      font-size: 11px;
+      line-height: 1;
+      white-space: nowrap;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        inset 0 -10px 20px rgba(0,0,0,0.06),
+        0 0 0 1px rgba(88,182,143,0.03);
+      overflow: hidden;
+      transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, transform 0.16s ease, filter 0.18s ease;
+    }
+
+    .page-jump:hover {
+      color: var(--text);
+      border-color: rgba(var(--accent-rgb), 0.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        inset 0 -12px 24px rgba(0,0,0,0.08),
+        0 0 0 3px rgba(var(--accent-rgb), 0.045),
+        0 10px 20px rgba(0,0,0,0.12);
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .page-jump::before {
+      position: absolute;
+      inset: -24%;
+      content: "";
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(151,255,210,0.20), rgba(88,182,143,0.09) 28%, rgba(124,111,205,0.05) 44%, transparent 66%);
+      mix-blend-mode: screen;
+      opacity: 0.72;
+      filter: blur(16px);
+      transform: translateX(-18%);
+      animation: pageJumpGlow 4.8s ease-in-out infinite alternate;
+    }
+
+    .page-jump-mark {
+      position: relative;
+      z-index: 1;
+      display: inline-grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(88,182,143,0.20), transparent 72%),
+        rgba(255,255,255,0.03);
+      border: 0.5px solid rgba(255,255,255,0.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+    }
+
+    .page-jump-mark::before {
+      width: 8px;
+      height: 8px;
+      content: "";
+      border-radius: 2px;
+      background:
+        linear-gradient(180deg, rgba(165,242,208,0.92), rgba(88,182,143,0.76));
+      box-shadow: 0 0 10px rgba(88,182,143,0.24);
+      transform: rotate(45deg);
+    }
+
+    .page-jump-text {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      box-shadow: none;
+    }
+
+    .page-jump-text::after {
+      content: "→";
+      color: rgba(255,255,255,0.76);
+      transform: translateY(-1px);
+    }
+
     .pill {
       display: inline-flex;
       align-items: center;
@@ -270,6 +365,11 @@
       border-radius: 999px;
       background: var(--success);
       animation: blink 2s infinite ease-in-out;
+    }
+
+    @keyframes pageJumpGlow {
+      from { transform: translateX(-18%) scale(1); opacity: 0.52; }
+      to { transform: translateX(18%) scale(1.06); opacity: 0.82; }
     }
 
     .layout {
@@ -1641,6 +1741,13 @@
           </nav>
         </div>
         <div class="status-pills">
+          <a
+            class="page-jump"
+            data-server-href="/benchmark"
+            data-local-href="./benchmark.html"
+            href="./benchmark.html"
+            aria-label="Open benchmark page"
+          ><span class="page-jump-mark" aria-hidden="true"></span><span class="page-jump-text">Benchmark</span></a>
           <div class="pill">70 services</div>
           <div class="pill">47 categories</div>
           <div class="pill">schema v0.3</div>
@@ -2242,6 +2349,7 @@
       };
 
       function init() {
+        initStaticLinks();
         state.proofData = JSON.parse(JSON.stringify(WORKBENCH_DATA.proof));
         applyInitialMode();
         populateTaxonomies();
@@ -2256,6 +2364,14 @@
           window.setTimeout(() => refs.proofView.classList.add("is-armed"), 100);
           restartBenchmarkCascade();
         }
+      }
+
+      function initStaticLinks() {
+        const isFile = window.location.protocol === "file:";
+        document.querySelectorAll("[data-server-href][data-local-href]").forEach((node) => {
+          const href = isFile ? node.getAttribute("data-local-href") : node.getAttribute("data-server-href");
+          if (href) node.setAttribute("href", href);
+        });
       }
 
       function applyInitialMode() {
