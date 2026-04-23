@@ -454,6 +454,30 @@ function registerRoutes() {
     }
   });
 
+  app.get("/assets/benchmark/:file", (req: Request, res: Response) => {
+    const fileName = path.basename(req.params.file);
+    const assetPath = path.resolve(__dirname, "assets", "benchmark", fileName);
+    if (!assetPath.startsWith(path.resolve(__dirname, "assets", "benchmark"))) {
+      res.status(400).send("Invalid asset path");
+      return;
+    }
+    if (!fs.existsSync(assetPath)) {
+      res.status(404).send("Benchmark asset not found");
+      return;
+    }
+    res.sendFile(assetPath);
+  });
+
+  app.get("/benchmark-results/sample-for-frontend.json", (_req: Request, res: Response) => {
+    const snapshotPath = path.resolve(__dirname, "..", "benchmark-results", "sample-for-frontend.json");
+    if (!fs.existsSync(snapshotPath)) {
+      res.status(404).json({ error: "benchmark_snapshot_not_found" });
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
+    res.send(fs.readFileSync(snapshotPath, "utf-8"));
+  });
+
   app.get("/workbench", (_req: Request, res: Response) => {
     res.redirect("/api/dashboard");
   });
@@ -921,7 +945,7 @@ async function main() {
     console.log(`     GET  /api/trust     — Trust scores`);
     console.log(`     GET  /api/events    — SSE real-time event stream`);
     console.log(`     GET  /api/dashboard — Dashboard`);
-    console.log(`     GET  /benchmark     — Benchmark placeholder`);
+    console.log(`     GET  /benchmark     — Benchmark showcase`);
     console.log(`     GET  /workbench     — Workbench shortcut`);
     console.log(`\n   Depends on: ASM Registry → ${config.asmRegistryUrl}`);
     console.log("");
