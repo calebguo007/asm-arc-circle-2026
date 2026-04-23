@@ -1,0 +1,33 @@
+{
+  "id": 15,
+  "category": "deploy",
+  "prompt": "Deploy landing page to production, return public URL",
+  "expected_taxonomy": "tool.devops.deployment",
+  "matched_taxonomy": "tool.productivity.project",
+  "confidence": 0.383,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.383
+    },
+    {
+      "taxonomy": "tool.data.pdf",
+      "score": 0.3136
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.3104
+    },
+    {
+      "taxonomy": "tool.devops.monitoring",
+      "score": 0.3019
+    },
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.2858
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.project for \"Deploy landing page to production, return public URL\" (0.383). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 30,
+  "category": "translate",
+  "prompt": "Translate to Spanish (LATAM), casual register",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "tool.productivity.scheduling",
+  "confidence": 0.3627,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.scheduling",
+      "score": 0.3627
+    },
+    {
+      "taxonomy": "tool.data.analytics",
+      "score": 0.3123
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.3024
+    },
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.2747
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2624
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.scheduling for \"Translate to Spanish (LATAM), casual register\" (0.363). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

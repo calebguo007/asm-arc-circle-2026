@@ -1,0 +1,33 @@
+{
+  "id": 21,
+  "category": "embed",
+  "prompt": "Embed competitor taglines to cluster their positioning angles",
+  "expected_taxonomy": "ai.llm.embedding",
+  "matched_taxonomy": "tool.devops.logging",
+  "confidence": 0.398,
+  "candidates": [
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.398
+    },
+    {
+      "taxonomy": "tool.data.screenshot",
+      "score": 0.3636
+    },
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.2896
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.2783
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.252
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.devops.logging for \"Embed competitor taglines to cluster their positioning angles\" (0.398). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

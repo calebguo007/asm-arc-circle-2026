@@ -1,0 +1,33 @@
+{
+  "id": 27,
+  "category": "search",
+  "prompt": "Find ADHD-focused newsletter sponsorship opportunities",
+  "expected_taxonomy": "tool.data.search",
+  "matched_taxonomy": "infra.compute.sandbox",
+  "confidence": 0.2827,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.2827
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2631
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2471
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2422
+    },
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.2361
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.compute.sandbox for \"Find ADHD-focused newsletter sponsorship opportunities\" (0.283). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

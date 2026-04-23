@@ -1,0 +1,33 @@
+{
+  "id": 31,
+  "category": "tts",
+  "prompt": "Short tag jingle voice, neutral, 8s",
+  "expected_taxonomy": "ai.audio.tts",
+  "matched_taxonomy": "ai.llm.embedding",
+  "confidence": 0.3296,
+  "candidates": [
+    {
+      "taxonomy": "ai.llm.embedding",
+      "score": 0.3296
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.3284
+    },
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.3001
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2696
+    },
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.2464
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.llm.embedding for \"Short tag jingle voice, neutral, 8s\" (0.330). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

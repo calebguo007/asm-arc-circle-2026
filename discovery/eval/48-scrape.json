@@ -1,0 +1,33 @@
+{
+  "id": 48,
+  "category": "scrape",
+  "prompt": "Scrape YouTube titles of ADHD productivity videos past 7 days",
+  "expected_taxonomy": "tool.data.scraping",
+  "matched_taxonomy": "ai.audio.stt",
+  "confidence": 0.3733,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.3733
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.3047
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.296
+    },
+    {
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.2534
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.2454
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.audio.stt for \"Scrape YouTube titles of ADHD productivity videos past 7 days\" (0.373). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

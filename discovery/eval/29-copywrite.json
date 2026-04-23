@@ -1,0 +1,33 @@
+{
+  "id": 29,
+  "category": "copywrite",
+  "prompt": "LinkedIn post, 500 chars, founder-voice, tell the ADHD pain point",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "tool.communication.email",
+  "confidence": 0.3296,
+  "candidates": [
+    {
+      "taxonomy": "tool.communication.email",
+      "score": 0.3296
+    },
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.3158
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.2677
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.214
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2019
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.communication.email for \"LinkedIn post, 500 chars, founder-voice, tell the ADHD pain point\" (0.330). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

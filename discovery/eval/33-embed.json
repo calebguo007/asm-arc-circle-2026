@@ -1,0 +1,33 @@
+{
+  "id": 33,
+  "category": "embed",
+  "prompt": "Embed landing-page headline candidates, find closest to 'relief'",
+  "expected_taxonomy": "ai.llm.embedding",
+  "matched_taxonomy": "infra.compute.serverless",
+  "confidence": 0.2681,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2681
+    },
+    {
+      "taxonomy": "infra.network.dns",
+      "score": 0.2612
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2467
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.2232
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2157
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.compute.serverless for \"Embed landing-page headline candidates, find closest to 'relief'\" (0.268). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

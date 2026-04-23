@@ -1,0 +1,33 @@
+{
+  "id": 2,
+  "category": "copywrite",
+  "prompt": "Instagram caption, 150 chars, witty, target ADHD adults 25-40",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "ai.video.generation",
+  "confidence": 0.3009,
+  "candidates": [
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.3009
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.2868
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.2509
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2067
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2049
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.video.generation for \"Instagram caption, 150 chars, witty, target ADHD adults 25-40\" (0.301). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

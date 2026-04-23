@@ -1,0 +1,33 @@
+{
+  "id": 40,
+  "category": "copywrite",
+  "prompt": "TikTok hook line, 8 words, stop-the-scroll energy",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "ai.audio.stt",
+  "confidence": 0.3579,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.3579
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.3304
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2952
+    },
+    {
+      "taxonomy": "tool.data.geolocation",
+      "score": 0.2885
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.2667
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.audio.stt for \"TikTok hook line, 8 words, stop-the-scroll energy\" (0.358). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 50,
+  "category": "translate",
+  "prompt": "Translate to Korean, preserve product name in katakana-style",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "tool.data.scraping",
+  "confidence": 0.3546,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.scraping",
+      "score": 0.3546
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.2935
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2756
+    },
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.2321
+    },
+    {
+      "taxonomy": "ai.code.completion",
+      "score": 0.2134
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.scraping for \"Translate to Korean, preserve product name in katakana-style\" (0.355). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

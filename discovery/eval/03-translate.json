@@ -1,0 +1,33 @@
+{
+  "id": 3,
+  "category": "translate",
+  "prompt": "Translate launch caption to Japanese, keep witty tone",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "infra.storage.object",
+  "confidence": 0.498,
+  "candidates": [
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.498
+    },
+    {
+      "taxonomy": "tool.communication.chat",
+      "score": 0.3618
+    },
+    {
+      "taxonomy": "ai.code.completion",
+      "score": 0.2968
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2853
+    },
+    {
+      "taxonomy": "tool.data.analytics",
+      "score": 0.2507
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.storage.object for \"Translate launch caption to Japanese, keep witty tone\" (0.498). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

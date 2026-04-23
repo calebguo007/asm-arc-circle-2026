@@ -1,0 +1,33 @@
+{
+  "id": 41,
+  "category": "translate",
+  "prompt": "Translate to German, professional tone",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "infra.compute.gpu",
+  "confidence": 0.3312,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.gpu",
+      "score": 0.3312
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.3116
+    },
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.2774
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2595
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2389
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.compute.gpu for \"Translate to German, professional tone\" (0.331). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

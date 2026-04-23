@@ -1,0 +1,33 @@
+{
+  "id": 35,
+  "category": "code-gen",
+  "prompt": "Generate UTM-tagged link builder helper in TS",
+  "expected_taxonomy": "ai.code.completion",
+  "matched_taxonomy": "tool.productivity.spreadsheet",
+  "confidence": 0.3041,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.3041
+    },
+    {
+      "taxonomy": "tool.automation.browser",
+      "score": 0.292
+    },
+    {
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.2472
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.179
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.1739
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"Generate UTM-tagged link builder helper in TS\" (0.304). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

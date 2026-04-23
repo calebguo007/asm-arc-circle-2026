@@ -1,0 +1,33 @@
+{
+  "id": 13,
+  "category": "todo",
+  "prompt": "Create launch-day checklist: 8 tasks w/ owners + due times across US/EU/JP timezones",
+  "expected_taxonomy": "tool.productivity.todo",
+  "matched_taxonomy": "tool.productivity.forms",
+  "confidence": 0.4634,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.forms",
+      "score": 0.4634
+    },
+    {
+      "taxonomy": "tool.data.visualization",
+      "score": 0.3407
+    },
+    {
+      "taxonomy": "tool.data.pdf",
+      "score": 0.3309
+    },
+    {
+      "taxonomy": "infra.auth.identity",
+      "score": 0.2901
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.2082
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.forms for \"Create launch-day checklist: 8 tasks w/ owners + due times across US/EU/JP timezones\" (0.463). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

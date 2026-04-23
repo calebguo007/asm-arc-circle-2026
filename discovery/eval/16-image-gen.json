@@ -1,0 +1,33 @@
+{
+  "id": 16,
+  "category": "image-gen",
+  "prompt": "App icon, focus bear mascot, flat design, 512x512",
+  "expected_taxonomy": "ai.vision.image_generation",
+  "matched_taxonomy": "tool.productivity.spreadsheet",
+  "confidence": 0.3161,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.3161
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2751
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.2689
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.265
+    },
+    {
+      "taxonomy": "ai.vision.ocr",
+      "score": 0.22
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"App icon, focus bear mascot, flat design, 512x512\" (0.316). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

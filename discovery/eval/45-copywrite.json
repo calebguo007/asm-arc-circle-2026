@@ -1,0 +1,33 @@
+{
+  "id": 45,
+  "category": "copywrite",
+  "prompt": "Email subject line, under 50 chars, curiosity-driven",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "tool.productivity.todo",
+  "confidence": 0.3679,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.3679
+    },
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.3599
+    },
+    {
+      "taxonomy": "tool.data.scraping",
+      "score": 0.2137
+    },
+    {
+      "taxonomy": "tool.data.analytics",
+      "score": 0.1997
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.1893
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.todo for \"Email subject line, under 50 chars, curiosity-driven\" (0.368). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

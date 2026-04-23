@@ -1,0 +1,33 @@
+{
+  "id": 12,
+  "category": "search",
+  "prompt": "Find top 5 ADHD productivity blogs with DA > 40",
+  "expected_taxonomy": "tool.data.search",
+  "matched_taxonomy": "tool.data.search",
+  "confidence": 0.3626,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.3626
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.3353
+    },
+    {
+      "taxonomy": "tool.communication.email",
+      "score": 0.2315
+    },
+    {
+      "taxonomy": "tool.devops.monitoring",
+      "score": 0.2013
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.1832
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.search for \"Find top 5 ADHD productivity blogs with DA > 40\" (0.363). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": true,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

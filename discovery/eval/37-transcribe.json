@@ -1,0 +1,33 @@
+{
+  "id": 37,
+  "category": "transcribe",
+  "prompt": "Transcribe ADHD productivity podcast clip (90s) for quotable lines",
+  "expected_taxonomy": "ai.audio.stt",
+  "matched_taxonomy": "infra.network.dns",
+  "confidence": 0.5559,
+  "candidates": [
+    {
+      "taxonomy": "infra.network.dns",
+      "score": 0.5559
+    },
+    {
+      "taxonomy": "tool.productivity.forms",
+      "score": 0.3507
+    },
+    {
+      "taxonomy": "tool.data.scraping",
+      "score": 0.2412
+    },
+    {
+      "taxonomy": "tool.data.geolocation",
+      "score": 0.2324
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.2285
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.network.dns for \"Transcribe ADHD productivity podcast clip (90s) for quotable lines\" (0.556). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}

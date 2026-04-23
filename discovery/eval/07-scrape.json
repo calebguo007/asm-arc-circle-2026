@@ -1,0 +1,33 @@
+{
+  "id": 7,
+  "category": "scrape",
+  "prompt": "Scrape competitor Focusmate latest 10 posts + engagement",
+  "expected_taxonomy": "tool.data.scraping",
+  "matched_taxonomy": "tool.business.crm",
+  "confidence": 0.3378,
+  "candidates": [
+    {
+      "taxonomy": "tool.business.crm",
+      "score": 0.3378
+    },
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.2859
+    },
+    {
+      "taxonomy": "tool.automation.browser",
+      "score": 0.2665
+    },
+    {
+      "taxonomy": "tool.communication.email",
+      "score": 0.2271
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.2167
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.business.crm for \"Scrape competitor Focusmate latest 10 posts + engagement\" (0.338). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "correct": false,
+  "timestamp": "2026-04-23T09:15:24.788Z"
+}
