@@ -3,6 +3,7 @@
   "rewrites": [
     { "source": "/", "destination": "/payments/src/dashboard.html" },
     { "source": "/marketplace", "destination": "/payments/src/marketplace.html" },
-    { "source": "/benchmark", "destination": "/payments/src/benchmark.html" }
+    { "source": "/benchmark", "destination": "/payments/src/benchmark.html" },
+    { "source": "/workbench", "destination": "/payments/src/dashboard-workbench.html" }
   ]
 }
