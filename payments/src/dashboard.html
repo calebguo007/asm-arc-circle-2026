@@ -1970,7 +1970,7 @@
             },
             {
               name: "GPT-4o",
-              serviceId: "openai/gpt-4o",
+              serviceId: "openai/gpt-4o@2024-11-20",
               priceLabel: "$5/$15 per 1M",
               latencyMs: 950,
               uptime: 0.998,
@@ -1980,7 +1980,7 @@
             },
             {
               name: "Gemini 2.5 Pro",
-              serviceId: "google/gemini-2.5-pro",
+              serviceId: "google/gemini-2.5-pro@2.5",
               priceLabel: "$3.5/$14 per 1M",
               latencyMs: 700,
               uptime: 0.997,
@@ -2901,14 +2901,18 @@
         };
       }
 
+      const REGISTRY_API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? "http://localhost:4402"
+        : "";
+
       async function requestRegistryDecision() {
-        if (state.method !== "topsis") return null;
         const weights = getWeights();
-        const response = await fetch("http://localhost:3456/api/score", {
+        const response = await fetch(`${REGISTRY_API_BASE}/api/score`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
+          signal: AbortSignal.timeout(10000),
           body: JSON.stringify({
             taxonomy: state.taxonomy,
             method: state.method,
@@ -2929,21 +2933,22 @@
       async function commitRun(isInitial) {
         let decision = computeDecision();
         let usedLiveScore = false;
-        if (!isInitial) {
+        const showButtonState = !isInitial;
+        if (showButtonState) {
           refs.runButton.disabled = true;
           refs.runButton.dataset.label = refs.runButton.textContent;
-          refs.runButton.textContent = state.method === "topsis" ? "Querying Registry..." : "Running Local Score...";
-          try {
-            const liveDecision = await requestRegistryDecision();
-            if (liveDecision) {
-              decision = liveDecision;
-              usedLiveScore = true;
-            }
-          } catch (_error) {
-            decision = computeDecision();
-          } finally {
-            refs.runButton.disabled = false;
+          refs.runButton.textContent = "Querying Registry...";
+        }
+        try {
+          const liveDecision = await requestRegistryDecision();
+          if (liveDecision) {
+            decision = liveDecision;
+            usedLiveScore = true;
           }
+        } catch (_error) {
+          decision = computeDecision();
+        } finally {
+          if (showButtonState) refs.runButton.disabled = false;
         }
 
         const log = {

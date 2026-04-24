@@ -18,7 +18,10 @@ async function main() {
     );
   }
   const embedder = openAiKey
-    ? new OpenAIEmbedder(openAiKey)
+    ? new OpenAIEmbedder(
+        openAiKey,
+        process.env.OPENAI_EMBEDDING_MODEL || "text-embedding-3-small",
+      )
     : new FakeHashEmbedder(128);
 
   const index = await buildIndex(catalog, embedder);

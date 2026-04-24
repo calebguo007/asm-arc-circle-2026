@@ -18,10 +18,16 @@ export class FakeHashEmbedder implements Embedder {
 
 export class OpenAIEmbedder implements Embedder {
   name = "openai-text-embedding-3-small";
-  constructor(private readonly apiKey: string, private readonly model = "text-embedding-3-small") {}
+  constructor(
+    private readonly apiKey: string,
+    private readonly model = "text-embedding-3-small",
+    private readonly baseUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com",
+  ) {}
 
   async embed(text: string): Promise<number[]> {
-    const resp = await fetch("https://api.openai.com/v1/embeddings", {
+    const base = this.baseUrl.replace(/\/+$/, "");
+    const url = base.endsWith("/v1") ? `${base}/embeddings` : `${base}/v1/embeddings`;
+    const resp = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

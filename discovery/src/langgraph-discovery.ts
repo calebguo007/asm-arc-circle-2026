@@ -59,8 +59,11 @@ async function llmRerankCandidates(
   }
   const model = new ChatOpenAI({
     apiKey,
-    model: "gpt-4o-mini",
+    model: process.env.OPENAI_CHAT_MODEL || "gpt-4o-mini",
     temperature: 0,
+    configuration: {
+      baseURL: process.env.OPENAI_BASE_URL || undefined,
+    },
   });
   const prompt = [
     "You are ranking ASM taxonomy candidates for a user task.",
