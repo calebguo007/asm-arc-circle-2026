@@ -3,31 +3,31 @@
   "category": "embed",
   "prompt": "Embed 20 Reddit pain-point quotes, cluster into top 5 themes",
   "expected_taxonomy": "ai.llm.embedding",
-  "matched_taxonomy": "tool.productivity.document",
-  "confidence": 0.4325,
+  "matched_taxonomy": "ai.llm.embedding",
+  "confidence": 0.3093,
   "candidates": [
     {
-      "taxonomy": "tool.productivity.document",
-      "score": 0.4325
+      "taxonomy": "tool.data.search",
+      "score": 0.357
     },
     {
-      "taxonomy": "tool.data.analytics",
-      "score": 0.4075
-    },
-    {
-      "taxonomy": "tool.communication.email",
-      "score": 0.3552
-    },
-    {
-      "taxonomy": "tool.devops.logging",
-      "score": 0.3382
+      "taxonomy": "tool.data.visualization",
+      "score": 0.3247
     },
     {
       "taxonomy": "ai.llm.embedding",
-      "score": 0.2566
+      "score": 0.3093
+    },
+    {
+      "taxonomy": "tool.communication.chat",
+      "score": 0.2982
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.2974
     }
   ],
-  "reasoning": "LangGraph: selected tool.productivity.document for \"Embed 20 Reddit pain-point quotes, cluster into top 5 themes\" (0.432). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.llm.embedding for \"Embed 20 Reddit pain-point quotes, cluster into top 5 themes\" (0.309). The user's primary action is 'Embed' — creating vector embeddings from text quotes to enable clustering. The domain (Reddit quotes, pain points) is secondary; the core task is generating embeddings, which matches ai.llm.embedding.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

@@ -3,31 +3,31 @@
   "category": "translate",
   "prompt": "Translate launch caption to Japanese, keep witty tone",
   "expected_taxonomy": "ai.nlp.translation",
-  "matched_taxonomy": "infra.storage.object",
-  "confidence": 0.498,
+  "matched_taxonomy": "ai.nlp.translation",
+  "confidence": 0.4185,
   "candidates": [
     {
-      "taxonomy": "infra.storage.object",
-      "score": 0.498
+      "taxonomy": "ai.llm.chat",
+      "score": 0.4274
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.4185
+    },
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.3989
     },
     {
       "taxonomy": "tool.communication.chat",
-      "score": 0.3618
+      "score": 0.3965
     },
     {
-      "taxonomy": "ai.code.completion",
-      "score": 0.2968
-    },
-    {
-      "taxonomy": "tool.devops.deployment",
-      "score": 0.2853
-    },
-    {
-      "taxonomy": "tool.data.analytics",
-      "score": 0.2507
+      "taxonomy": "tool.productivity.project",
+      "score": 0.3927
     }
   ],
-  "reasoning": "LangGraph: selected infra.storage.object for \"Translate launch caption to Japanese, keep witty tone\" (0.498). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.nlp.translation for \"Translate launch caption to Japanese, keep witty tone\" (0.418). The user's primary action is translation (converting text from one language to another while preserving tone), which directly matches the ai.nlp.translation taxonomy. While ai.llm.chat could handle text generation, the core task is specifically translation, not general chat or writing.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

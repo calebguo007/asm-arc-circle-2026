@@ -3,31 +3,31 @@
   "category": "scrape",
   "prompt": "Scrape YouTube titles of ADHD productivity videos past 7 days",
   "expected_taxonomy": "tool.data.scraping",
-  "matched_taxonomy": "ai.audio.stt",
-  "confidence": 0.3733,
+  "matched_taxonomy": "tool.data.scraping",
+  "confidence": 0.4634,
   "candidates": [
     {
-      "taxonomy": "ai.audio.stt",
-      "score": 0.3733
-    },
-    {
       "taxonomy": "tool.data.search",
-      "score": 0.3047
+      "score": 0.4902
     },
     {
-      "taxonomy": "tool.productivity.document",
-      "score": 0.296
+      "taxonomy": "tool.data.scraping",
+      "score": 0.4634
     },
     {
-      "taxonomy": "ai.vision.image_generation",
-      "score": 0.2534
+      "taxonomy": "ai.video.generation",
+      "score": 0.4288
     },
     {
-      "taxonomy": "ai.nlp.translation",
-      "score": 0.2454
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.4056
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.4032
     }
   ],
-  "reasoning": "LangGraph: selected ai.audio.stt for \"Scrape YouTube titles of ADHD productivity videos past 7 days\" (0.373). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected tool.data.scraping for \"Scrape YouTube titles of ADHD productivity videos past 7 days\" (0.463). The user's action is scraping data (YouTube titles), not searching, generating video, or using productivity tools.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

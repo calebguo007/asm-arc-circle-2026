@@ -3,31 +3,31 @@
   "category": "transcribe",
   "prompt": "Transcribe ADHD-creator TikTok voiceover (30s) to match their tone",
   "expected_taxonomy": "ai.audio.stt",
-  "matched_taxonomy": "tool.productivity.calendar",
-  "confidence": 0.4139,
+  "matched_taxonomy": "ai.audio.stt",
+  "confidence": 0.4922,
   "candidates": [
     {
-      "taxonomy": "tool.productivity.calendar",
-      "score": 0.4139
+      "taxonomy": "ai.audio.tts",
+      "score": 0.5009
     },
     {
-      "taxonomy": "ai.nlp.translation",
-      "score": 0.3679
+      "taxonomy": "ai.audio.stt",
+      "score": 0.4922
     },
     {
-      "taxonomy": "tool.productivity.forms",
-      "score": 0.2702
+      "taxonomy": "ai.llm.chat",
+      "score": 0.3843
     },
     {
-      "taxonomy": "ai.vision.ocr",
-      "score": 0.205
+      "taxonomy": "tool.communication.chat",
+      "score": 0.3557
     },
     {
-      "taxonomy": "infra.auth.identity",
-      "score": 0.155
+      "taxonomy": "ai.video.generation",
+      "score": 0.3452
     }
   ],
-  "reasoning": "LangGraph: selected tool.productivity.calendar for \"Transcribe ADHD-creator TikTok voiceover (30s) to match their tone\" (0.414). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.audio.stt for \"Transcribe ADHD-creator TikTok voiceover (30s) to match their tone\" (0.492). The user's action is transcribing audio (voiceover) to text, which is speech-to-text conversion, matching the ai.audio.stt taxonomy for the verb 'transcribe', not the domain of TikTok or tone matching.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }
