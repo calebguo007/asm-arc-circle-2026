@@ -57,9 +57,13 @@ async function llmRerankCandidates(
   if (!apiKey || candidates.length === 0) {
     return { taxonomy: null, reasoning: "LLM rerank skipped (missing OPENAI_API_KEY)." };
   }
+  // Auto-select default chat model based on provider: OpenRouter uses "openrouter/auto".
+  const defaultChatModel = process.env.OPENAI_BASE_URL?.includes("openrouter.ai")
+    ? "openrouter/auto"
+    : "gpt-4o-mini";
   const model = new ChatOpenAI({
     apiKey,
-    model: process.env.OPENAI_CHAT_MODEL ?? "gpt-4o-mini",
+    model: process.env.OPENAI_CHAT_MODEL || defaultChatModel,
     temperature: 0,
     configuration: process.env.OPENAI_BASE_URL
       ? { baseURL: process.env.OPENAI_BASE_URL }
@@ -86,7 +90,11 @@ async function llmRerankCandidates(
       ? response.content.map((p: any) => (typeof p === "string" ? p : p?.text ?? "")).join("")
       : "";
   try {
-    const parsed = JSON.parse(text) as { taxonomy?: string; reasoning?: string };
+    // Robust JSON extraction — some OSS models wrap JSON in prose.
+    const jsonLike = text.includes("{")
+      ? text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)
+      : text;
+    const parsed = JSON.parse(jsonLike) as { taxonomy?: string; reasoning?: string };
     if (parsed.taxonomy && candidates.some((c) => c.taxonomy === parsed.taxonomy)) {
       return {
         taxonomy: parsed.taxonomy,
@@ -94,9 +102,14 @@ async function llmRerankCandidates(
       };
     }
   } catch {
-    // ignore malformed output
+    // Ignore malformed JSON; fallback below.
   }
-  return { taxonomy: null, reasoning: "LLM rerank returned invalid output." };
+  // Heuristic fallback: if LLM returned garbage, use top similarity rather than null.
+  const heuristic = candidates[0]?.taxonomy ?? null;
+  return {
+    taxonomy: heuristic,
+    reasoning: "LLM rerank returned invalid output; fallback to top similarity candidate.",
+  };
 }
 
 export async function discoverTaxonomyWithLangGraph(
