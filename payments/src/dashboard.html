@@ -2882,9 +2882,25 @@
         };
       }
 
-      const REGISTRY_API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-        ? "http://localhost:4402"
-        : "https://highlights-cultural-wool-commander.trycloudflare.com";
+      // ── API Base URL Resolution ───────────────────────────────
+      // Priority: 1) URL ?api_base=  2) localStorage  3) same-origin  4) localhost
+      function resolveApiBase() {
+        const params = new URLSearchParams(window.location.search);
+        const fromUrl = params.get("api_base");
+        if (fromUrl) {
+          try { localStorage.setItem("ASM_API_BASE", fromUrl); } catch (_e) {}
+          return fromUrl.replace(/\/$/, "");
+        }
+        try {
+          const fromStorage = localStorage.getItem("ASM_API_BASE");
+          if (fromStorage) return fromStorage.replace(/\/$/, "");
+        } catch (_e) {}
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        if (isLocal) return "http://localhost:4402";
+        // Same-origin deployment: use relative path (works when frontend & backend share domain)
+        return "";
+      }
+      const REGISTRY_API_BASE = resolveApiBase();
 
       async function requestRegistryDecision() {
         const weights = getWeights();

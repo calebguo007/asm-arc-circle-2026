@@ -44,7 +44,8 @@ const config = loadConfig();
 
 const app = express();
 
-// ── CORS: allow Vercel frontend + local dev ──────────
+// ── CORS: allow Vercel frontend + local dev + configurable origins ──────────
+const CORS_ALLOW_ALL = process.env.CORS_ALLOW_ALL === "true";
 const ALLOWED_ORIGINS = (
   process.env.CORS_ORIGINS ||
   "http://localhost:4173,http://localhost:3000,http://localhost:5173,https://*.vercel.app"
@@ -54,6 +55,8 @@ const ALLOWED_ORIGINS = (
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow all origins if CORS_ALLOW_ALL is set (useful for demos/public APIs)
+      if (CORS_ALLOW_ALL) return callback(null, true);
       // Allow non-browser requests (mobile apps, curl, server-to-server)
       if (!origin) return callback(null, true);
       const allowed = ALLOWED_ORIGINS.some((o) =>
