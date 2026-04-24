@@ -1,0 +1,33 @@
+{
+  "id": 4,
+  "category": "tts",
+  "prompt": "Voiceover script A, female voice, 30s, warm conversational",
+  "expected_taxonomy": "ai.audio.tts",
+  "matched_taxonomy": "ai.llm.chat",
+  "confidence": 0.4709,
+  "candidates": [
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.4709
+    },
+    {
+      "taxonomy": "infra.network.dns",
+      "score": 0.3134
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.2656
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2362
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.1938
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.llm.chat for \"Voiceover script A, female voice, 30s, warm conversational\" (0.471). The task describes a voiceover script with specific vocal characteristics (female, 30s, warm conversational). The candidate 'ai.llm.chat' has the highest similarity score (0.4709), suggesting it is the most relevant to generating or describing conversational AI-driven content, which aligns with the 'conversational' aspect of the task. The other candidates are related to infrastructure or specific tools and are less likely to be associated with voiceover script generation or characteristics.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

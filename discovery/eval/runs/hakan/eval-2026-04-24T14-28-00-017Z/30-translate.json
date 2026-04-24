@@ -1,0 +1,33 @@
+{
+  "id": 30,
+  "category": "translate",
+  "prompt": "Translate to Spanish (LATAM), casual register",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "tool.productivity.scheduling",
+  "confidence": 0.3627,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.scheduling",
+      "score": 0.3627
+    },
+    {
+      "taxonomy": "tool.data.analytics",
+      "score": 0.3123
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.3024
+    },
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.2747
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2624
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.scheduling for \"Translate to Spanish (LATAM), casual register\" (0.363). The user task is to translate to Spanish (LATAM) in a casual register. This implies a need for a tool that can assist with language translation, which falls under productivity tools. While other categories like data analytics or DevOps might involve language processing, 'scheduling' within productivity is the most direct fit for a translation task, as it implies managing and organizing information, which translation is a form of. The similarity score is also the highest among the candidates.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

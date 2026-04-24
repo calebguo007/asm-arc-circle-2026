@@ -1,0 +1,33 @@
+{
+  "id": 12,
+  "category": "search",
+  "prompt": "Find top 5 ADHD productivity blogs with DA > 40",
+  "expected_taxonomy": "tool.data.search",
+  "matched_taxonomy": null,
+  "confidence": 0.1832,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.3626
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.3353
+    },
+    {
+      "taxonomy": "tool.communication.email",
+      "score": 0.2315
+    },
+    {
+      "taxonomy": "tool.devops.monitoring",
+      "score": 0.2013
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.1832
+    }
+  ],
+  "reasoning": "LangGraph: low confidence for \"Find top 5 ADHD productivity blogs with DA > 40\". The user is looking for ADHD productivity blogs. While the other candidates are related to tools or data, 'tool.productivity.document' is the most relevant as it directly relates to productivity tools and resources, which would encompass blogs offering advice and strategies for managing ADHD and improving productivity.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 7,
+  "category": "scrape",
+  "prompt": "Scrape competitor Focusmate latest 10 posts + engagement",
+  "expected_taxonomy": "tool.data.scraping",
+  "matched_taxonomy": "tool.business.crm",
+  "confidence": 0.3378,
+  "candidates": [
+    {
+      "taxonomy": "tool.business.crm",
+      "score": 0.3378
+    },
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.2859
+    },
+    {
+      "taxonomy": "tool.automation.browser",
+      "score": 0.2665
+    },
+    {
+      "taxonomy": "tool.communication.email",
+      "score": 0.2271
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.2167
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.business.crm for \"Scrape competitor Focusmate latest 10 posts + engagement\" (0.338). The task is to scrape competitor Focusmate's latest 10 posts and engagement. Focusmate is a productivity tool that helps users stay focused and accountable, often in a business context. While not a direct CRM, its function of tracking progress and potentially managing user interactions aligns most closely with 'tool.business.crm' compared to other options like project management, browser automation, email, or CI/CD, which are less relevant to the core functionality and user base of a tool like Focusmate.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

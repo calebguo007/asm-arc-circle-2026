@@ -1,0 +1,33 @@
+{
+  "id": 16,
+  "category": "image-gen",
+  "prompt": "App icon, focus bear mascot, flat design, 512x512",
+  "expected_taxonomy": "ai.vision.image_generation",
+  "matched_taxonomy": "tool.productivity.spreadsheet",
+  "confidence": 0.3161,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.3161
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2751
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.2689
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.265
+    },
+    {
+      "taxonomy": "ai.vision.ocr",
+      "score": 0.22
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"App icon, focus bear mascot, flat design, 512x512\" (0.316). The user is looking for an app icon with a focus on a bear mascot and flat design, intended for a 512x512 resolution. While none of the provided taxonomies directly relate to 'app icon' or 'mascot', 'tool.productivity.spreadsheet' is the most general and least specific category among the options. Spreadsheets are often associated with productivity tools, and app icons are a common element of productivity applications. The other options are too specialized (DevOps, Vector Databases, NLP Translation, OCR) and have no clear connection to the user's request for an app icon or mascot.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

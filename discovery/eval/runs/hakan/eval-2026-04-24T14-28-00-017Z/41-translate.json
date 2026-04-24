@@ -1,0 +1,33 @@
+{
+  "id": 41,
+  "category": "translate",
+  "prompt": "Translate to German, professional tone",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "ai.nlp.translation",
+  "confidence": 0.3116,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.gpu",
+      "score": 0.3312
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.3116
+    },
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.2774
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2595
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2389
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.nlp.translation for \"Translate to German, professional tone\" (0.312). The user task is to translate text to German with a professional tone. The candidate 'ai.nlp.translation' is the most relevant as it directly addresses natural language processing and translation, which are core components of the task. While 'infra.compute.gpu' might be involved in the underlying technology for such a task, it's too low-level and doesn't describe the user's intent. The other candidates are unrelated to translation.",
+  "correct": true,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

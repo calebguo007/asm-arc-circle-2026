@@ -1,0 +1,33 @@
+{
+  "id": 9,
+  "category": "code-gen",
+  "prompt": "Generate Google Analytics 4 snippet for campaign tracking",
+  "expected_taxonomy": "ai.code.completion",
+  "matched_taxonomy": "ai.audio.stt",
+  "confidence": 0.3635,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.3635
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.2653
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.2564
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.238
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2262
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.audio.stt for \"Generate Google Analytics 4 snippet for campaign tracking\" (0.363). The task is to generate a Google Analytics 4 snippet for campaign tracking. While none of the candidates directly relate to campaign tracking or Google Analytics, 'ai.audio.stt' (Speech-to-Text) is the most tangentially related. Speech-to-text technology can be used in various applications, including user interaction and data collection, which could indirectly involve campaign tracking if users are interacting with a campaign through voice. The other candidates are even less relevant: vector databases are for data storage, messaging queues are for inter-process communication, translation is for language conversion, and logging is for system monitoring. Therefore, 'ai.audio.stt' is the least inappropriate choice among the given options.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

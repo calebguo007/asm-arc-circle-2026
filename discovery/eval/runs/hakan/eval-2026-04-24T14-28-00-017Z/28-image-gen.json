@@ -1,0 +1,33 @@
+{
+  "id": 28,
+  "category": "image-gen",
+  "prompt": "Social ad banner, product UI screenshot + tagline, 1200x628",
+  "expected_taxonomy": "ai.vision.image_generation",
+  "matched_taxonomy": "tool.productivity.project",
+  "confidence": 0.4109,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.4109
+    },
+    {
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.3786
+    },
+    {
+      "taxonomy": "infra.database.postgres",
+      "score": 0.3556
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.343
+    },
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.2732
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.project for \"Social ad banner, product UI screenshot + tagline, 1200x628\" (0.411). The task describes a 'Social ad banner, product UI screenshot + tagline, 1200x628'. This strongly suggests a marketing or promotional asset for a product. 'tool.productivity.project' is the most relevant candidate as it implies a tool or software that aids in productivity, which is often the subject of such advertisements. The other candidates are less suitable: 'ai.vision.image_generation' is too specific to the technology, 'infra.database.postgres' and 'infra.storage.object' are infrastructure-related and unlikely to be the primary subject of a social ad banner, and 'tool.productivity.knowledge' is too broad and less directly related to a product UI.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

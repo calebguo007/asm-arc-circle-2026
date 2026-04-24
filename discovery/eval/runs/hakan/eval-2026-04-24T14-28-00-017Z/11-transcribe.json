@@ -1,0 +1,33 @@
+{
+  "id": 11,
+  "category": "transcribe",
+  "prompt": "Transcribe 3-min competitor Focusmate demo video for theme extraction",
+  "expected_taxonomy": "ai.audio.stt",
+  "matched_taxonomy": null,
+  "confidence": 0.2352,
+  "candidates": [
+    {
+      "taxonomy": "infra.database.postgres",
+      "score": 0.3035
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2375
+    },
+    {
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.2368
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2352
+    },
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.212
+    }
+  ],
+  "reasoning": "LangGraph: low confidence for \"Transcribe 3-min competitor Focusmate demo video for theme extraction\". The task is to transcribe a demo video for theme extraction. Focusmate is a productivity tool that helps users stay focused and get tasks done. Therefore, 'tool.productivity.todo' is the most relevant taxonomy as it directly relates to task management and productivity, which are central to the purpose of Focusmate and the goal of theme extraction from its demo.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

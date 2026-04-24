@@ -1,0 +1,33 @@
+{
+  "id": 14,
+  "category": "database",
+  "prompt": "Insert campaign_metrics row: run_id, total_cost, txs, ts — for later dashboard query",
+  "expected_taxonomy": "infra.database.postgres",
+  "matched_taxonomy": "tool.data.conversion",
+  "confidence": 0.36,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.gpu",
+      "score": 0.3669
+    },
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.36
+    },
+    {
+      "taxonomy": "tool.data.geolocation",
+      "score": 0.3078
+    },
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.3016
+    },
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.2952
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.conversion for \"Insert campaign_metrics row: run_id, total_cost, txs, ts — for later dashboard query\" (0.360). The task is to insert a 'campaign_metrics' row with fields like 'run_id', 'total_cost', 'txs', and 'ts'. These fields are indicative of data processing and tracking related to campaigns. 'tool.data.conversion' is the most relevant candidate as it suggests operations involving data transformation and management, which aligns with the need to store and query campaign metrics. The other candidates are less relevant: 'infra.compute.gpu' relates to hardware, 'tool.data.geolocation' to location data, 'ai.video.generation' to media creation, and 'tool.productivity.spreadsheet' to general office tools, none of which directly map to the core function of storing and querying campaign performance metrics.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

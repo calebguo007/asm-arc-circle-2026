@@ -1,0 +1,33 @@
+{
+  "id": 29,
+  "category": "copywrite",
+  "prompt": "LinkedIn post, 500 chars, founder-voice, tell the ADHD pain point",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "tool.communication.email",
+  "confidence": 0.3296,
+  "candidates": [
+    {
+      "taxonomy": "tool.communication.email",
+      "score": 0.3296
+    },
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.3158
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.2677
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.214
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2019
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.communication.email for \"LinkedIn post, 500 chars, founder-voice, tell the ADHD pain point\" (0.330). The user wants to describe an ADHD pain point in a LinkedIn post. While none of the provided taxonomies directly map to 'ADHD pain point', 'tool.communication.email' is the most plausible candidate. ADHD often involves challenges with organization, time management, and focus, which can manifest in difficulties managing communication channels like email. The other options (SMS, secrets, object storage, deployment) are less likely to be the primary focus of a founder's personal pain point related to ADHD in a general LinkedIn post.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 33,
+  "category": "embed",
+  "prompt": "Embed landing-page headline candidates, find closest to 'relief'",
+  "expected_taxonomy": "ai.llm.embedding",
+  "matched_taxonomy": "infra.compute.serverless",
+  "confidence": 0.2681,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2681
+    },
+    {
+      "taxonomy": "infra.network.dns",
+      "score": 0.2612
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2467
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.2232
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2157
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.compute.serverless for \"Embed landing-page headline candidates, find closest to 'relief'\" (0.268). The candidate 'infra.compute.serverless' has the highest similarity score (0.2681) to the target term 'relief'. While not a direct synonym, serverless computing can offer relief from infrastructure management burdens, making it the closest conceptual match among the provided options.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,1661 @@
+{
+  "summary": {
+    "timestamp": "2026-04-24T14:19:26.968Z",
+    "total": 50,
+    "correct": 2,
+    "accuracy": 0.04,
+    "embedding_model": "fake-hash-v1"
+  },
+  "records": [
+    {
+      "id": 1,
+      "category": "image-gen",
+      "prompt": "Hero image, ADHD user working peacefully, calm palette, 1024x1024",
+      "expected_taxonomy": "ai.vision.image_generation",
+      "matched_taxonomy": "infra.compute.sandbox",
+      "confidence": 0.3597,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.sandbox",
+          "score": 0.3597
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.3463
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.3361
+        },
+        {
+          "taxonomy": "tool.data.geolocation",
+          "score": 0.3143
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.2946
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.compute.sandbox for \"Hero image, ADHD user working peacefully, calm palette, 1024x1024\" (0.360). The task describes a 'hero image' with a user working peacefully, suggesting a focus on a controlled and stable environment. 'infra.compute.sandbox' aligns with this by representing a safe, isolated computing environment, which can be metaphorically linked to a peaceful and focused workspace. The other candidates are less relevant: weather, payment processing, geolocation, and CI/CD are all specific functional tools or data types that do not directly relate to the concept of a peaceful work environment or a general hero image.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 2,
+      "category": "copywrite",
+      "prompt": "Instagram caption, 150 chars, witty, target ADHD adults 25-40",
+      "expected_taxonomy": "ai.llm.chat",
+      "matched_taxonomy": "ai.llm.chat",
+      "confidence": 0.2509,
+      "candidates": [
+        {
+          "taxonomy": "ai.video.generation",
+          "score": 0.3009
+        },
+        {
+          "taxonomy": "infra.database.vector",
+          "score": 0.2868
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.2509
+        },
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.2067
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.2049
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.llm.chat for \"Instagram caption, 150 chars, witty, target ADHD adults 25-40\" (0.251). The task is to create an Instagram caption for ADHD adults, requiring wit and brevity. LLM chat capabilities are directly relevant to generating creative and engaging text content, which aligns with the user's need for a witty caption. The other options are less directly applicable: video generation is for visuals, vector databases for data storage, to-do lists for organization, and DevOps logging for technical operations.",
+      "correct": true,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 3,
+      "category": "translate",
+      "prompt": "Translate launch caption to Japanese, keep witty tone",
+      "expected_taxonomy": "ai.nlp.translation",
+      "matched_taxonomy": "infra.storage.object",
+      "confidence": 0.498,
+      "candidates": [
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.498
+        },
+        {
+          "taxonomy": "tool.communication.chat",
+          "score": 0.3618
+        },
+        {
+          "taxonomy": "ai.code.completion",
+          "score": 0.2968
+        },
+        {
+          "taxonomy": "tool.devops.deployment",
+          "score": 0.2853
+        },
+        {
+          "taxonomy": "tool.data.analytics",
+          "score": 0.2507
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.storage.object for \"Translate launch caption to Japanese, keep witty tone\" (0.498). The task involves translating a 'launch caption', which implies content creation and communication. While not a direct fit, 'infra.storage.object' is the closest among the provided options as it relates to the infrastructure that might host or deliver such content. The other options are less relevant: 'tool.communication.chat' is too specific to real-time chat, 'ai.code.completion' is for code, and 'tool.devops.deployment' and 'tool.data.analytics' are unrelated to content translation or witty tone.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 4,
+      "category": "tts",
+      "prompt": "Voiceover script A, female voice, 30s, warm conversational",
+      "expected_taxonomy": "ai.audio.tts",
+      "matched_taxonomy": "ai.llm.chat",
+      "confidence": 0.4709,
+      "candidates": [
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.4709
+        },
+        {
+          "taxonomy": "infra.network.dns",
+          "score": 0.3134
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.2656
+        },
+        {
+          "taxonomy": "infra.compute.serverless",
+          "score": 0.2362
+        },
+        {
+          "taxonomy": "tool.devops.deployment",
+          "score": 0.1938
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.llm.chat for \"Voiceover script A, female voice, 30s, warm conversational\" (0.471). The task describes a voiceover script with specific vocal characteristics (female, 30s, warm conversational). The candidate 'ai.llm.chat' has the highest similarity score (0.4709), suggesting it is the most relevant to generating or describing conversational AI-driven content, which aligns with the 'conversational' aspect of the task. The other candidates are related to infrastructure or specific tools and are less likely to be associated with voiceover script generation or characteristics.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 5,
+      "category": "video-gen",
+      "prompt": "6s product demo, screen recording style, highlight timer feature",
+      "expected_taxonomy": "ai.video.generation",
+      "matched_taxonomy": "tool.productivity.todo",
+      "confidence": 0.5594,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.5594
+        },
+        {
+          "taxonomy": "tool.productivity.calendar",
+          "score": 0.4022
+        },
+        {
+          "taxonomy": "ai.video.generation",
+          "score": 0.305
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.2937
+        },
+        {
+          "taxonomy": "tool.data.pdf",
+          "score": 0.2773
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.todo for \"6s product demo, screen recording style, highlight timer feature\" (0.559). The task is a product demo of a 6s product, specifically highlighting a timer feature. This aligns best with a 'todo' tool, as timers are often integrated into task management and productivity applications to track time spent on tasks or to set deadlines. While 'calendar' is also productivity-related, 'todo' is a more direct fit for a timer feature within a product demo context.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 6,
+      "category": "embed",
+      "prompt": "Embed 10 caption variants to find most semantically distinct 3",
+      "expected_taxonomy": "ai.llm.embedding",
+      "matched_taxonomy": "infra.auth.identity",
+      "confidence": 0.407,
+      "candidates": [
+        {
+          "taxonomy": "infra.auth.identity",
+          "score": 0.407
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.3658
+        },
+        {
+          "taxonomy": "tool.communication.sms",
+          "score": 0.3338
+        },
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.2377
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.2244
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.auth.identity for \"Embed 10 caption variants to find most semantically distinct 3\" (0.407). This candidate has the highest similarity score (0.4070) among the provided options, indicating it is the most semantically related to the user's task of finding distinct caption variants.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 7,
+      "category": "scrape",
+      "prompt": "Scrape competitor Focusmate latest 10 posts + engagement",
+      "expected_taxonomy": "tool.data.scraping",
+      "matched_taxonomy": "tool.business.crm",
+      "confidence": 0.3378,
+      "candidates": [
+        {
+          "taxonomy": "tool.business.crm",
+          "score": 0.3378
+        },
+        {
+          "taxonomy": "tool.productivity.project",
+          "score": 0.2859
+        },
+        {
+          "taxonomy": "tool.automation.browser",
+          "score": 0.2665
+        },
+        {
+          "taxonomy": "tool.communication.email",
+          "score": 0.2271
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.2167
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.business.crm for \"Scrape competitor Focusmate latest 10 posts + engagement\" (0.338). The task is to scrape competitor Focusmate's latest 10 posts and engagement. Focusmate is a productivity tool that helps users stay focused and accountable, often in a business context. While not a direct CRM, its function of tracking progress and potentially managing user interactions aligns most closely with 'tool.business.crm' compared to other options like project management, browser automation, email, or CI/CD, which are less relevant to the core functionality and user base of a tool like Focusmate.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 8,
+      "category": "browse",
+      "prompt": "Open competitor pricing page in headless browser, capture full-page screenshot",
+      "expected_taxonomy": "tool.automation.browser",
+      "matched_taxonomy": null,
+      "confidence": 0.2215,
+      "candidates": [
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.326
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.2784
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.2253
+        },
+        {
+          "taxonomy": "ai.audio.tts",
+          "score": 0.2218
+        },
+        {
+          "taxonomy": "tool.data.scraping",
+          "score": 0.2215
+        }
+      ],
+      "reasoning": "LangGraph: low confidence for \"Open competitor pricing page in headless browser, capture full-page screenshot\". The task involves opening a web page and capturing a screenshot, which is a form of data extraction or scraping from a web source. While 'headless browser' is mentioned, the core action aligns best with data scraping tools.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 9,
+      "category": "code-gen",
+      "prompt": "Generate Google Analytics 4 snippet for campaign tracking",
+      "expected_taxonomy": "ai.code.completion",
+      "matched_taxonomy": "ai.audio.stt",
+      "confidence": 0.3635,
+      "candidates": [
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.3635
+        },
+        {
+          "taxonomy": "infra.database.vector",
+          "score": 0.2653
+        },
+        {
+          "taxonomy": "infra.messaging.queue",
+          "score": 0.2564
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.238
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.2262
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.audio.stt for \"Generate Google Analytics 4 snippet for campaign tracking\" (0.363). The task is to generate a Google Analytics 4 snippet for campaign tracking. While none of the candidates directly relate to campaign tracking or Google Analytics, 'ai.audio.stt' (Speech-to-Text) is the most tangentially related. Speech-to-text technology can be used in various applications, including user interaction and data collection, which could indirectly involve campaign tracking if users are interacting with a campaign through voice. The other candidates are even less relevant: vector databases are for data storage, messaging queues are for inter-process communication, translation is for language conversion, and logging is for system monitoring. Therefore, 'ai.audio.stt' is the least inappropriate choice among the given options.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 10,
+      "category": "spreadsheet",
+      "prompt": "Tag 100 App Store review snippets by sentiment (pos/neg/neutral) in a sheet",
+      "expected_taxonomy": "tool.productivity.spreadsheet",
+      "matched_taxonomy": "tool.communication.chat",
+      "confidence": 0.3797,
+      "candidates": [
+        {
+          "taxonomy": "tool.communication.chat",
+          "score": 0.3797
+        },
+        {
+          "taxonomy": "infra.messaging.queue",
+          "score": 0.3521
+        },
+        {
+          "taxonomy": "tool.productivity.scheduling",
+          "score": 0.2654
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.2625
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.2557
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.communication.chat for \"Tag 100 App Store review snippets by sentiment (pos/neg/neutral) in a sheet\" (0.380). The task involves tagging app store review snippets by sentiment. Chat tools are directly related to communication and user interaction, making them the most relevant category for analyzing reviews about communication features. The other candidates are less directly related to the core task of analyzing user reviews for sentiment.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 11,
+      "category": "transcribe",
+      "prompt": "Transcribe 3-min competitor Focusmate demo video for theme extraction",
+      "expected_taxonomy": "ai.audio.stt",
+      "matched_taxonomy": null,
+      "confidence": 0.2352,
+      "candidates": [
+        {
+          "taxonomy": "infra.database.postgres",
+          "score": 0.3035
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.2375
+        },
+        {
+          "taxonomy": "tool.productivity.calendar",
+          "score": 0.2368
+        },
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.2352
+        },
+        {
+          "taxonomy": "tool.data.conversion",
+          "score": 0.212
+        }
+      ],
+      "reasoning": "LangGraph: low confidence for \"Transcribe 3-min competitor Focusmate demo video for theme extraction\". The task is to transcribe a demo video for theme extraction. Focusmate is a productivity tool that helps users stay focused and get tasks done. Therefore, 'tool.productivity.todo' is the most relevant taxonomy as it directly relates to task management and productivity, which are central to the purpose of Focusmate and the goal of theme extraction from its demo.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 12,
+      "category": "search",
+      "prompt": "Find top 5 ADHD productivity blogs with DA > 40",
+      "expected_taxonomy": "tool.data.search",
+      "matched_taxonomy": null,
+      "confidence": 0.1832,
+      "candidates": [
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.3626
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.3353
+        },
+        {
+          "taxonomy": "tool.communication.email",
+          "score": 0.2315
+        },
+        {
+          "taxonomy": "tool.devops.monitoring",
+          "score": 0.2013
+        },
+        {
+          "taxonomy": "tool.productivity.document",
+          "score": 0.1832
+        }
+      ],
+      "reasoning": "LangGraph: low confidence for \"Find top 5 ADHD productivity blogs with DA > 40\". The user is looking for ADHD productivity blogs. While the other candidates are related to tools or data, 'tool.productivity.document' is the most relevant as it directly relates to productivity tools and resources, which would encompass blogs offering advice and strategies for managing ADHD and improving productivity.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 13,
+      "category": "todo",
+      "prompt": "Create launch-day checklist: 8 tasks w/ owners + due times across US/EU/JP timezones",
+      "expected_taxonomy": "tool.productivity.todo",
+      "matched_taxonomy": "tool.productivity.forms",
+      "confidence": 0.4634,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.forms",
+          "score": 0.4634
+        },
+        {
+          "taxonomy": "tool.data.visualization",
+          "score": 0.3407
+        },
+        {
+          "taxonomy": "tool.data.pdf",
+          "score": 0.3309
+        },
+        {
+          "taxonomy": "infra.auth.identity",
+          "score": 0.2901
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.2082
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.forms for \"Create launch-day checklist: 8 tasks w/ owners + due times across US/EU/JP timezones\" (0.463). The user task is to 'Create launch-day checklist: 8 tasks w/ owners + due times across US/EU/JP timezones'. This task involves creating a structured list with specific items, owners, and deadlines. 'tool.productivity.forms' is the most relevant candidate as forms are commonly used for creating checklists, gathering information, and organizing tasks, which directly aligns with the user's goal.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 14,
+      "category": "database",
+      "prompt": "Insert campaign_metrics row: run_id, total_cost, txs, ts — for later dashboard query",
+      "expected_taxonomy": "infra.database.postgres",
+      "matched_taxonomy": "tool.data.conversion",
+      "confidence": 0.36,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.gpu",
+          "score": 0.3669
+        },
+        {
+          "taxonomy": "tool.data.conversion",
+          "score": 0.36
+        },
+        {
+          "taxonomy": "tool.data.geolocation",
+          "score": 0.3078
+        },
+        {
+          "taxonomy": "ai.video.generation",
+          "score": 0.3016
+        },
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.2952
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.conversion for \"Insert campaign_metrics row: run_id, total_cost, txs, ts — for later dashboard query\" (0.360). The task is to insert a 'campaign_metrics' row with fields like 'run_id', 'total_cost', 'txs', and 'ts'. These fields are indicative of data processing and tracking related to campaigns. 'tool.data.conversion' is the most relevant candidate as it suggests operations involving data transformation and management, which aligns with the need to store and query campaign metrics. The other candidates are less relevant: 'infra.compute.gpu' relates to hardware, 'tool.data.geolocation' to location data, 'ai.video.generation' to media creation, and 'tool.productivity.spreadsheet' to general office tools, none of which directly map to the core function of storing and querying campaign performance metrics.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 15,
+      "category": "deploy",
+      "prompt": "Deploy landing page to production, return public URL",
+      "expected_taxonomy": "tool.devops.deployment",
+      "matched_taxonomy": "tool.productivity.project",
+      "confidence": 0.383,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.project",
+          "score": 0.383
+        },
+        {
+          "taxonomy": "tool.data.pdf",
+          "score": 0.3136
+        },
+        {
+          "taxonomy": "infra.database.vector",
+          "score": 0.3104
+        },
+        {
+          "taxonomy": "tool.devops.monitoring",
+          "score": 0.3019
+        },
+        {
+          "taxonomy": "infra.compute.sandbox",
+          "score": 0.2858
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.project for \"Deploy landing page to production, return public URL\" (0.383). The task involves deploying a landing page to production and obtaining a public URL. This aligns best with tools used for managing and deploying projects, which often include features for handling production environments and generating public access points. The other candidates are less relevant: PDF tools are for document handling, vector databases are for data storage and retrieval, monitoring tools are for observing system performance, and sandboxes are for isolated testing environments.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 16,
+      "category": "image-gen",
+      "prompt": "App icon, focus bear mascot, flat design, 512x512",
+      "expected_taxonomy": "ai.vision.image_generation",
+      "matched_taxonomy": "tool.productivity.spreadsheet",
+      "confidence": 0.3161,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.3161
+        },
+        {
+          "taxonomy": "tool.devops.deployment",
+          "score": 0.2751
+        },
+        {
+          "taxonomy": "infra.database.vector",
+          "score": 0.2689
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.265
+        },
+        {
+          "taxonomy": "ai.vision.ocr",
+          "score": 0.22
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"App icon, focus bear mascot, flat design, 512x512\" (0.316). The user is looking for an app icon with a focus on a bear mascot and flat design, intended for a 512x512 resolution. While none of the provided taxonomies directly relate to 'app icon' or 'mascot', 'tool.productivity.spreadsheet' is the most general and least specific category among the options. Spreadsheets are often associated with productivity tools, and app icons are a common element of productivity applications. The other options are too specialized (DevOps, Vector Databases, NLP Translation, OCR) and have no clear connection to the user's request for an app icon or mascot.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 17,
+      "category": "copywrite",
+      "prompt": "Twitter/X post, 240 chars, product launch announcement",
+      "expected_taxonomy": "ai.llm.chat",
+      "matched_taxonomy": "tool.communication.email",
+      "confidence": 0.3956,
+      "candidates": [
+        {
+          "taxonomy": "tool.communication.email",
+          "score": 0.3956
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.3498
+        },
+        {
+          "taxonomy": "infra.security.secrets",
+          "score": 0.2352
+        },
+        {
+          "taxonomy": "tool.devops.deployment",
+          "score": 0.2087
+        },
+        {
+          "taxonomy": "tool.data.pdf",
+          "score": 0.1835
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.communication.email for \"Twitter/X post, 240 chars, product launch announcement\" (0.396). The task is a product launch announcement on Twitter/X, which is a form of communication. While not directly email, 'tool.communication.email' is the closest fit among the provided candidates as it broadly represents tools used for communication, and a product launch announcement is a communication event.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 18,
+      "category": "translate",
+      "prompt": "Translate to Simplified Chinese, localize idioms",
+      "expected_taxonomy": "ai.nlp.translation",
+      "matched_taxonomy": "tool.data.search",
+      "confidence": 0.508,
+      "candidates": [
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.508
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.3867
+        },
+        {
+          "taxonomy": "infra.database.postgres",
+          "score": 0.3008
+        },
+        {
+          "taxonomy": "infra.security.secrets",
+          "score": 0.2527
+        },
+        {
+          "taxonomy": "infra.auth.identity",
+          "score": 0.2484
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.search for \"Translate to Simplified Chinese, localize idioms\" (0.508). The user task is to 'Translate to Simplified Chinese, localize idioms'. This directly involves processing and transforming text data, which aligns best with a 'tool.data.search' taxonomy. While other taxonomies touch on data or processing, 'search' is the most fitting for tasks involving language manipulation and understanding.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 19,
+      "category": "tts",
+      "prompt": "Voiceover script B, male voice, 15s, energetic",
+      "expected_taxonomy": "ai.audio.tts",
+      "matched_taxonomy": "tool.productivity.knowledge",
+      "confidence": 0.4238,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.knowledge",
+          "score": 0.4238
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.417
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.3205
+        },
+        {
+          "taxonomy": "tool.communication.chat",
+          "score": 0.3023
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.2898
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.knowledge for \"Voiceover script B, male voice, 15s, energetic\" (0.424). The task specifies a voiceover script for a male voice, 15 seconds long, and energetic. While none of the candidates directly map to 'voiceover script' or 'audio', 'tool.productivity.knowledge' is the most general and encompassing category that could potentially include tools or services related to content creation, scriptwriting, or knowledge dissemination, which are often associated with productivity. The other categories are too specific to infrastructure, development operations, communication, or payment processing, making them less likely fits for a voiceover script task.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 20,
+      "category": "video-gen",
+      "prompt": "6s lifestyle clip, ADHD user feeling focused at desk",
+      "expected_taxonomy": "ai.video.generation",
+      "matched_taxonomy": "tool.productivity.spreadsheet",
+      "confidence": 0.3145,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.3145
+        },
+        {
+          "taxonomy": "tool.automation.browser",
+          "score": 0.3104
+        },
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.2881
+        },
+        {
+          "taxonomy": "ai.video.generation",
+          "score": 0.2224
+        },
+        {
+          "taxonomy": "tool.data.pdf",
+          "score": 0.2144
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"6s lifestyle clip, ADHD user feeling focused at desk\" (0.315). The user is looking for a '6s lifestyle clip' and is feeling 'focused at desk', which aligns with productivity tools. Spreadsheets are a common tool for organization and focus, making it the most relevant candidate despite a moderate similarity score.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 21,
+      "category": "embed",
+      "prompt": "Embed competitor taglines to cluster their positioning angles",
+      "expected_taxonomy": "ai.llm.embedding",
+      "matched_taxonomy": "tool.devops.logging",
+      "confidence": 0.398,
+      "candidates": [
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.398
+        },
+        {
+          "taxonomy": "tool.data.screenshot",
+          "score": 0.3636
+        },
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.2896
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.2783
+        },
+        {
+          "taxonomy": "tool.productivity.document",
+          "score": 0.252
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.devops.logging for \"Embed competitor taglines to cluster their positioning angles\" (0.398). The task is to embed competitor taglines to cluster their positioning angles. The candidate 'tool.devops.logging' has the highest similarity score (0.3980) among the provided options. This suggests it is the most relevant taxonomy for clustering positioning angles related to tools, particularly within the DevOps domain, which often involves analyzing and understanding operational data through logging.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 22,
+      "category": "scrape",
+      "prompt": "Scrape Reddit r/ADHD top posts of past week mentioning productivity apps",
+      "expected_taxonomy": "tool.data.scraping",
+      "matched_taxonomy": "tool.automation.browser",
+      "confidence": 0.3289,
+      "candidates": [
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.376
+        },
+        {
+          "taxonomy": "tool.data.pdf",
+          "score": 0.3377
+        },
+        {
+          "taxonomy": "tool.automation.browser",
+          "score": 0.3289
+        },
+        {
+          "taxonomy": "tool.data.visualization",
+          "score": 0.2405
+        },
+        {
+          "taxonomy": "tool.devops.monitoring",
+          "score": 0.2268
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.automation.browser for \"Scrape Reddit r/ADHD top posts of past week mentioning productivity apps\" (0.329). The user is looking for productivity apps on Reddit r/ADHD. Productivity apps often involve automation, and browser automation tools are a common type of application used for productivity, especially for tasks like web scraping or managing online workflows. While other candidates touch on data or devops, browser automation is the most direct fit for 'productivity apps' in a general user context.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 23,
+      "category": "browse",
+      "prompt": "Automate Product Hunt submission flow draft, screenshot each step",
+      "expected_taxonomy": "tool.automation.browser",
+      "matched_taxonomy": "tool.devops.ci",
+      "confidence": 0.3051,
+      "candidates": [
+        {
+          "taxonomy": "ai.audio.tts",
+          "score": 0.4496
+        },
+        {
+          "taxonomy": "infra.security.secrets",
+          "score": 0.4327
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.3051
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.2613
+        },
+        {
+          "taxonomy": "infra.database.kv",
+          "score": 0.2392
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.devops.ci for \"Automate Product Hunt submission flow draft, screenshot each step\" (0.305). The task involves automating a submission flow and taking screenshots of each step. This aligns best with 'tool.devops.ci' as CI/CD tools are often used to automate workflows and can be configured to perform actions like generating reports or capturing screenshots as part of a pipeline.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 24,
+      "category": "code-gen",
+      "prompt": "Generate TikTok Pixel install snippet for the landing page",
+      "expected_taxonomy": "ai.code.completion",
+      "matched_taxonomy": "tool.data.conversion",
+      "confidence": 0.2724,
+      "candidates": [
+        {
+          "taxonomy": "tool.communication.sms",
+          "score": 0.2734
+        },
+        {
+          "taxonomy": "tool.data.conversion",
+          "score": 0.2724
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.2723
+        },
+        {
+          "taxonomy": "ai.vision.ocr",
+          "score": 0.2587
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.2568
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.conversion for \"Generate TikTok Pixel install snippet for the landing page\" (0.272). The user wants to generate a TikTok Pixel install snippet. This involves embedding code (a snippet) onto a landing page. The purpose of the pixel is to track user behavior and convert that data for marketing purposes. Therefore, 'tool.data.conversion' is the most relevant taxonomy as it directly relates to tools used for data conversion and tracking, which is the core function of a pixel install.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 25,
+      "category": "spreadsheet",
+      "prompt": "Log 50 Reddit comments + pain-point category into tracking sheet",
+      "expected_taxonomy": "tool.productivity.spreadsheet",
+      "matched_taxonomy": "tool.data.analytics",
+      "confidence": 0.3413,
+      "candidates": [
+        {
+          "taxonomy": "tool.data.analytics",
+          "score": 0.3413
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.3258
+        },
+        {
+          "taxonomy": "tool.productivity.calendar",
+          "score": 0.2799
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.2531
+        },
+        {
+          "taxonomy": "tool.data.screenshot",
+          "score": 0.2396
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.analytics for \"Log 50 Reddit comments + pain-point category into tracking sheet\" (0.341). The task involves logging Reddit comments and a pain-point category into a tracking sheet. This implies data collection, organization, and potentially analysis of that data. 'tool.data.analytics' is the most fitting taxonomy as it directly relates to handling and understanding data, which is central to the user's task of logging and categorizing information.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 26,
+      "category": "transcribe",
+      "prompt": "Transcribe ADHD-creator TikTok voiceover (30s) to match their tone",
+      "expected_taxonomy": "ai.audio.stt",
+      "matched_taxonomy": "tool.productivity.calendar",
+      "confidence": 0.4139,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.calendar",
+          "score": 0.4139
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.3679
+        },
+        {
+          "taxonomy": "tool.productivity.forms",
+          "score": 0.2702
+        },
+        {
+          "taxonomy": "ai.vision.ocr",
+          "score": 0.205
+        },
+        {
+          "taxonomy": "infra.auth.identity",
+          "score": 0.155
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.calendar for \"Transcribe ADHD-creator TikTok voiceover (30s) to match their tone\" (0.414). The task is to transcribe a TikTok voiceover about ADHD, aiming to match the creator's tone. While ADHD can affect various aspects of life, the highest similarity score points to 'tool.productivity.calendar'. This suggests the voiceover might be discussing time management, scheduling, or organizational challenges often associated with ADHD, which are directly related to calendar tools. The other options are less relevant: translation is for language conversion, forms are for data collection, OCR is for text extraction from images, and identity authentication is unrelated.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 27,
+      "category": "search",
+      "prompt": "Find ADHD-focused newsletter sponsorship opportunities",
+      "expected_taxonomy": "tool.data.search",
+      "matched_taxonomy": "infra.compute.sandbox",
+      "confidence": 0.2827,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.sandbox",
+          "score": 0.2827
+        },
+        {
+          "taxonomy": "tool.devops.deployment",
+          "score": 0.2631
+        },
+        {
+          "taxonomy": "infra.compute.serverless",
+          "score": 0.2471
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.2422
+        },
+        {
+          "taxonomy": "tool.data.conversion",
+          "score": 0.2361
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.compute.sandbox for \"Find ADHD-focused newsletter sponsorship opportunities\" (0.283). The user is looking for sponsorship opportunities for an ADHD-focused newsletter. While none of the provided taxonomies directly relate to ADHD or newsletters, 'infra.compute.sandbox' is the most abstract and least specific. This could potentially be interpreted as a broad category where a company might be looking to reach a general audience, and a newsletter sponsorship could be a way to do that. The other options are too specific to technical domains (DevOps, serverless, data search, data conversion) and are unlikely to be relevant to a newsletter sponsorship for a non-technical audience like those interested in ADHD.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 28,
+      "category": "image-gen",
+      "prompt": "Social ad banner, product UI screenshot + tagline, 1200x628",
+      "expected_taxonomy": "ai.vision.image_generation",
+      "matched_taxonomy": "tool.productivity.project",
+      "confidence": 0.4109,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.project",
+          "score": 0.4109
+        },
+        {
+          "taxonomy": "ai.vision.image_generation",
+          "score": 0.3786
+        },
+        {
+          "taxonomy": "infra.database.postgres",
+          "score": 0.3556
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.343
+        },
+        {
+          "taxonomy": "tool.productivity.knowledge",
+          "score": 0.2732
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.project for \"Social ad banner, product UI screenshot + tagline, 1200x628\" (0.411). The task describes a 'Social ad banner, product UI screenshot + tagline, 1200x628'. This strongly suggests a marketing or promotional asset for a product. 'tool.productivity.project' is the most relevant candidate as it implies a tool or software that aids in productivity, which is often the subject of such advertisements. The other candidates are less suitable: 'ai.vision.image_generation' is too specific to the technology, 'infra.database.postgres' and 'infra.storage.object' are infrastructure-related and unlikely to be the primary subject of a social ad banner, and 'tool.productivity.knowledge' is too broad and less directly related to a product UI.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 29,
+      "category": "copywrite",
+      "prompt": "LinkedIn post, 500 chars, founder-voice, tell the ADHD pain point",
+      "expected_taxonomy": "ai.llm.chat",
+      "matched_taxonomy": "tool.communication.email",
+      "confidence": 0.3296,
+      "candidates": [
+        {
+          "taxonomy": "tool.communication.email",
+          "score": 0.3296
+        },
+        {
+          "taxonomy": "tool.communication.sms",
+          "score": 0.3158
+        },
+        {
+          "taxonomy": "infra.security.secrets",
+          "score": 0.2677
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.214
+        },
+        {
+          "taxonomy": "tool.devops.deployment",
+          "score": 0.2019
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.communication.email for \"LinkedIn post, 500 chars, founder-voice, tell the ADHD pain point\" (0.330). The user wants to describe an ADHD pain point in a LinkedIn post. While none of the provided taxonomies directly map to 'ADHD pain point', 'tool.communication.email' is the most plausible candidate. ADHD often involves challenges with organization, time management, and focus, which can manifest in difficulties managing communication channels like email. The other options (SMS, secrets, object storage, deployment) are less likely to be the primary focus of a founder's personal pain point related to ADHD in a general LinkedIn post.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 30,
+      "category": "translate",
+      "prompt": "Translate to Spanish (LATAM), casual register",
+      "expected_taxonomy": "ai.nlp.translation",
+      "matched_taxonomy": "tool.productivity.scheduling",
+      "confidence": 0.3627,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.scheduling",
+          "score": 0.3627
+        },
+        {
+          "taxonomy": "tool.data.analytics",
+          "score": 0.3123
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.3024
+        },
+        {
+          "taxonomy": "tool.productivity.knowledge",
+          "score": 0.2747
+        },
+        {
+          "taxonomy": "infra.compute.serverless",
+          "score": 0.2624
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.scheduling for \"Translate to Spanish (LATAM), casual register\" (0.363). The user task is to translate to Spanish (LATAM) in a casual register. This implies a need for a tool that can assist with language translation, which falls under productivity tools. While other categories like data analytics or DevOps might involve language processing, 'scheduling' within productivity is the most direct fit for a translation task, as it implies managing and organizing information, which translation is a form of. The similarity score is also the highest among the candidates.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 31,
+      "category": "tts",
+      "prompt": "Short tag jingle voice, neutral, 8s",
+      "expected_taxonomy": "ai.audio.tts",
+      "matched_taxonomy": "ai.llm.embedding",
+      "confidence": 0.3296,
+      "candidates": [
+        {
+          "taxonomy": "ai.llm.embedding",
+          "score": 0.3296
+        },
+        {
+          "taxonomy": "infra.messaging.queue",
+          "score": 0.3284
+        },
+        {
+          "taxonomy": "infra.compute.sandbox",
+          "score": 0.3001
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.2696
+        },
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.2464
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.llm.embedding for \"Short tag jingle voice, neutral, 8s\" (0.330). The task is to 'Short tag jingle voice, neutral, 8s'. 'ai.llm.embedding' is the most relevant candidate as it relates to AI and language models, which are often used for generating or processing audio content like jingles. While 'ai.audio.stt' (Speech-to-Text) is also audio-related, it's about converting speech to text, not generating audio content. The other candidates are infrastructure or DevOps related and have no direct connection to audio generation or jingles.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 32,
+      "category": "video-gen",
+      "prompt": "3s logo sting, bear mascot animates, brand palette",
+      "expected_taxonomy": "ai.video.generation",
+      "matched_taxonomy": "infra.storage.object",
+      "confidence": 0.3217,
+      "candidates": [
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.3217
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.2326
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.2289
+        },
+        {
+          "taxonomy": "tool.productivity.knowledge",
+          "score": 0.2183
+        },
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.2001
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.storage.object for \"3s logo sting, bear mascot animates, brand palette\" (0.322). The task mentions a 'logo sting' and 'brand palette', which are visual and branding elements. While none of the provided taxonomies directly relate to branding or visual design, 'infra.storage.object' is the least irrelevant. It's a stretch, but one could argue that storing brand assets (like logos and palettes) falls under infrastructure and object storage. The other options are even further removed, focusing on logging, AI chat, and productivity tools.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 33,
+      "category": "embed",
+      "prompt": "Embed landing-page headline candidates, find closest to 'relief'",
+      "expected_taxonomy": "ai.llm.embedding",
+      "matched_taxonomy": "infra.compute.serverless",
+      "confidence": 0.2681,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.serverless",
+          "score": 0.2681
+        },
+        {
+          "taxonomy": "infra.network.dns",
+          "score": 0.2612
+        },
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.2467
+        },
+        {
+          "taxonomy": "infra.security.secrets",
+          "score": 0.2232
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.2157
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.compute.serverless for \"Embed landing-page headline candidates, find closest to 'relief'\" (0.268). The candidate 'infra.compute.serverless' has the highest similarity score (0.2681) to the target term 'relief'. While not a direct synonym, serverless computing can offer relief from infrastructure management burdens, making it the closest conceptual match among the provided options.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 34,
+      "category": "scrape",
+      "prompt": "Scrape Product Hunt ADHD-related launches past 30 days",
+      "expected_taxonomy": "tool.data.scraping",
+      "matched_taxonomy": "tool.communication.sms",
+      "confidence": 0.2696,
+      "candidates": [
+        {
+          "taxonomy": "infra.database.kv",
+          "score": 0.3324
+        },
+        {
+          "taxonomy": "infra.compute.sandbox",
+          "score": 0.3245
+        },
+        {
+          "taxonomy": "infra.security.secrets",
+          "score": 0.2951
+        },
+        {
+          "taxonomy": "tool.communication.sms",
+          "score": 0.2696
+        },
+        {
+          "taxonomy": "tool.business.crm",
+          "score": 0.2261
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.communication.sms for \"Scrape Product Hunt ADHD-related launches past 30 days\" (0.270). The task is to scrape Product Hunt launches related to ADHD. While none of the candidates directly map to 'ADHD', 'tool.communication.sms' is the most plausible candidate. ADHD can sometimes impact communication, and tools that facilitate communication might be relevant. The other candidates (database, sandbox, secrets, CRM) are too far removed from the user's stated interest in ADHD-related launches.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 35,
+      "category": "code-gen",
+      "prompt": "Generate UTM-tagged link builder helper in TS",
+      "expected_taxonomy": "ai.code.completion",
+      "matched_taxonomy": "tool.productivity.spreadsheet",
+      "confidence": 0.3041,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.3041
+        },
+        {
+          "taxonomy": "tool.automation.browser",
+          "score": 0.292
+        },
+        {
+          "taxonomy": "tool.productivity.calendar",
+          "score": 0.2472
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.179
+        },
+        {
+          "taxonomy": "infra.messaging.queue",
+          "score": 0.1739
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"Generate UTM-tagged link builder helper in TS\" (0.304). The user wants to build a UTM-tagged link builder helper in TypeScript. This suggests a tool that helps manage and organize information, which aligns well with the 'productivity' aspect of 'tool.productivity.spreadsheet'. While not a direct spreadsheet function, a link builder can be seen as a productivity tool that might be used in conjunction with or as an alternative to managing links in a spreadsheet. The other candidates are less relevant: 'tool.automation.browser' is too specific to browser automation, 'tool.productivity.calendar' is for scheduling, 'ai.nlp.translation' is for language processing, and 'infra.messaging.queue' is for infrastructure messaging.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 36,
+      "category": "spreadsheet",
+      "prompt": "Build competitor feature-overlap matrix, FocusBear vs 5 rivals",
+      "expected_taxonomy": "tool.productivity.spreadsheet",
+      "matched_taxonomy": "tool.devops.monitoring",
+      "confidence": 0.3645,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.serverless",
+          "score": 0.3923
+        },
+        {
+          "taxonomy": "tool.devops.monitoring",
+          "score": 0.3645
+        },
+        {
+          "taxonomy": "tool.data.conversion",
+          "score": 0.2094
+        },
+        {
+          "taxonomy": "infra.database.vector",
+          "score": 0.1911
+        },
+        {
+          "taxonomy": "infra.messaging.queue",
+          "score": 0.1621
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.devops.monitoring for \"Build competitor feature-overlap matrix, FocusBear vs 5 rivals\" (0.364). The task is to build a competitor feature-overlap matrix for FocusBear against 5 rivals. Monitoring is a core DevOps function that directly relates to understanding and comparing features across different tools, making it the most relevant taxonomy for this task. The other options are too specific to infrastructure or data processing and less directly applicable to a feature-overlap analysis of competitor tools.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 37,
+      "category": "transcribe",
+      "prompt": "Transcribe ADHD productivity podcast clip (90s) for quotable lines",
+      "expected_taxonomy": "ai.audio.stt",
+      "matched_taxonomy": "infra.network.dns",
+      "confidence": 0.5559,
+      "candidates": [
+        {
+          "taxonomy": "infra.network.dns",
+          "score": 0.5559
+        },
+        {
+          "taxonomy": "tool.productivity.forms",
+          "score": 0.3507
+        },
+        {
+          "taxonomy": "tool.data.scraping",
+          "score": 0.2412
+        },
+        {
+          "taxonomy": "tool.data.geolocation",
+          "score": 0.2324
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.2285
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.network.dns for \"Transcribe ADHD productivity podcast clip (90s) for quotable lines\" (0.556). The task is to transcribe a podcast clip about ADHD productivity. While the content is about productivity, the highest similarity score is with 'infra.network.dns'. This suggests a potential misclassification or a very tangential connection. However, given the strict instruction to pick *exactly one* from the candidates and the highest similarity score, 'infra.network.dns' is the chosen candidate, despite the apparent disconnect with the user's stated task. The reasoning acknowledges this discrepancy.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 38,
+      "category": "search",
+      "prompt": "Find TikTok creators in ADHD niche with 10k-100k followers",
+      "expected_taxonomy": "tool.data.search",
+      "matched_taxonomy": "tool.productivity.project",
+      "confidence": 0.2939,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.gpu",
+          "score": 0.3832
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.3166
+        },
+        {
+          "taxonomy": "infra.database.postgres",
+          "score": 0.2984
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.2957
+        },
+        {
+          "taxonomy": "tool.productivity.project",
+          "score": 0.2939
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.project for \"Find TikTok creators in ADHD niche with 10k-100k followers\" (0.294). The user is looking for TikTok creators in the ADHD niche. While none of the provided candidates directly map to 'ADHD' or 'TikTok', 'tool.productivity.project' is the most conceptually relevant. Creators in the ADHD niche often share productivity tips, organizational strategies, and project management techniques. Therefore, this taxonomy is the closest fit among the given options, implying tools or discussions related to managing tasks and projects, which aligns with content often found in the ADHD community.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 39,
+      "category": "image-gen",
+      "prompt": "Thumbnail for short video, bold text overlay, 720x1280",
+      "expected_taxonomy": "ai.vision.image_generation",
+      "matched_taxonomy": "ai.audio.tts",
+      "confidence": 0.5095,
+      "candidates": [
+        {
+          "taxonomy": "ai.audio.tts",
+          "score": 0.5095
+        },
+        {
+          "taxonomy": "tool.business.crm",
+          "score": 0.3038
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.2884
+        },
+        {
+          "taxonomy": "tool.data.visualization",
+          "score": 0.28
+        },
+        {
+          "taxonomy": "tool.productivity.forms",
+          "score": 0.2698
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.audio.tts for \"Thumbnail for short video, bold text overlay, 720x1280\" (0.509). The task involves creating a thumbnail for a short video with bold text overlay. While none of the provided taxonomies directly relate to graphic design or video editing, 'ai.audio.tts' (Text-to-Speech) is the most tangentially related. Text-to-Speech is often used in video creation for narration, and the output of TTS could be part of the content that the thumbnail is meant to represent. The other options (CRM, LLM Chat, Data Visualization, Forms) are even less relevant to the visual aspect of a video thumbnail.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 40,
+      "category": "copywrite",
+      "prompt": "TikTok hook line, 8 words, stop-the-scroll energy",
+      "expected_taxonomy": "ai.llm.chat",
+      "matched_taxonomy": "ai.audio.stt",
+      "confidence": 0.3579,
+      "candidates": [
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.3579
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.3304
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.2952
+        },
+        {
+          "taxonomy": "tool.data.geolocation",
+          "score": 0.2885
+        },
+        {
+          "taxonomy": "tool.data.weather",
+          "score": 0.2667
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.audio.stt for \"TikTok hook line, 8 words, stop-the-scroll energy\" (0.358). The task is to create a TikTok hook line with 'stop-the-scroll energy'. While none of the provided taxonomies directly relate to creative content generation, 'ai.audio.stt' (Speech-to-Text) is the most tangentially related. STT is a core component in many AI-powered content creation tools, including those that might analyze audio for trends or generate captions, which could indirectly inform hook line creation. The other options (payment processing, data search, geolocation, weather) are too far removed from the creative aspect of generating a hook line.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 41,
+      "category": "translate",
+      "prompt": "Translate to German, professional tone",
+      "expected_taxonomy": "ai.nlp.translation",
+      "matched_taxonomy": "ai.nlp.translation",
+      "confidence": 0.3116,
+      "candidates": [
+        {
+          "taxonomy": "infra.compute.gpu",
+          "score": 0.3312
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.3116
+        },
+        {
+          "taxonomy": "ai.video.generation",
+          "score": 0.2774
+        },
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.2595
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.2389
+        }
+      ],
+      "reasoning": "LangGraph: selected ai.nlp.translation for \"Translate to German, professional tone\" (0.312). The user task is to translate text to German with a professional tone. The candidate 'ai.nlp.translation' is the most relevant as it directly addresses natural language processing and translation, which are core components of the task. While 'infra.compute.gpu' might be involved in the underlying technology for such a task, it's too low-level and doesn't describe the user's intent. The other candidates are unrelated to translation.",
+      "correct": true,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 42,
+      "category": "embed",
+      "prompt": "Embed 20 Reddit pain-point quotes, cluster into top 5 themes",
+      "expected_taxonomy": "ai.llm.embedding",
+      "matched_taxonomy": "tool.productivity.document",
+      "confidence": 0.4325,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.document",
+          "score": 0.4325
+        },
+        {
+          "taxonomy": "tool.data.analytics",
+          "score": 0.4075
+        },
+        {
+          "taxonomy": "tool.communication.email",
+          "score": 0.3552
+        },
+        {
+          "taxonomy": "tool.devops.logging",
+          "score": 0.3382
+        },
+        {
+          "taxonomy": "ai.llm.embedding",
+          "score": 0.2566
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.document for \"Embed 20 Reddit pain-point quotes, cluster into top 5 themes\" (0.432). The task involves embedding quotes and clustering them into themes. While 'ai.llm.embedding' is directly related to the embedding process, the ultimate goal is to organize and understand information, which aligns more broadly with 'tool.productivity.document'. The other candidates are too specific to particular domains (analytics, email, devops) and don't capture the general nature of text processing and theme identification.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 43,
+      "category": "scrape",
+      "prompt": "Scrape App Store reviews for top 3 ADHD apps, latest 20 each",
+      "expected_taxonomy": "tool.data.scraping",
+      "matched_taxonomy": "tool.productivity.document",
+      "confidence": 0.3536,
+      "candidates": [
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.4415
+        },
+        {
+          "taxonomy": "tool.productivity.document",
+          "score": 0.3536
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.3529
+        },
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.2575
+        },
+        {
+          "taxonomy": "infra.database.kv",
+          "score": 0.2553
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.document for \"Scrape App Store reviews for top 3 ADHD apps, latest 20 each\" (0.354). The user task is to scrape App Store reviews for ADHD apps. ADHD apps often involve features like task management, note-taking, and organization, which fall under the umbrella of productivity tools. 'tool.productivity.document' is the closest match among the candidates as it broadly encompasses tools used for managing and organizing information, which is a core function of many ADHD-focused applications. The other candidates are less relevant: 'tool.payment.processing' is for financial transactions, 'infra.storage.object' and 'infra.database.kv' are infrastructure components, and 'tool.productivity.spreadsheet' is too specific to tabular data.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 44,
+      "category": "code-gen",
+      "prompt": "Generate webhook handler for Circle payment confirmation",
+      "expected_taxonomy": "ai.code.completion",
+      "matched_taxonomy": "tool.productivity.todo",
+      "confidence": 0.3138,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.3138
+        },
+        {
+          "taxonomy": "tool.productivity.document",
+          "score": 0.2667
+        },
+        {
+          "taxonomy": "infra.storage.object",
+          "score": 0.2362
+        },
+        {
+          "taxonomy": "ai.vision.image_generation",
+          "score": 0.2114
+        },
+        {
+          "taxonomy": "tool.data.analytics",
+          "score": 0.2109
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.todo for \"Generate webhook handler for Circle payment confirmation\" (0.314). The task is to generate a webhook handler for a payment confirmation. This involves creating code that will be triggered by an event and perform an action, which aligns with the concept of a 'tool' that helps automate a process. Among the 'tool' related taxonomies, 'productivity.todo' is the most fitting as it implies a task or action that needs to be completed or managed, which is precisely what a webhook handler does. The other candidates are less relevant: 'document' is about creating or managing documents, 'object storage' is for data persistence, 'image generation' is for creating images, and 'data analytics' is for analyzing data. While a webhook handler might interact with data or documents, its primary function is to execute a task, making 'productivity.todo' the closest conceptual match.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 45,
+      "category": "copywrite",
+      "prompt": "Email subject line, under 50 chars, curiosity-driven",
+      "expected_taxonomy": "ai.llm.chat",
+      "matched_taxonomy": "tool.productivity.todo",
+      "confidence": 0.3679,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.todo",
+          "score": 0.3679
+        },
+        {
+          "taxonomy": "ai.video.generation",
+          "score": 0.3599
+        },
+        {
+          "taxonomy": "tool.data.scraping",
+          "score": 0.2137
+        },
+        {
+          "taxonomy": "tool.data.analytics",
+          "score": 0.1997
+        },
+        {
+          "taxonomy": "tool.payment.processing",
+          "score": 0.1893
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.todo for \"Email subject line, under 50 chars, curiosity-driven\" (0.368). This taxonomy is the most relevant to a curiosity-driven email subject line under 50 characters. 'Todo' implies tasks and organization, which can easily be framed as a question or intriguing statement about improving productivity. The other options are too specific or less likely to evoke immediate curiosity in a general context.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 46,
+      "category": "translate",
+      "prompt": "Translate to Brazilian Portuguese, friendly tone",
+      "expected_taxonomy": "ai.nlp.translation",
+      "matched_taxonomy": "tool.productivity.project",
+      "confidence": 0.3214,
+      "candidates": [
+        {
+          "taxonomy": "tool.productivity.project",
+          "score": 0.3214
+        },
+        {
+          "taxonomy": "tool.productivity.spreadsheet",
+          "score": 0.3048
+        },
+        {
+          "taxonomy": "infra.compute.gpu",
+          "score": 0.2973
+        },
+        {
+          "taxonomy": "tool.business.crm",
+          "score": 0.2749
+        },
+        {
+          "taxonomy": "tool.communication.sms",
+          "score": 0.2096
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.productivity.project for \"Translate to Brazilian Portuguese, friendly tone\" (0.321). The user wants to translate to Brazilian Portuguese with a friendly tone. 'tool.productivity.project' is the most relevant taxonomy as it directly relates to tools used for managing projects, which often involve communication and collaboration, aligning with a friendly tone. While other productivity tools exist, project management is a broad category that encompasses the need for clear and friendly communication.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 47,
+      "category": "embed",
+      "prompt": "Embed founder-voice LinkedIn drafts, pick the most on-brand one",
+      "expected_taxonomy": "ai.llm.embedding",
+      "matched_taxonomy": "tool.data.conversion",
+      "confidence": 0.3642,
+      "candidates": [
+        {
+          "taxonomy": "tool.data.conversion",
+          "score": 0.3642
+        },
+        {
+          "taxonomy": "ai.audio.tts",
+          "score": 0.2862
+        },
+        {
+          "taxonomy": "ai.vision.ocr",
+          "score": 0.2609
+        },
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.2525
+        },
+        {
+          "taxonomy": "ai.llm.chat",
+          "score": 0.2388
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.conversion for \"Embed founder-voice LinkedIn drafts, pick the most on-brand one\" (0.364). The task is to embed founder-voice LinkedIn drafts. This implies taking existing text (the drafts) and transforming it into a different format or representation suitable for embedding. 'tool.data.conversion' best captures this process of transforming data from one form to another, which is analogous to converting text drafts into embeddings. The other candidates are too specific to particular AI modalities (audio, vision, LLM chat) and don't encompass the general concept of data transformation required for embedding.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 48,
+      "category": "scrape",
+      "prompt": "Scrape YouTube titles of ADHD productivity videos past 7 days",
+      "expected_taxonomy": "tool.data.scraping",
+      "matched_taxonomy": "tool.data.search",
+      "confidence": 0.3047,
+      "candidates": [
+        {
+          "taxonomy": "ai.audio.stt",
+          "score": 0.3733
+        },
+        {
+          "taxonomy": "tool.data.search",
+          "score": 0.3047
+        },
+        {
+          "taxonomy": "tool.productivity.document",
+          "score": 0.296
+        },
+        {
+          "taxonomy": "ai.vision.image_generation",
+          "score": 0.2534
+        },
+        {
+          "taxonomy": "ai.nlp.translation",
+          "score": 0.2454
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.search for \"Scrape YouTube titles of ADHD productivity videos past 7 days\" (0.305). The user wants to scrape YouTube titles of ADHD productivity videos from the past 7 days. This involves searching for specific content (ADHD productivity videos) within a platform (YouTube) and filtering by a time range (past 7 days). The 'tool.data.search' taxonomy best represents this action as it involves retrieving and filtering data based on specific criteria. While 'tool.productivity.document' is related to productivity, the core action here is searching for existing content, not creating or managing documents. The AI-related taxonomies are not relevant as the task doesn't involve AI generation or analysis of audio/vision/translation.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 49,
+      "category": "copywrite",
+      "prompt": "Product Hunt tagline, under 60 chars, benefit-led",
+      "expected_taxonomy": "ai.llm.chat",
+      "matched_taxonomy": "infra.messaging.queue",
+      "confidence": 0.4746,
+      "candidates": [
+        {
+          "taxonomy": "infra.messaging.queue",
+          "score": 0.4746
+        },
+        {
+          "taxonomy": "tool.devops.monitoring",
+          "score": 0.355
+        },
+        {
+          "taxonomy": "ai.vision.image_generation",
+          "score": 0.3475
+        },
+        {
+          "taxonomy": "infra.compute.gpu",
+          "score": 0.344
+        },
+        {
+          "taxonomy": "infra.auth.identity",
+          "score": 0.3345
+        }
+      ],
+      "reasoning": "LangGraph: selected infra.messaging.queue for \"Product Hunt tagline, under 60 chars, benefit-led\" (0.475). This candidate is the most relevant because Product Hunt taglines often highlight efficiency and speed, which are core benefits of messaging queues in infrastructure. The other candidates are less directly tied to a benefit that would resonate in a short, punchy tagline.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    },
+    {
+      "id": 50,
+      "category": "translate",
+      "prompt": "Translate to Korean, preserve product name in katakana-style",
+      "expected_taxonomy": "ai.nlp.translation",
+      "matched_taxonomy": "tool.data.scraping",
+      "confidence": 0.3546,
+      "candidates": [
+        {
+          "taxonomy": "tool.data.scraping",
+          "score": 0.3546
+        },
+        {
+          "taxonomy": "tool.devops.ci",
+          "score": 0.2935
+        },
+        {
+          "taxonomy": "infra.compute.serverless",
+          "score": 0.2756
+        },
+        {
+          "taxonomy": "tool.productivity.knowledge",
+          "score": 0.2321
+        },
+        {
+          "taxonomy": "ai.code.completion",
+          "score": 0.2134
+        }
+      ],
+      "reasoning": "LangGraph: selected tool.data.scraping for \"Translate to Korean, preserve product name in katakana-style\" (0.355). The user task is to translate text to Korean while preserving product names in katakana. This directly aligns with data scraping, which involves extracting specific information (product names) from text and transforming it (preserving in katakana). The other candidates are less relevant: CI is for development workflows, serverless is for infrastructure, knowledge management is for organizing information, and code completion is for programming assistance.",
+      "correct": false,
+      "timestamp": "2026-04-24T14:19:26.968Z"
+    }
+  ]
+}

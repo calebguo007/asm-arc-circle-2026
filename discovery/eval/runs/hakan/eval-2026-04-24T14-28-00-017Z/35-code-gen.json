@@ -1,0 +1,33 @@
+{
+  "id": 35,
+  "category": "code-gen",
+  "prompt": "Generate UTM-tagged link builder helper in TS",
+  "expected_taxonomy": "ai.code.completion",
+  "matched_taxonomy": "tool.productivity.spreadsheet",
+  "confidence": 0.3041,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.3041
+    },
+    {
+      "taxonomy": "tool.automation.browser",
+      "score": 0.292
+    },
+    {
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.2472
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.179
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.1739
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.spreadsheet for \"Generate UTM-tagged link builder helper in TS\" (0.304). The user wants to build a UTM-tagged link builder helper in TypeScript. This suggests a tool that helps manage and organize information, which aligns well with the 'productivity' aspect of 'tool.productivity.spreadsheet'. While not a direct spreadsheet function, a link builder can be seen as a productivity tool that might be used in conjunction with or as an alternative to managing links in a spreadsheet. The other candidates are less relevant: 'tool.automation.browser' is too specific to browser automation, 'tool.productivity.calendar' is for scheduling, 'ai.nlp.translation' is for language processing, and 'infra.messaging.queue' is for infrastructure messaging.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 43,
+  "category": "scrape",
+  "prompt": "Scrape App Store reviews for top 3 ADHD apps, latest 20 each",
+  "expected_taxonomy": "tool.data.scraping",
+  "matched_taxonomy": "tool.productivity.document",
+  "confidence": 0.3536,
+  "candidates": [
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.4415
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.3536
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.3529
+    },
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.2575
+    },
+    {
+      "taxonomy": "infra.database.kv",
+      "score": 0.2553
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.document for \"Scrape App Store reviews for top 3 ADHD apps, latest 20 each\" (0.354). The user task is to scrape App Store reviews for ADHD apps. ADHD apps often involve features like task management, note-taking, and organization, which fall under the umbrella of productivity tools. 'tool.productivity.document' is the closest match among the candidates as it broadly encompasses tools used for managing and organizing information, which is a core function of many ADHD-focused applications. The other candidates are less relevant: 'tool.payment.processing' is for financial transactions, 'infra.storage.object' and 'infra.database.kv' are infrastructure components, and 'tool.productivity.spreadsheet' is too specific to tabular data.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

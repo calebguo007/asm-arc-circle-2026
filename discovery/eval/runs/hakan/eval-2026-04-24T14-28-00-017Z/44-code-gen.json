@@ -1,0 +1,33 @@
+{
+  "id": 44,
+  "category": "code-gen",
+  "prompt": "Generate webhook handler for Circle payment confirmation",
+  "expected_taxonomy": "ai.code.completion",
+  "matched_taxonomy": "tool.productivity.todo",
+  "confidence": 0.3138,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.3138
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.2667
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.2362
+    },
+    {
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.2114
+    },
+    {
+      "taxonomy": "tool.data.analytics",
+      "score": 0.2109
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.todo for \"Generate webhook handler for Circle payment confirmation\" (0.314). The task is to generate a webhook handler for a payment confirmation. This involves creating code that will be triggered by an event and perform an action, which aligns with the concept of a 'tool' that helps automate a process. Among the 'tool' related taxonomies, 'productivity.todo' is the most fitting as it implies a task or action that needs to be completed or managed, which is precisely what a webhook handler does. The other candidates are less relevant: 'document' is about creating or managing documents, 'object storage' is for data persistence, 'image generation' is for creating images, and 'data analytics' is for analyzing data. While a webhook handler might interact with data or documents, its primary function is to execute a task, making 'productivity.todo' the closest conceptual match.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

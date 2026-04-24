@@ -1,0 +1,33 @@
+{
+  "id": 1,
+  "category": "image-gen",
+  "prompt": "Hero image, ADHD user working peacefully, calm palette, 1024x1024",
+  "expected_taxonomy": "ai.vision.image_generation",
+  "matched_taxonomy": "infra.compute.sandbox",
+  "confidence": 0.3597,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.3597
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.3463
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.3361
+    },
+    {
+      "taxonomy": "tool.data.geolocation",
+      "score": 0.3143
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.2946
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.compute.sandbox for \"Hero image, ADHD user working peacefully, calm palette, 1024x1024\" (0.360). The task describes a 'hero image' with a user working peacefully, suggesting a focus on a controlled and stable environment. 'infra.compute.sandbox' aligns with this by representing a safe, isolated computing environment, which can be metaphorically linked to a peaceful and focused workspace. The other candidates are less relevant: weather, payment processing, geolocation, and CI/CD are all specific functional tools or data types that do not directly relate to the concept of a peaceful work environment or a general hero image.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 19,
+  "category": "tts",
+  "prompt": "Voiceover script B, male voice, 15s, energetic",
+  "expected_taxonomy": "ai.audio.tts",
+  "matched_taxonomy": "tool.productivity.knowledge",
+  "confidence": 0.4238,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.4238
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.417
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.3205
+    },
+    {
+      "taxonomy": "tool.communication.chat",
+      "score": 0.3023
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.2898
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.knowledge for \"Voiceover script B, male voice, 15s, energetic\" (0.424). The task specifies a voiceover script for a male voice, 15 seconds long, and energetic. While none of the candidates directly map to 'voiceover script' or 'audio', 'tool.productivity.knowledge' is the most general and encompassing category that could potentially include tools or services related to content creation, scriptwriting, or knowledge dissemination, which are often associated with productivity. The other categories are too specific to infrastructure, development operations, communication, or payment processing, making them less likely fits for a voiceover script task.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

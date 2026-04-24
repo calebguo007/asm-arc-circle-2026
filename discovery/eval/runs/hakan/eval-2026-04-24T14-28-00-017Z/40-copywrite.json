@@ -1,0 +1,33 @@
+{
+  "id": 40,
+  "category": "copywrite",
+  "prompt": "TikTok hook line, 8 words, stop-the-scroll energy",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "ai.audio.stt",
+  "confidence": 0.3579,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.3579
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.3304
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2952
+    },
+    {
+      "taxonomy": "tool.data.geolocation",
+      "score": 0.2885
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.2667
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.audio.stt for \"TikTok hook line, 8 words, stop-the-scroll energy\" (0.358). The task is to create a TikTok hook line with 'stop-the-scroll energy'. While none of the provided taxonomies directly relate to creative content generation, 'ai.audio.stt' (Speech-to-Text) is the most tangentially related. STT is a core component in many AI-powered content creation tools, including those that might analyze audio for trends or generate captions, which could indirectly inform hook line creation. The other options (payment processing, data search, geolocation, weather) are too far removed from the creative aspect of generating a hook line.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 15,
+  "category": "deploy",
+  "prompt": "Deploy landing page to production, return public URL",
+  "expected_taxonomy": "tool.devops.deployment",
+  "matched_taxonomy": "tool.productivity.project",
+  "confidence": 0.383,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.383
+    },
+    {
+      "taxonomy": "tool.data.pdf",
+      "score": 0.3136
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.3104
+    },
+    {
+      "taxonomy": "tool.devops.monitoring",
+      "score": 0.3019
+    },
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.2858
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.project for \"Deploy landing page to production, return public URL\" (0.383). The task involves deploying a landing page to production and obtaining a public URL. This aligns best with tools used for managing and deploying projects, which often include features for handling production environments and generating public access points. The other candidates are less relevant: PDF tools are for document handling, vector databases are for data storage and retrieval, monitoring tools are for observing system performance, and sandboxes are for isolated testing environments.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

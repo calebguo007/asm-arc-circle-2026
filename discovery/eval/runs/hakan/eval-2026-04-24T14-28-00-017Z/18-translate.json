@@ -1,0 +1,33 @@
+{
+  "id": 18,
+  "category": "translate",
+  "prompt": "Translate to Simplified Chinese, localize idioms",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "tool.data.search",
+  "confidence": 0.508,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.508
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.3867
+    },
+    {
+      "taxonomy": "infra.database.postgres",
+      "score": 0.3008
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.2527
+    },
+    {
+      "taxonomy": "infra.auth.identity",
+      "score": 0.2484
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.search for \"Translate to Simplified Chinese, localize idioms\" (0.508). The user task is to 'Translate to Simplified Chinese, localize idioms'. This directly involves processing and transforming text data, which aligns best with a 'tool.data.search' taxonomy. While other taxonomies touch on data or processing, 'search' is the most fitting for tasks involving language manipulation and understanding.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

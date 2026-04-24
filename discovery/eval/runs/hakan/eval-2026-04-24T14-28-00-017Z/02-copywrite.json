@@ -1,0 +1,33 @@
+{
+  "id": 2,
+  "category": "copywrite",
+  "prompt": "Instagram caption, 150 chars, witty, target ADHD adults 25-40",
+  "expected_taxonomy": "ai.llm.chat",
+  "matched_taxonomy": "ai.llm.chat",
+  "confidence": 0.2509,
+  "candidates": [
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.3009
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.2868
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.2509
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2067
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2049
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.llm.chat for \"Instagram caption, 150 chars, witty, target ADHD adults 25-40\" (0.251). The task is to create an Instagram caption for ADHD adults, requiring wit and brevity. LLM chat capabilities are directly relevant to generating creative and engaging text content, which aligns with the user's need for a witty caption. The other options are less directly applicable: video generation is for visuals, vector databases for data storage, to-do lists for organization, and DevOps logging for technical operations.",
+  "correct": true,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

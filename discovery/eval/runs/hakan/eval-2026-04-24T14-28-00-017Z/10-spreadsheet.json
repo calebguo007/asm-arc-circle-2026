@@ -1,0 +1,33 @@
+{
+  "id": 10,
+  "category": "spreadsheet",
+  "prompt": "Tag 100 App Store review snippets by sentiment (pos/neg/neutral) in a sheet",
+  "expected_taxonomy": "tool.productivity.spreadsheet",
+  "matched_taxonomy": "tool.communication.chat",
+  "confidence": 0.3797,
+  "candidates": [
+    {
+      "taxonomy": "tool.communication.chat",
+      "score": 0.3797
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.3521
+    },
+    {
+      "taxonomy": "tool.productivity.scheduling",
+      "score": 0.2654
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.2625
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.2557
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.communication.chat for \"Tag 100 App Store review snippets by sentiment (pos/neg/neutral) in a sheet\" (0.380). The task involves tagging app store review snippets by sentiment. Chat tools are directly related to communication and user interaction, making them the most relevant category for analyzing reviews about communication features. The other candidates are less directly related to the core task of analyzing user reviews for sentiment.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

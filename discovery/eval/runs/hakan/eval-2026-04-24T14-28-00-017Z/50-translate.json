@@ -1,0 +1,33 @@
+{
+  "id": 50,
+  "category": "translate",
+  "prompt": "Translate to Korean, preserve product name in katakana-style",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "tool.data.scraping",
+  "confidence": 0.3546,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.scraping",
+      "score": 0.3546
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.2935
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2756
+    },
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.2321
+    },
+    {
+      "taxonomy": "ai.code.completion",
+      "score": 0.2134
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.scraping for \"Translate to Korean, preserve product name in katakana-style\" (0.355). The user task is to translate text to Korean while preserving product names in katakana. This directly aligns with data scraping, which involves extracting specific information (product names) from text and transforming it (preserving in katakana). The other candidates are less relevant: CI is for development workflows, serverless is for infrastructure, knowledge management is for organizing information, and code completion is for programming assistance.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

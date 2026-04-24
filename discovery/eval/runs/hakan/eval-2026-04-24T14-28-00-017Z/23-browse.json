@@ -1,0 +1,33 @@
+{
+  "id": 23,
+  "category": "browse",
+  "prompt": "Automate Product Hunt submission flow draft, screenshot each step",
+  "expected_taxonomy": "tool.automation.browser",
+  "matched_taxonomy": "tool.devops.ci",
+  "confidence": 0.3051,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.tts",
+      "score": 0.4496
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.4327
+    },
+    {
+      "taxonomy": "tool.devops.ci",
+      "score": 0.3051
+    },
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.2613
+    },
+    {
+      "taxonomy": "infra.database.kv",
+      "score": 0.2392
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.devops.ci for \"Automate Product Hunt submission flow draft, screenshot each step\" (0.305). The task involves automating a submission flow and taking screenshots of each step. This aligns best with 'tool.devops.ci' as CI/CD tools are often used to automate workflows and can be configured to perform actions like generating reports or capturing screenshots as part of a pipeline.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

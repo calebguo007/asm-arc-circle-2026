@@ -1,0 +1,33 @@
+{
+  "id": 47,
+  "category": "embed",
+  "prompt": "Embed founder-voice LinkedIn drafts, pick the most on-brand one",
+  "expected_taxonomy": "ai.llm.embedding",
+  "matched_taxonomy": "tool.data.conversion",
+  "confidence": 0.3642,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.3642
+    },
+    {
+      "taxonomy": "ai.audio.tts",
+      "score": 0.2862
+    },
+    {
+      "taxonomy": "ai.vision.ocr",
+      "score": 0.2609
+    },
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.2525
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.2388
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.conversion for \"Embed founder-voice LinkedIn drafts, pick the most on-brand one\" (0.364). The task is to embed founder-voice LinkedIn drafts. This implies taking existing text (the drafts) and transforming it into a different format or representation suitable for embedding. 'tool.data.conversion' best captures this process of transforming data from one form to another, which is analogous to converting text drafts into embeddings. The other candidates are too specific to particular AI modalities (audio, vision, LLM chat) and don't encompass the general concept of data transformation required for embedding.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

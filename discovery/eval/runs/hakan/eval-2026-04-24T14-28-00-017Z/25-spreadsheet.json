@@ -1,0 +1,33 @@
+{
+  "id": 25,
+  "category": "spreadsheet",
+  "prompt": "Log 50 Reddit comments + pain-point category into tracking sheet",
+  "expected_taxonomy": "tool.productivity.spreadsheet",
+  "matched_taxonomy": "tool.data.analytics",
+  "confidence": 0.3413,
+  "candidates": [
+    {
+      "taxonomy": "tool.data.analytics",
+      "score": 0.3413
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.3258
+    },
+    {
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.2799
+    },
+    {
+      "taxonomy": "tool.payment.processing",
+      "score": 0.2531
+    },
+    {
+      "taxonomy": "tool.data.screenshot",
+      "score": 0.2396
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.analytics for \"Log 50 Reddit comments + pain-point category into tracking sheet\" (0.341). The task involves logging Reddit comments and a pain-point category into a tracking sheet. This implies data collection, organization, and potentially analysis of that data. 'tool.data.analytics' is the most fitting taxonomy as it directly relates to handling and understanding data, which is central to the user's task of logging and categorizing information.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

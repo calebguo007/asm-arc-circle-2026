@@ -1,0 +1,33 @@
+{
+  "id": 31,
+  "category": "tts",
+  "prompt": "Short tag jingle voice, neutral, 8s",
+  "expected_taxonomy": "ai.audio.tts",
+  "matched_taxonomy": "ai.llm.embedding",
+  "confidence": 0.3296,
+  "candidates": [
+    {
+      "taxonomy": "ai.llm.embedding",
+      "score": 0.3296
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.3284
+    },
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.3001
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2696
+    },
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.2464
+    }
+  ],
+  "reasoning": "LangGraph: selected ai.llm.embedding for \"Short tag jingle voice, neutral, 8s\" (0.330). The task is to 'Short tag jingle voice, neutral, 8s'. 'ai.llm.embedding' is the most relevant candidate as it relates to AI and language models, which are often used for generating or processing audio content like jingles. While 'ai.audio.stt' (Speech-to-Text) is also audio-related, it's about converting speech to text, not generating audio content. The other candidates are infrastructure or DevOps related and have no direct connection to audio generation or jingles.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

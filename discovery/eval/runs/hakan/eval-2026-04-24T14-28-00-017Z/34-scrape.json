@@ -1,0 +1,33 @@
+{
+  "id": 34,
+  "category": "scrape",
+  "prompt": "Scrape Product Hunt ADHD-related launches past 30 days",
+  "expected_taxonomy": "tool.data.scraping",
+  "matched_taxonomy": "tool.communication.sms",
+  "confidence": 0.2696,
+  "candidates": [
+    {
+      "taxonomy": "infra.database.kv",
+      "score": 0.3324
+    },
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.3245
+    },
+    {
+      "taxonomy": "infra.security.secrets",
+      "score": 0.2951
+    },
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.2696
+    },
+    {
+      "taxonomy": "tool.business.crm",
+      "score": 0.2261
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.communication.sms for \"Scrape Product Hunt ADHD-related launches past 30 days\" (0.270). The task is to scrape Product Hunt launches related to ADHD. While none of the candidates directly map to 'ADHD', 'tool.communication.sms' is the most plausible candidate. ADHD can sometimes impact communication, and tools that facilitate communication might be relevant. The other candidates (database, sandbox, secrets, CRM) are too far removed from the user's stated interest in ADHD-related launches.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

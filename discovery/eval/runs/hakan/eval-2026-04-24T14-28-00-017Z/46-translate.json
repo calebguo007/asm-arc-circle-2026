@@ -1,0 +1,33 @@
+{
+  "id": 46,
+  "category": "translate",
+  "prompt": "Translate to Brazilian Portuguese, friendly tone",
+  "expected_taxonomy": "ai.nlp.translation",
+  "matched_taxonomy": "tool.productivity.project",
+  "confidence": 0.3214,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.3214
+    },
+    {
+      "taxonomy": "tool.productivity.spreadsheet",
+      "score": 0.3048
+    },
+    {
+      "taxonomy": "infra.compute.gpu",
+      "score": 0.2973
+    },
+    {
+      "taxonomy": "tool.business.crm",
+      "score": 0.2749
+    },
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.2096
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.project for \"Translate to Brazilian Portuguese, friendly tone\" (0.321). The user wants to translate to Brazilian Portuguese with a friendly tone. 'tool.productivity.project' is the most relevant taxonomy as it directly relates to tools used for managing projects, which often involve communication and collaboration, aligning with a friendly tone. While other productivity tools exist, project management is a broad category that encompasses the need for clear and friendly communication.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

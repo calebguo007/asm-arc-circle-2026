@@ -1,0 +1,33 @@
+{
+  "id": 48,
+  "category": "scrape",
+  "prompt": "Scrape YouTube titles of ADHD productivity videos past 7 days",
+  "expected_taxonomy": "tool.data.scraping",
+  "matched_taxonomy": "tool.data.search",
+  "confidence": 0.3047,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.3733
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.3047
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.296
+    },
+    {
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.2534
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.2454
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.search for \"Scrape YouTube titles of ADHD productivity videos past 7 days\" (0.305). The user wants to scrape YouTube titles of ADHD productivity videos from the past 7 days. This involves searching for specific content (ADHD productivity videos) within a platform (YouTube) and filtering by a time range (past 7 days). The 'tool.data.search' taxonomy best represents this action as it involves retrieving and filtering data based on specific criteria. While 'tool.productivity.document' is related to productivity, the core action here is searching for existing content, not creating or managing documents. The AI-related taxonomies are not relevant as the task doesn't involve AI generation or analysis of audio/vision/translation.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

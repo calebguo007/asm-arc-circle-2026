@@ -1,0 +1,33 @@
+{
+  "id": 32,
+  "category": "video-gen",
+  "prompt": "3s logo sting, bear mascot animates, brand palette",
+  "expected_taxonomy": "ai.video.generation",
+  "matched_taxonomy": "infra.storage.object",
+  "confidence": 0.3217,
+  "candidates": [
+    {
+      "taxonomy": "infra.storage.object",
+      "score": 0.3217
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2326
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.2289
+    },
+    {
+      "taxonomy": "tool.productivity.knowledge",
+      "score": 0.2183
+    },
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.2001
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.storage.object for \"3s logo sting, bear mascot animates, brand palette\" (0.322). The task mentions a 'logo sting' and 'brand palette', which are visual and branding elements. While none of the provided taxonomies directly relate to branding or visual design, 'infra.storage.object' is the least irrelevant. It's a stretch, but one could argue that storing brand assets (like logos and palettes) falls under infrastructure and object storage. The other options are even further removed, focusing on logging, AI chat, and productivity tools.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

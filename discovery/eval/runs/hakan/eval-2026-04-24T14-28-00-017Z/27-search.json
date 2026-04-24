@@ -1,0 +1,33 @@
+{
+  "id": 27,
+  "category": "search",
+  "prompt": "Find ADHD-focused newsletter sponsorship opportunities",
+  "expected_taxonomy": "tool.data.search",
+  "matched_taxonomy": "infra.compute.sandbox",
+  "confidence": 0.2827,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.sandbox",
+      "score": 0.2827
+    },
+    {
+      "taxonomy": "tool.devops.deployment",
+      "score": 0.2631
+    },
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.2471
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2422
+    },
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.2361
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.compute.sandbox for \"Find ADHD-focused newsletter sponsorship opportunities\" (0.283). The user is looking for sponsorship opportunities for an ADHD-focused newsletter. While none of the provided taxonomies directly relate to ADHD or newsletters, 'infra.compute.sandbox' is the most abstract and least specific. This could potentially be interpreted as a broad category where a company might be looking to reach a general audience, and a newsletter sponsorship could be a way to do that. The other options are too specific to technical domains (DevOps, serverless, data search, data conversion) and are unlikely to be relevant to a newsletter sponsorship for a non-technical audience like those interested in ADHD.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 24,
+  "category": "code-gen",
+  "prompt": "Generate TikTok Pixel install snippet for the landing page",
+  "expected_taxonomy": "ai.code.completion",
+  "matched_taxonomy": "tool.data.conversion",
+  "confidence": 0.2724,
+  "candidates": [
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.2734
+    },
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.2724
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.2723
+    },
+    {
+      "taxonomy": "ai.vision.ocr",
+      "score": 0.2587
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.2568
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.data.conversion for \"Generate TikTok Pixel install snippet for the landing page\" (0.272). The user wants to generate a TikTok Pixel install snippet. This involves embedding code (a snippet) onto a landing page. The purpose of the pixel is to track user behavior and convert that data for marketing purposes. Therefore, 'tool.data.conversion' is the most relevant taxonomy as it directly relates to tools used for data conversion and tracking, which is the core function of a pixel install.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

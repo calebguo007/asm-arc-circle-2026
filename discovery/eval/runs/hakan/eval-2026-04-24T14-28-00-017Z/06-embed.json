@@ -1,0 +1,33 @@
+{
+  "id": 6,
+  "category": "embed",
+  "prompt": "Embed 10 caption variants to find most semantically distinct 3",
+  "expected_taxonomy": "ai.llm.embedding",
+  "matched_taxonomy": "infra.auth.identity",
+  "confidence": 0.407,
+  "candidates": [
+    {
+      "taxonomy": "infra.auth.identity",
+      "score": 0.407
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.3658
+    },
+    {
+      "taxonomy": "tool.communication.sms",
+      "score": 0.3338
+    },
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.2377
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.2244
+    }
+  ],
+  "reasoning": "LangGraph: selected infra.auth.identity for \"Embed 10 caption variants to find most semantically distinct 3\" (0.407). This candidate has the highest similarity score (0.4070) among the provided options, indicating it is the most semantically related to the user's task of finding distinct caption variants.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

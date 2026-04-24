@@ -1,0 +1,33 @@
+{
+  "id": 36,
+  "category": "spreadsheet",
+  "prompt": "Build competitor feature-overlap matrix, FocusBear vs 5 rivals",
+  "expected_taxonomy": "tool.productivity.spreadsheet",
+  "matched_taxonomy": "tool.devops.monitoring",
+  "confidence": 0.3645,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.serverless",
+      "score": 0.3923
+    },
+    {
+      "taxonomy": "tool.devops.monitoring",
+      "score": 0.3645
+    },
+    {
+      "taxonomy": "tool.data.conversion",
+      "score": 0.2094
+    },
+    {
+      "taxonomy": "infra.database.vector",
+      "score": 0.1911
+    },
+    {
+      "taxonomy": "infra.messaging.queue",
+      "score": 0.1621
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.devops.monitoring for \"Build competitor feature-overlap matrix, FocusBear vs 5 rivals\" (0.364). The task is to build a competitor feature-overlap matrix for FocusBear against 5 rivals. Monitoring is a core DevOps function that directly relates to understanding and comparing features across different tools, making it the most relevant taxonomy for this task. The other options are too specific to infrastructure or data processing and less directly applicable to a feature-overlap analysis of competitor tools.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

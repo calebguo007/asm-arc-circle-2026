@@ -1,0 +1,33 @@
+{
+  "id": 8,
+  "category": "browse",
+  "prompt": "Open competitor pricing page in headless browser, capture full-page screenshot",
+  "expected_taxonomy": "tool.automation.browser",
+  "matched_taxonomy": null,
+  "confidence": 0.2215,
+  "candidates": [
+    {
+      "taxonomy": "ai.audio.stt",
+      "score": 0.326
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.2784
+    },
+    {
+      "taxonomy": "tool.data.weather",
+      "score": 0.2253
+    },
+    {
+      "taxonomy": "ai.audio.tts",
+      "score": 0.2218
+    },
+    {
+      "taxonomy": "tool.data.scraping",
+      "score": 0.2215
+    }
+  ],
+  "reasoning": "LangGraph: low confidence for \"Open competitor pricing page in headless browser, capture full-page screenshot\". The task involves opening a web page and capturing a screenshot, which is a form of data extraction or scraping from a web source. While 'headless browser' is mentioned, the core action aligns best with data scraping tools.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

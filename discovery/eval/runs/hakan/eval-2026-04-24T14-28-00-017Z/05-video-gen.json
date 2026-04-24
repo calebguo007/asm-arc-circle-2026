@@ -1,0 +1,33 @@
+{
+  "id": 5,
+  "category": "video-gen",
+  "prompt": "6s product demo, screen recording style, highlight timer feature",
+  "expected_taxonomy": "ai.video.generation",
+  "matched_taxonomy": "tool.productivity.todo",
+  "confidence": 0.5594,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.todo",
+      "score": 0.5594
+    },
+    {
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.4022
+    },
+    {
+      "taxonomy": "ai.video.generation",
+      "score": 0.305
+    },
+    {
+      "taxonomy": "tool.devops.logging",
+      "score": 0.2937
+    },
+    {
+      "taxonomy": "tool.data.pdf",
+      "score": 0.2773
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.todo for \"6s product demo, screen recording style, highlight timer feature\" (0.559). The task is a product demo of a 6s product, specifically highlighting a timer feature. This aligns best with a 'todo' tool, as timers are often integrated into task management and productivity applications to track time spent on tasks or to set deadlines. While 'calendar' is also productivity-related, 'todo' is a more direct fit for a timer feature within a product demo context.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

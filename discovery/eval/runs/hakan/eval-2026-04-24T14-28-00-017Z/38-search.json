@@ -1,0 +1,33 @@
+{
+  "id": 38,
+  "category": "search",
+  "prompt": "Find TikTok creators in ADHD niche with 10k-100k followers",
+  "expected_taxonomy": "tool.data.search",
+  "matched_taxonomy": "tool.productivity.project",
+  "confidence": 0.2939,
+  "candidates": [
+    {
+      "taxonomy": "infra.compute.gpu",
+      "score": 0.3832
+    },
+    {
+      "taxonomy": "ai.llm.chat",
+      "score": 0.3166
+    },
+    {
+      "taxonomy": "infra.database.postgres",
+      "score": 0.2984
+    },
+    {
+      "taxonomy": "tool.data.search",
+      "score": 0.2957
+    },
+    {
+      "taxonomy": "tool.productivity.project",
+      "score": 0.2939
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.project for \"Find TikTok creators in ADHD niche with 10k-100k followers\" (0.294). The user is looking for TikTok creators in the ADHD niche. While none of the provided candidates directly map to 'ADHD' or 'TikTok', 'tool.productivity.project' is the most conceptually relevant. Creators in the ADHD niche often share productivity tips, organizational strategies, and project management techniques. Therefore, this taxonomy is the closest fit among the given options, implying tools or discussions related to managing tasks and projects, which aligns with content often found in the ADHD community.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}

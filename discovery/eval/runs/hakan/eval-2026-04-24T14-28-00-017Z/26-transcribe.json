@@ -1,0 +1,33 @@
+{
+  "id": 26,
+  "category": "transcribe",
+  "prompt": "Transcribe ADHD-creator TikTok voiceover (30s) to match their tone",
+  "expected_taxonomy": "ai.audio.stt",
+  "matched_taxonomy": "tool.productivity.calendar",
+  "confidence": 0.4139,
+  "candidates": [
+    {
+      "taxonomy": "tool.productivity.calendar",
+      "score": 0.4139
+    },
+    {
+      "taxonomy": "ai.nlp.translation",
+      "score": 0.3679
+    },
+    {
+      "taxonomy": "tool.productivity.forms",
+      "score": 0.2702
+    },
+    {
+      "taxonomy": "ai.vision.ocr",
+      "score": 0.205
+    },
+    {
+      "taxonomy": "infra.auth.identity",
+      "score": 0.155
+    }
+  ],
+  "reasoning": "LangGraph: selected tool.productivity.calendar for \"Transcribe ADHD-creator TikTok voiceover (30s) to match their tone\" (0.414). The task is to transcribe a TikTok voiceover about ADHD, aiming to match the creator's tone. While ADHD can affect various aspects of life, the highest similarity score points to 'tool.productivity.calendar'. This suggests the voiceover might be discussing time management, scheduling, or organizational challenges often associated with ADHD, which are directly related to calendar tools. The other options are less relevant: translation is for language conversion, forms are for data collection, OCR is for text extraction from images, and identity authentication is unrelated.",
+  "correct": false,
+  "timestamp": "2026-04-24T14:19:26.968Z"
+}
