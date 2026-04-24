@@ -1,1 +1,8 @@
-{"cleanUrls": true, "rewrites": [{"source": "/", "destination": "/payments/src/dashboard.html"}, {"source": "/marketplace", "destination": "/payments/src/marketplace.html"}, {"source": "/benchmark", "destination": "/payments/src/benchmark.html"}]}
+{
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/payments/src/dashboard.html" },
+    { "source": "/marketplace", "destination": "/payments/src/marketplace.html" },
+    { "source": "/benchmark", "destination": "/payments/src/benchmark.html" }
+  ]
+}
