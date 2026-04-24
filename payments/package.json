@@ -47,6 +47,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "start": "node dist/seller.js",
     "dev:seller": "tsx src/seller.ts",
     "dev:registry": "tsx ../registry/src/http.ts",
     "dev:all": "tsx src/start-all.ts",

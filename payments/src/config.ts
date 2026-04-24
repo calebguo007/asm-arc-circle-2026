@@ -81,7 +81,7 @@ export function loadConfig(): PaymentConfig {
     asmRegistryUrl: getEnv("ASM_REGISTRY_URL", "http://localhost:3456"),
     scorePrice: getEnv("SCORE_PRICE", "$0.005"),
     queryPrice: getEnv("QUERY_PRICE", "$0.002"),
-    port: parseInt(getEnv("PAYMENT_SERVER_PORT", "4402"), 10),
+    port: parseInt(getEnv("PAYMENT_SERVER_PORT", process.env.PORT || "4402"), 10),
     mode,
   };
 }

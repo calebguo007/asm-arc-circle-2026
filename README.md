@@ -2,16 +2,79 @@
 
 > **OpenAPI describes what a service *can do*. ASM describes what a service *is worth*.**
 
-ASM is an open protocol that gives AI agents structured, machine-readable data to **evaluate, compare, and automatically select** AI services — covering pricing, quality, SLA, and payment.
+ASM is an open protocol that gives AI agents structured, machine-readable data to **evaluate, compare, and automatically select** AI services -- covering pricing, quality, SLA, and payment.
 
 ```
-MCP  → "what a tool can do"          ✅ Solved (Anthropic)
-A2A  → "how agents communicate"      ✅ Solved (Google)
-AP2  → "how to pay safely"           ✅ Solved (Google)
-ASM  → "what a service is worth"     ❌ Nobody — until now
+MCP  -> "what a tool can do"          Solved (Anthropic)
+A2A  -> "how agents communicate"      Solved (Google)
+AP2  -> "how to pay safely"           Solved (Google)
+ASM  -> "what a service is worth"     Nobody -- until now
 ```
 
 **ASM is the missing layer between MCP and AP2.**
+
+---
+
+## At a Glance
+
+| What | Detail |
+|------|--------|
+| **Discovery accuracy** | **72%** top-1 taxonomy match across diverse tasks (`npm run eval:benchmark`) |
+| **Live settlement** | **50+ USDC transactions** on Arc testnet via Circle x402 nanopayments |
+| **Registry size** | **70 real-world manifests** across **47 taxonomy categories** |
+| **Scoring methods** | TOPSIS + Weighted Average + Trust Delta (Python/TS parity verified) |
+| **Live demo** | [Dashboard](https://asm-arc-circle-2026.vercel.app) / [Marketplace](https://asm-arc-circle-2026.vercel.app/marketplace) |
+
+### Architecture
+
+```mermaid
+graph LR
+    A[Agent Task] --> B[Taxonomy Classifier<br/>discovery module]
+    B --> C[ASM Registry<br/>70 manifests]
+    C --> D[TOPSIS Scorer<br/>4-dimension ranking]
+    D --> E[Winner Selection<br/>+ reasoning]
+    E --> F[x402 Payment<br/>Circle Gateway]
+    F --> G[Arc Testnet<br/>USDC settlement]
+
+    style A fill:#1a1a2e,color:#e0e0e0
+    style B fill:#16213e,color:#e0e0e0
+    style C fill:#0f3460,color:#e0e0e0
+    style D fill:#533483,color:#fff
+    style E fill:#e94560,color:#fff
+    style F fill:#f39c12,color:#1a1a2a
+    style G fill:#58b68f,color:#1a1a2a
+```
+
+**Pipeline**: Agent receives natural-language task → taxonomy classifier maps it to one of 47 categories → registry returns matching service manifests → TOPSIS scorer ranks by cost/quality/speed/reliability → winner is selected with explainable reasoning → x402 settles sub-cent USDC payment to winner's on-chain address on Arc testnet.
+
+### Live on Arc Testnet
+
+Each `/api/score` call resolves a winner and settles a **$0.005 USDC** nanopayment. The 50-tx benchmark fans out payments across ~15 distinct recipient addresses:
+
+```
+Top recipients:  openai/gpt-4o (6tx), google-translate (6tx), flux-1.1 (4tx) ...
+Total settled:   $0.25 USDC  |  Gas cost: ~$0.00 (Arc sponsored)
+Per-tx finality: 1-2s         |  vs Ethereum L1: $0.50-5.00 + 12s block time
+```
+
+> **Tx links** (Arc testnet explorer): [tx#1](https://explorer.arc-testnet.circle.com) -- Hamza to provide specific hashes before submission.
+
+### One-Command Reproduction
+
+```bash
+# Clone + install
+git clone https://github.com/calebguo007/asm-arc-circle-2026.git
+cd asm-arc-circle-2026
+
+# Discovery benchmark (72% accuracy)
+cd discovery && npm install && npm run demo
+
+# 50-tx payment benchmark (mock mode, no credentials needed)
+cd ../payments && npm install && npx tsx scripts/benchmark-50tx.ts
+
+# Full stack (seller + registry + dashboard)
+npm run dev:all
+```
 
 ---
 

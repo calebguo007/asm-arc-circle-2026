@@ -43,9 +43,39 @@ const config = loadConfig();
 // ── Express App ───────────────────────────────────────
 
 const app = express();
-app.use(cors());
-app.use(helmet({ contentSecurityPolicy: false })); // Security headers (CSP disabled for SSE)
+
+// ── CORS: allow Vercel frontend + local dev ──────────
+const ALLOWED_ORIGINS = (
+  process.env.CORS_ORIGINS ||
+  "http://localhost:4173,http://localhost:3000,http://localhost:5173,https://*.vercel.app"
+)
+  .split(",")
+  .map((s) => s.trim());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow non-browser requests (mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      const allowed = ALLOWED_ORIGINS.some((o) =>
+        o.startsWith("*.") ? origin.endsWith(o.slice(1)) : o === origin,
+      );
+      if (allowed) return callback(null, true);
+      callback(new Error(`CORS blocked: ${origin}`));
+    },
+    credentials: true,
+  }),
+);
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
+
+// ── API Key guard for mutating endpoints ─────────────
+const API_KEY = process.env.API_KEY || "";
+function requireApiKey(req: Request, res: Response, next: NextFunction) {
+  if (!API_KEY) return next(); // skip if not configured (local dev)
+  const provided = req.headers["x-api-key"] || req.query.api_key;
+  if (provided === API_KEY) return next();
+  res.status(401).json({ error: "unauthorized", message: "Missing or invalid X-API-Key header" });
+}
 
 // Rate limiting: 100 requests per minute per IP for paid endpoints
 const apiLimiter = rateLimit({
@@ -551,7 +581,7 @@ function registerRoutes() {
     ? mockPaymentMiddleware(config.scorePrice)
     : recordPayment("/api/score", config.scorePrice);
 
-  app.post("/api/score", apiLimiter, scoreMiddleware, async (req: Request, res: Response) => {
+  app.post("/api/score", apiLimiter, requireApiKey, scoreMiddleware, async (req: Request, res: Response) => {
     try {
       const data = await proxyToRegistry("/api/score", "POST", req.body);
       // live mode: settlement info decoded from PAYMENT-RESPONSE header by recordPayment hook
@@ -640,7 +670,7 @@ function registerRoutes() {
     ? mockPaymentMiddleware(config.queryPrice)
     : recordPayment("/api/query", config.queryPrice);
 
-  app.post("/api/query", apiLimiter, queryMiddleware, async (req: Request, res: Response) => {
+  app.post("/api/query", apiLimiter, requireApiKey, queryMiddleware, async (req: Request, res: Response) => {
     try {
       const data = await proxyToRegistry("/api/query", "POST", req.body);
       const settlement = (req as any).settlement;
@@ -711,7 +741,7 @@ function registerRoutes() {
     ? mockPaymentMiddleware(config.scorePrice)
     : recordPayment("/api/agent-decide", config.scorePrice);
 
-  app.post("/api/agent-decide", apiLimiter, agentMiddleware, async (req: Request, res: Response) => {
+  app.post("/api/agent-decide", apiLimiter, requireApiKey, agentMiddleware, async (req: Request, res: Response) => {
     const startTime = Date.now();
     try {
       const { request: agentRequest, gemini_api_key } = req.body;
