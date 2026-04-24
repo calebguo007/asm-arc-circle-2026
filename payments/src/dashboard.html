@@ -1958,209 +1958,168 @@
       const WORKBENCH_DATA = {
         taxonomyPools: {
           "ai.llm.chat": [
-            {
-              name: "Claude Sonnet 4",
-              serviceId: "anthropic/claude-sonnet-4@4.0",
-              priceLabel: "$3/$15 per 1M",
-              latencyMs: 800,
-              uptime: 0.999,
-              selfReported: false,
-              address: "0xbA5Ae65c6fC3928075Bf3a47F450cA6b2da26c82",
-              dimensions: { cost: 0.72, quality: 0.91, speed: 0.78, reliability: 0.99 }
-            },
-            {
-              name: "GPT-4o",
-              serviceId: "openai/gpt-4o@2024-11-20",
-              priceLabel: "$5/$15 per 1M",
-              latencyMs: 950,
-              uptime: 0.998,
-              selfReported: false,
-              address: "0xfd8A69A33Cd564B13E7f7195fE98d8Af6063dcFc",
-              dimensions: { cost: 0.61, quality: 0.94, speed: 0.72, reliability: 0.98 }
-            },
-            {
-              name: "Gemini 2.5 Pro",
-              serviceId: "google/gemini-2.5-pro@2.5",
-              priceLabel: "$3.5/$14 per 1M",
-              latencyMs: 700,
-              uptime: 0.997,
-              selfReported: false,
-              address: "0xe0b9Bf2350Af7BC5e6F8d3eAd3Cf33515cb9F025",
-              dimensions: { cost: 0.69, quality: 0.89, speed: 0.82, reliability: 0.97 }
-            },
-            {
-              name: "DeepSeek V3",
-              serviceId: "deepseek/v3",
-              priceLabel: "$0.27/$1.1 per 1M",
-              latencyMs: 1200,
-              uptime: 0.992,
-              selfReported: false,
-              address: "0xD33F5E3f8A1c42Bf8D12d8C5A7E1AB0C3E7B19D4",
-              dimensions: { cost: 0.97, quality: 0.85, speed: 0.55, reliability: 0.92 }
-            },
-            {
-              name: "Llama 3.3 70B",
-              serviceId: "groq/llama-3.3-70b",
-              priceLabel: "$0.59/$0.79 per 1M",
-              latencyMs: 380,
-              uptime: 0.990,
-              selfReported: true,
-              address: "0x110A370B70D33F7B22A9C95F4E5B8C3D7A6E19F2",
-              dimensions: { cost: 0.94, quality: 0.79, speed: 0.96, reliability: 0.90 }
-            }
+            { name: "Claude Sonnet 4", serviceId: "anthropic/claude-sonnet-4@4.0", priceLabel: "$3/$15 per 1M", latencyMs: 800, uptime: 0.999, selfReported: false, address: "0xbA5Ae65c6fC3928075Bf3a47F450cA6b2da26c82", dimensions: { cost: 0.72, quality: 0.91, speed: 0.78, reliability: 0.99 } },
+            { name: "GPT-4o", serviceId: "openai/gpt-4o@2024-11-20", priceLabel: "$2.5/$10 per 1M", latencyMs: 600, uptime: 0.999, selfReported: false, address: "0xfd8A69A33Cd564B13E7f7195fE98d8Af6063dcFc", dimensions: { cost: 0.75, quality: 0.94, speed: 0.85, reliability: 0.99 } },
+            { name: "Gemini 2.5 Pro", serviceId: "google/gemini-2.5-pro@2.5", priceLabel: "$1.25/$10 per 1M", latencyMs: 700, uptime: 0.997, selfReported: false, address: "0xe0b9Bf2350Af7BC5e6F8d3eAd3Cf33515cb9F025", dimensions: { cost: 0.78, quality: 0.89, speed: 0.82, reliability: 0.997 } }
           ],
           "ai.vision.image_generation": [
-            {
-              name: "FLUX 1.1 Pro",
-              serviceId: "black-forest-labs/flux-1.1-pro@1.1",
-              priceLabel: "$0.04 / image",
-              priceUsd: 0.04,
-              latencyMs: 8000,
-              uptime: 0.995,
-              selfReported: true,
-              address: "0x746b0F52b979b18225CC31FC7EB1dd89a67100a9",
-              qualityMetric: 0.904
-            },
-            {
-              name: "Imagen 3",
-              serviceId: "google/imagen-3@3.0",
-              priceLabel: "$0.04 / image",
-              priceUsd: 0.04,
-              latencyMs: 10000,
-              uptime: 0.999,
-              selfReported: true,
-              address: "0x444155D692b646f872a6501eEbD9F8ceff1F1DD9",
-              qualityMetric: 0.72
-            },
-            {
-              name: "DALL-E 3",
-              serviceId: "openai/dall-e-3@3.0",
-              priceLabel: "$0.04 / image",
-              priceUsd: 0.04,
-              latencyMs: 12000,
-              uptime: 0.999,
-              selfReported: false,
-              address: "0xcDa5313778bf7E0220521aA80208D2C5619abaD0",
-              qualityMetric: 0.67
-            }
+            { name: "FLUX 1.1 Pro", serviceId: "black-forest-labs/flux-1.1-pro@1.1", priceLabel: "$0.04 / image", latencyMs: 8000, uptime: 0.995, selfReported: true, address: "0x746b0F52b979b18225CC31FC7EB1dd89a67100a9", dimensions: { cost: 0.85, quality: 0.90, speed: 0.35, reliability: 0.995 } },
+            { name: "Imagen 3", serviceId: "google/imagen-3@3.0", priceLabel: "$0.04 / image", latencyMs: 10000, uptime: 0.999, selfReported: true, address: "0x444155D692b646f872a6501eEbD9F8ceff1F1DD9", dimensions: { cost: 0.85, quality: 0.72, speed: 0.28, reliability: 0.999 } },
+            { name: "DALL-E 3", serviceId: "openai/dall-e-3@3.0", priceLabel: "$0.04 / image", latencyMs: 12000, uptime: 0.999, selfReported: false, address: "0xcDa5313778bf7E0220521aA80208D2C5619abaD0", dimensions: { cost: 0.85, quality: 0.67, speed: 0.20, reliability: 0.999 } }
           ],
           "ai.audio.tts": [
-            {
-              name: "OpenAI TTS",
-              serviceId: "openai/tts-1@1.0",
-              priceLabel: "$15 / 1M chars",
-              priceUsd: 0.000015,
-              latencyMs: 500,
-              uptime: 0.999,
-              selfReported: true,
-              address: "0x2b0a2e691866F6B6D50A3B10c5ADD78fa7124CF7",
-              qualityMetric: 0.75
-            },
-            {
-              name: "ElevenLabs TTS v2",
-              serviceId: "elevenlabs/tts-v2@2.0",
-              priceLabel: "$180 / 1M chars",
-              priceUsd: 0.00018,
-              latencyMs: 400,
-              uptime: 0.999,
-              selfReported: true,
-              address: "0x3c985A6578134cbB485f97EB8526D2bd6247a1CA",
-              qualityMetric: 0.875
-            }
+            { name: "OpenAI TTS", serviceId: "openai/tts-1@1.0", priceLabel: "$15 / 1M chars", latencyMs: 500, uptime: 0.999, selfReported: true, address: "0x2b0a2e691866F6B6D50A3B10c5ADD78fa7124CF7", dimensions: { cost: 0.55, quality: 0.75, speed: 0.88, reliability: 0.999 } },
+            { name: "ElevenLabs TTS v2", serviceId: "elevenlabs/tts-v2@2.0", priceLabel: "$180 / 1M chars", latencyMs: 400, uptime: 0.999, selfReported: true, address: "0x3c985A6578134cbB485f97EB8526D2bd6247a1CA", dimensions: { cost: 0.20, quality: 0.90, speed: 0.92, reliability: 0.999 } }
           ],
           "ai.video.generation": [
-            {
-              name: "Kling 3.0",
-              serviceId: "kuaishou/kling-3.0@3.0",
-              priceLabel: "$0.029 / second",
-              priceUsd: 0.029,
-              latencyMs: 60000,
-              uptime: 0.996,
-              selfReported: true,
-              address: "0x45A190637BFF49449131A54054b2fb0DB4B13d30",
-              qualityMetric: 0.835
-            },
-            {
-              name: "Veo 3.1",
-              serviceId: "google/veo-3.1@3.1",
-              priceLabel: "$0.20 / second",
-              priceUsd: 0.2,
-              latencyMs: 45000,
-              uptime: 0.997,
-              selfReported: true,
-              address: "0xa7cDe0B6F843AcBFA7552d72B8899Ae1937da2d9",
-              qualityMetric: 0.847
-            }
+            { name: "Kling 3.0", serviceId: "kuaishou/kling-3.0@3.0", priceLabel: "$0.029 / second", latencyMs: 60000, uptime: 0.996, selfReported: true, address: "0x45A190637BFF49449131A54054b2fb0DB4B13d30", dimensions: { cost: 0.90, quality: 0.84, speed: 0.12, reliability: 0.996 } },
+            { name: "Veo 3.1", serviceId: "google/veo-3.1@3.1", priceLabel: "$0.20 / second", latencyMs: 45000, uptime: 0.997, selfReported: true, address: "0xa7cDe0B6F843AcBFA7552d72B8899Ae1937da2d9", dimensions: { cost: 0.60, quality: 0.85, speed: 0.18, reliability: 0.997 } }
           ],
           "ai.llm.embedding": [
-            {
-              name: "text-embedding-3-large",
-              serviceId: "openai/text-embedding-3-large@3.0",
-              priceLabel: "$0.13 / 1M tokens",
-              priceUsd: 0.00000013,
-              latencyMs: 100,
-              uptime: 0.999,
-              selfReported: false,
-              address: "0x5e7d5fc2A62623a72322cC4C1C9Eda4d08F3a353",
-              qualityMetric: 0.646
-            },
-            {
-              name: "Voyage 3 Large",
-              serviceId: "voyageai/voyage-3-large@3.0",
-              priceLabel: "$0.18 / 1M tokens",
-              priceUsd: 0.00000018,
-              latencyMs: 150,
-              uptime: 0.998,
-              selfReported: false,
-              address: "0x14D9a01533cecB6FaB0b74C363727f702C259a61",
-              qualityMetric: 0.662
-            }
+            { name: "text-embedding-3-large", serviceId: "openai/text-embedding-3-large@3.0", priceLabel: "$0.13 / 1M tokens", latencyMs: 100, uptime: 0.999, selfReported: false, address: "0x5e7d5fc2A62623a72322cC4C1C9Eda4d08F3a353", dimensions: { cost: 0.88, quality: 0.65, speed: 0.98, reliability: 0.999 } },
+            { name: "Voyage 3 Large", serviceId: "voyageai/voyage-3-large@3.0", priceLabel: "$0.18 / 1M tokens", latencyMs: 150, uptime: 0.998, selfReported: false, address: "0x14D9a01533cecB6FaB0b74C363727f702C259a61", dimensions: { cost: 0.83, quality: 0.66, speed: 0.96, reliability: 0.998 } }
           ],
-          "ai.data.search": [
-            {
-              name: "Tavily Search",
-              serviceId: "tavily/search-api@v1",
-              priceLabel: "$0.001 / query",
-              priceUsd: 0.001,
-              latencyMs: 800,
-              uptime: 0.998,
-              selfReported: true,
-              address: "0xF7cDd620b3C9e20203bf12440973989743Baf92F",
-              qualityMetric: 0.92
-            },
-            {
-              name: "Exa Search",
-              serviceId: "exa/search-api@v1",
-              priceLabel: "$0.003 / query",
-              priceUsd: 0.003,
-              latencyMs: 600,
-              uptime: 0.997,
-              selfReported: true,
-              address: "0x553984Bb7100978F763f67Ed2fC5B5AA4778E1e1",
-              qualityMetric: 0.95
-            },
-            {
-              name: "Jina Reader",
-              serviceId: "jina/reader@v1",
-              priceLabel: "$0 / page",
-              priceUsd: 0,
-              latencyMs: 2000,
-              uptime: 0.996,
-              selfReported: false,
-              address: "0x2142D2a1BBD5C4a6277D121B1DCc1B09176c390b",
-              qualityMetric: 0.5
-            },
-            {
-              name: "Firecrawl",
-              serviceId: "firecrawl/scrape@v1",
-              priceLabel: "$0.001 / page",
-              priceUsd: 0.001,
-              latencyMs: 3000,
-              uptime: 0.997,
-              selfReported: false,
-              address: "0xF2BF8B0dEfd8dD49DC02F99518e81B132e96Bbd8",
-              qualityMetric: 0.5
-            }
+          "ai.audio.stt": [
+            { name: "Deepgram Nova-2", serviceId: "deepgram/nova@v2", priceLabel: "$0.0043 / min", latencyMs: 200, uptime: 0.999, selfReported: false, address: "0x71710D38155B3A09936147f67DBB18b5F3818e43", dimensions: { cost: 0.88, quality: 0.85, speed: 0.92, reliability: 0.999 } },
+            { name: "OpenAI Whisper", serviceId: "openai/whisper@v1", priceLabel: "$0.006 / min", latencyMs: 3000, uptime: 0.999, selfReported: false, address: "0x9CbFa1086aAd16E50Be4E654E88C59d08D6b01ae", dimensions: { cost: 0.82, quality: 0.80, speed: 0.45, reliability: 0.999 } }
+          ],
+          "ai.code.completion": [
+            { name: "Cursor", serviceId: "cursor/editor@v1", priceLabel: "Free tier", latencyMs: 200, uptime: 0.998, selfReported: true, address: "0x58C2ac638A77CfCd22Af2750b453C0DAe32400E0", dimensions: { cost: 1.0, quality: 0.82, speed: 0.92, reliability: 0.998 } },
+            { name: "GitHub Copilot", serviceId: "github/copilot@v1", priceLabel: "$10 / month", latencyMs: 150, uptime: 0.999, selfReported: false, address: "0xb76797Ad243fAD4643D419D52ed4bA44C301Dd5c", dimensions: { cost: 0.65, quality: 0.88, speed: 0.95, reliability: 0.999 } }
+          ],
+          "ai.nlp.translation": [
+            { name: "DeepL Translate", serviceId: "deepl/translate@v2", priceLabel: "$0.00002 / char", latencyMs: 200, uptime: 0.999, selfReported: false, address: "0x3B720a048CF91d011B696040a952e0754f921af4", dimensions: { cost: 0.90, quality: 0.92, speed: 0.92, reliability: 0.999 } },
+            { name: "Google Cloud Translation", serviceId: "google/translate@v3", priceLabel: "$0.00002 / char", latencyMs: 150, uptime: 0.999, selfReported: false, address: "0x6abA07310EcFD9ce836C920295293fDc43329EC5", dimensions: { cost: 0.90, quality: 0.85, speed: 0.95, reliability: 0.999 } }
+          ],
+          "ai.vision.ocr": [
+            { name: "Google Cloud Vision OCR", serviceId: "google/vision-ocr@v1", priceLabel: "$0.0015 / image", latencyMs: 500, uptime: 0.999, selfReported: false, address: "0xfb4e92F27B942876Be20771dB965E543AaC70A94", dimensions: { cost: 0.90, quality: 0.88, speed: 0.75, reliability: 0.999 } }
+          ],
+          "tool.data.search": [
+            { name: "Tavily Search", serviceId: "tavily/search-api@v1", priceLabel: "$0.001 / query", latencyMs: 800, uptime: 0.998, selfReported: true, address: "0xF7cDd620b3C9e20203bf12440973989743Baf92F", dimensions: { cost: 0.88, quality: 0.92, speed: 0.78, reliability: 0.998 } },
+            { name: "Exa Search", serviceId: "exa/search-api@v1", priceLabel: "$0.003 / query", latencyMs: 600, uptime: 0.997, selfReported: true, address: "0x553984Bb7100978F763f67Ed2fC5B5AA4778E1e1", dimensions: { cost: 0.82, quality: 0.95, speed: 0.85, reliability: 0.997 } }
+          ],
+          "tool.data.scraping": [
+            { name: "Jina Reader", serviceId: "jina/reader@v1", priceLabel: "Free", latencyMs: 2000, uptime: 0.996, selfReported: false, address: "0x2142D2a1BBD5C4a6277D121B1DCc1B09176c390b", dimensions: { cost: 1.0, quality: 0.65, speed: 0.50, reliability: 0.996 } },
+            { name: "Firecrawl", serviceId: "firecrawl/scrape@v1", priceLabel: "$0.001 / page", latencyMs: 3000, uptime: 0.997, selfReported: false, address: "0xF2BF8B0dEfd8dD49DC02F99518e81B132e96Bbd8", dimensions: { cost: 0.88, quality: 0.78, speed: 0.38, reliability: 0.997 } }
+          ],
+          "tool.automation.browser": [
+            { name: "Browserbase", serviceId: "browserbase/api@v1", priceLabel: "$0.01 / min", latencyMs: 2000, uptime: 0.998, selfReported: false, address: "0x52CBd6295A7813e50aa8FA3A3E2b8148A01bD6a1", dimensions: { cost: 0.75, quality: 0.82, speed: 0.50, reliability: 0.998 } },
+            { name: "Steel Browser", serviceId: "steel/browser@v1", priceLabel: "$0.005 / min", latencyMs: 1500, uptime: 0.995, selfReported: false, address: "0x82c0538b1eD43E8eA88158D988D24c7647735e04", dimensions: { cost: 0.85, quality: 0.86, speed: 0.58, reliability: 0.995 } }
+          ],
+          "tool.productivity.spreadsheet": [
+            { name: "Airtable", serviceId: "airtable/api@v1", priceLabel: "Free tier", latencyMs: 120, uptime: 0.999, selfReported: false, address: "0x53d11edF5B0B7a447431FAF42260f22BEA9FFB66", dimensions: { cost: 0.95, quality: 0.84, speed: 0.93, reliability: 0.999 } },
+            { name: "Google Sheets", serviceId: "google/sheets-api@v4", priceLabel: "Free", latencyMs: 100, uptime: 0.9995, selfReported: false, address: "0x71C4eDf7182028794Ab4dC85C9a372394D5439A4", dimensions: { cost: 1.0, quality: 0.88, speed: 0.95, reliability: 0.9995 } }
+          ],
+          "tool.devops.logging": [
+            { name: "Better Stack", serviceId: "betterstack/logs@v2", priceLabel: "Free tier", latencyMs: 30, uptime: 0.999, selfReported: false, address: "0xe201e55c505b2e487A2b337F6b7f70F3fDb110B2", dimensions: { cost: 0.95, quality: 0.82, speed: 1.0, reliability: 0.999 } }
+          ],
+          "tool.productivity.scheduling": [
+            { name: "Cal.com", serviceId: "cal/scheduling@v2", priceLabel: "Free tier", latencyMs: 100, uptime: 0.998, selfReported: false, address: "0x5f295F0799f67359ddF7A7E9e55257a0811c0b5d", dimensions: { cost: 0.95, quality: 0.80, speed: 0.95, reliability: 0.998 } }
+          ],
+          "tool.devops.ci": [
+            { name: "CircleCI", serviceId: "circleci/cloud@v2", priceLabel: "$0.0006 / credit", latencyMs: 10000, uptime: 0.999, selfReported: false, address: "0x389d4faa7894422B1D9b682b958537E8DDd51426", dimensions: { cost: 0.88, quality: 0.80, speed: 0.28, reliability: 0.999 } },
+            { name: "GitHub Actions", serviceId: "github/actions@v2", priceLabel: "$0.008 / min", latencyMs: 15000, uptime: 0.998, selfReported: false, address: "0x34106Ef224F7FeC935f43340593AF1e314204745", dimensions: { cost: 0.78, quality: 0.85, speed: 0.20, reliability: 0.998 } }
+          ],
+          "infra.auth.identity": [
+            { name: "Clerk", serviceId: "clerk/auth@v5", priceLabel: "Free tier", latencyMs: 60, uptime: 0.999, selfReported: false, address: "0x202911c1708d9226b8f9a8D6dA942953424d6A10", dimensions: { cost: 0.92, quality: 0.88, speed: 0.98, reliability: 0.999 } }
+          ],
+          "tool.data.conversion": [
+            { name: "CloudConvert", serviceId: "cloudconvert/api@v2", priceLabel: "$0.001 / conversion", latencyMs: 2000, uptime: 0.998, selfReported: false, address: "0xbcC6cBBC866442e652dc2068b23221A4c4351179", dimensions: { cost: 0.88, quality: 0.82, speed: 0.50, reliability: 0.998 } }
+          ],
+          "infra.network.dns": [
+            { name: "Cloudflare DNS", serviceId: "cloudflare/dns@v4", priceLabel: "Free", latencyMs: 5, uptime: 0.99999, selfReported: false, address: "0xa2B7a46C8eD8A8365DcCeB0AC8ad8f083Ecbd50E", dimensions: { cost: 1.0, quality: 0.92, speed: 1.0, reliability: 1.0 } }
+          ],
+          "infra.storage.object": [
+            { name: "Cloudflare R2", serviceId: "cloudflare/r2@v1", priceLabel: "Free tier", latencyMs: 30, uptime: 0.99999, selfReported: false, address: "0xFeA4EFe8FF2b4C3a05e2Ff4DdD12C5b18A8e9e34", dimensions: { cost: 0.95, quality: 0.88, speed: 0.98, reliability: 0.9999 } }
+          ],
+          "infra.compute.sandbox": [
+            { name: "E2B Code Sandbox", serviceId: "e2b/sandbox@v1", priceLabel: "$0.0001 / sec", latencyMs: 800, uptime: 0.998, selfReported: false, address: "0xd67f2408C1Df1bCEbC88d7c22398a0f27EC65402", dimensions: { cost: 0.88, quality: 0.82, speed: 0.78, reliability: 0.998 } }
+          ],
+          "infra.compute.serverless": [
+            { name: "Modal", serviceId: "modal/serverless@v1", priceLabel: "$0.000016 / cpu-s", latencyMs: 500, uptime: 0.998, selfReported: false, address: "0x89183d97554291924DB3aeC2703D048d5E4e7db0", dimensions: { cost: 0.92, quality: 0.84, speed: 0.88, reliability: 0.998 } }
+          ],
+          "tool.productivity.calendar": [
+            { name: "Google Calendar", serviceId: "google/calendar-api@v3", priceLabel: "Free", latencyMs: 80, uptime: 0.9995, selfReported: false, address: "0xFE4b6B5d420B62e997383B44052Fe2aC389f588E", dimensions: { cost: 1.0, quality: 0.90, speed: 0.96, reliability: 0.9995 } }
+          ],
+          "tool.productivity.document": [
+            { name: "Google Docs", serviceId: "google/docs-api@v1", priceLabel: "Free", latencyMs: 120, uptime: 0.9995, selfReported: false, address: "0xD44d5b8Bd4034D92ca03A032aeD3c29a51D410cC", dimensions: { cost: 1.0, quality: 0.88, speed: 0.93, reliability: 0.9995 } }
+          ],
+          "tool.data.geolocation": [
+            { name: "Google Maps Platform", serviceId: "google/maps-platform@v1", priceLabel: "$0.005 / req", latencyMs: 100, uptime: 0.9999, selfReported: false, address: "0x8eB681fe4fbEecA210669bb0eA7EF5C05Ab2eE28", dimensions: { cost: 0.85, quality: 0.95, speed: 0.95, reliability: 0.9999 } }
+          ],
+          "tool.productivity.todo": [
+            { name: "Google Tasks", serviceId: "google/tasks-api@v1", priceLabel: "Free", latencyMs: 200, uptime: 0.9995, selfReported: false, address: "0x82C23955a94bA6BCe870e67aC47d080be3b50299", dimensions: { cost: 1.0, quality: 0.78, speed: 0.90, reliability: 0.9995 } },
+            { name: "TickTick", serviceId: "ticktick/api@v2", priceLabel: "Free tier", latencyMs: 150, uptime: 0.998, selfReported: false, address: "0xB81Af5546eEe9FD9cc60320116dEce3858F042A8", dimensions: { cost: 0.95, quality: 0.84, speed: 0.93, reliability: 0.998 } },
+            { name: "Todoist", serviceId: "todoist/api@v2", priceLabel: "Free tier", latencyMs: 120, uptime: 0.999, selfReported: false, address: "0x29e22B366fBbcE9bdc12De5FD992D1925174F9C1", dimensions: { cost: 0.95, quality: 0.82, speed: 0.94, reliability: 0.999 } }
+          ],
+          "tool.business.crm": [
+            { name: "HubSpot CRM", serviceId: "hubspot/crm@v3", priceLabel: "Free tier", latencyMs: 200, uptime: 0.999, selfReported: false, address: "0x3de20Bf87EB178F20f015189d0a9a01d537f549C", dimensions: { cost: 0.95, quality: 0.82, speed: 0.90, reliability: 0.999 } }
+          ],
+          "infra.security.secrets": [
+            { name: "Infisical", serviceId: "infisical/secrets@v1", priceLabel: "Free tier", latencyMs: 30, uptime: 0.999, selfReported: false, address: "0xA305F0AAc13c663C9cded280Cc9174F66bcD30Fd", dimensions: { cost: 0.95, quality: 0.86, speed: 1.0, reliability: 0.999 } }
+          ],
+          "tool.productivity.knowledge": [
+            { name: "Notion", serviceId: "notion/api@v1", priceLabel: "Free tier", latencyMs: 250, uptime: 0.999, selfReported: false, address: "0xd78E2a015e7ebA0e5e1D469af32cA23000D01B77", dimensions: { cost: 0.92, quality: 0.88, speed: 0.87, reliability: 0.999 } }
+          ],
+          "tool.data.pdf": [
+            { name: "PDF.co", serviceId: "pdfco/api@v1", priceLabel: "$0.005 / page", latencyMs: 1000, uptime: 0.997, selfReported: false, address: "0x0Ec016d126F32B7b18279029a5A6848Be3106632", dimensions: { cost: 0.88, quality: 0.78, speed: 0.62, reliability: 0.997 } }
+          ],
+          "tool.data.analytics": [
+            { name: "PostHog", serviceId: "posthog/analytics@v1", priceLabel: "Free tier", latencyMs: 50, uptime: 0.999, selfReported: false, address: "0x1C2564e45213ce5b643b38Dc2B18A6510D253F66", dimensions: { cost: 0.95, quality: 0.84, speed: 1.0, reliability: 0.999 } }
+          ],
+          "tool.data.visualization": [
+            { name: "QuickChart", serviceId: "quickchart/api@v1", priceLabel: "Free tier", latencyMs: 200, uptime: 0.998, selfReported: false, address: "0x08840F0d3acDD60d8fabf39CbB7D681cB5B00C9d", dimensions: { cost: 0.96, quality: 0.76, speed: 0.90, reliability: 0.998 } }
+          ],
+          "infra.compute.gpu": [
+            { name: "Replicate Serverless GPU", serviceId: "replicate/gpu-serverless@1.0", priceLabel: "$0.000225 / gpu-s", latencyMs: 5000, uptime: 0.995, selfReported: false, address: "0xB4EE680a3C5c53995565f07917A9c5fAfa249590", dimensions: { cost: 0.82, quality: 0.82, speed: 0.38, reliability: 0.995 } },
+            { name: "RunPod Serverless GPU", serviceId: "runpod/gpu-serverless@1.0", priceLabel: "$0.00019 / gpu-s", latencyMs: 3000, uptime: 0.998, selfReported: false, address: "0x5131DD84651fd0285700A6f0BEdC6f2A9648005d", dimensions: { cost: 0.85, quality: 0.82, speed: 0.52, reliability: 0.998 } }
+          ],
+          "tool.communication.email": [
+            { name: "Resend", serviceId: "resend/email-api@v1", priceLabel: "$0.00028 / email", latencyMs: 300, uptime: 0.999, selfReported: true, address: "0x72fC9e616984801E002151f4C040A444B67A624f", dimensions: { cost: 0.90, quality: 0.88, speed: 0.88, reliability: 0.999 } },
+            { name: "SendGrid", serviceId: "twilio/sendgrid@v3", priceLabel: "$0.00035 / email", latencyMs: 400, uptime: 0.999, selfReported: false, address: "0x04E242C36b6a91a33f9Af6dcEc46958F9F6B641c", dimensions: { cost: 0.88, quality: 0.80, speed: 0.85, reliability: 0.999 } }
+          ],
+          "tool.data.screenshot": [
+            { name: "ScreenshotOne", serviceId: "screenshotone/api@v1", priceLabel: "$0.001 / shot", latencyMs: 3000, uptime: 0.998, selfReported: false, address: "0xF3905FBA470320034f71C7e8f8A6e4Fa1828ebc4", dimensions: { cost: 0.88, quality: 0.78, speed: 0.50, reliability: 0.998 } }
+          ],
+          "tool.devops.monitoring": [
+            { name: "Sentry", serviceId: "sentry/error-tracking@v1", priceLabel: "Free tier", latencyMs: 50, uptime: 0.999, selfReported: false, address: "0xf70C1176AA1dd83fEbD130475c49F59f09b85b3E", dimensions: { cost: 0.95, quality: 0.90, speed: 1.0, reliability: 0.999 } }
+          ],
+          "tool.payment.processing": [
+            { name: "Stripe", serviceId: "stripe/payments@v1", priceLabel: "2.9% + $0.30 / tx", latencyMs: 300, uptime: 0.9999, selfReported: false, address: "0xDe89c88C74dc4CA5d630860Ee1365a868D337780", dimensions: { cost: 0.60, quality: 0.95, speed: 0.88, reliability: 0.9999 } }
+          ],
+          "infra.database.postgres": [
+            { name: "Neon Serverless Postgres", serviceId: "neon/serverless-postgres@v1", priceLabel: "Free tier", latencyMs: 8, uptime: 0.999, selfReported: false, address: "0x0C3eEB38519A5e39702f9D5C04084f2ca19C05E7", dimensions: { cost: 0.95, quality: 0.86, speed: 1.0, reliability: 0.999 } },
+            { name: "Supabase", serviceId: "supabase/database@v2", priceLabel: "Free tier", latencyMs: 15, uptime: 0.999, selfReported: false, address: "0x8955Cd6ee061aA0a15d21e08Ce9631A5774D6F2c", dimensions: { cost: 0.95, quality: 0.88, speed: 0.99, reliability: 0.999 } }
+          ],
+          "infra.database.vector": [
+            { name: "Pinecone", serviceId: "pinecone/index@v3", priceLabel: "Free tier", latencyMs: 20, uptime: 0.999, selfReported: false, address: "0xC7aB1B2720e8f5e421ac32Fe1A04Ecf5b566bA50", dimensions: { cost: 0.95, quality: 0.86, speed: 0.98, reliability: 0.999 } },
+            { name: "Qdrant", serviceId: "qdrant/cloud@v1", priceLabel: "Free tier", latencyMs: 10, uptime: 0.998, selfReported: false, address: "0xe4c629864b739ff9aaA6aAD5251e02DD887B2126", dimensions: { cost: 0.95, quality: 0.84, speed: 1.0, reliability: 0.998 } }
+          ],
+          "tool.communication.sms": [
+            { name: "Twilio SMS", serviceId: "twilio/sms@v1", priceLabel: "$0.0079 / msg", latencyMs: 200, uptime: 0.999, selfReported: false, address: "0xaB71d286DAFeD9177096B70D24344ed93997f514", dimensions: { cost: 0.78, quality: 0.90, speed: 0.92, reliability: 0.999 } }
+          ],
+          "tool.productivity.forms": [
+            { name: "Typeform", serviceId: "typeform/api@v1", priceLabel: "Free tier", latencyMs: 150, uptime: 0.998, selfReported: false, address: "0x991901D6d8fEA662dA606E12916cC4cb89264467", dimensions: { cost: 0.95, quality: 0.80, speed: 0.93, reliability: 0.998 } }
+          ],
+          "infra.messaging.queue": [
+            { name: "Upstash QStash", serviceId: "upstash/qstash@v2", priceLabel: "$0.000001 / msg", latencyMs: 50, uptime: 0.999, selfReported: false, address: "0xF165c1DbCbc201523b643Ba6112797412Db5B5F7", dimensions: { cost: 0.96, quality: 0.82, speed: 1.0, reliability: 0.999 } }
+          ],
+          "infra.database.kv": [
+            { name: "Upstash Redis", serviceId: "upstash/redis@v2", priceLabel: "$0.000002 / req", latencyMs: 2, uptime: 0.999, selfReported: false, address: "0x2A42e2Dc591C79e9524b81Ed47a8725fA15F9fbd", dimensions: { cost: 0.95, quality: 0.86, speed: 1.0, reliability: 0.999 } }
+          ],
+          "tool.devops.deployment": [
+            { name: "Vercel", serviceId: "vercel/platform@v1", priceLabel: "Free tier", latencyMs: 1000, uptime: 0.999, selfReported: false, address: "0xf321B3EA2469266CA49b571c416B157b76eda49d", dimensions: { cost: 0.95, quality: 0.88, speed: 0.62, reliability: 0.999 } },
+            { name: "Fly.io", serviceId: "fly/machines@v1", priceLabel: "$0.0031 / cpu-h", latencyMs: 2000, uptime: 0.998, selfReported: false, address: "0xeac1843e2eAD31237CA8fC46d22bC77fc025D2F4", dimensions: { cost: 0.88, quality: 0.82, speed: 0.50, reliability: 0.998 } }
+          ],
+          "tool.productivity.project": [
+            { name: "Linear", serviceId: "linear/api@v2", priceLabel: "Free tier", latencyMs: 80, uptime: 0.999, selfReported: false, address: "0x316A2A9D2a1be20604e2f6687431cA31Ab3eB20B", dimensions: { cost: 0.92, quality: 0.88, speed: 0.96, reliability: 0.999 } }
+          ],
+          "tool.communication.chat": [
+            { name: "Discord", serviceId: "discord/api@v10", priceLabel: "Free", latencyMs: 80, uptime: 0.998, selfReported: false, address: "0x8D5008676A8A113764B867F2672b748B4C676BA4", dimensions: { cost: 1.0, quality: 0.80, speed: 0.96, reliability: 0.998 } },
+            { name: "Slack", serviceId: "slack/web-api@v2", priceLabel: "Free tier", latencyMs: 100, uptime: 0.999, selfReported: false, address: "0xb8d7707f051dFa10260f28aB02ddA50EeA27C99B", dimensions: { cost: 0.95, quality: 0.84, speed: 0.95, reliability: 0.999 } }
+          ],
+          "tool.data.weather": [
+            { name: "OpenWeatherMap", serviceId: "openweathermap/api@v3", priceLabel: "Free tier", latencyMs: 200, uptime: 0.998, selfReported: false, address: "0xB2a89543e9E0c03f5684445787e956fF8a39EFA2", dimensions: { cost: 0.96, quality: 0.76, speed: 0.90, reliability: 0.998 } }
           ]
         },
         proof: {
@@ -2257,12 +2216,9 @@
       const DEFAULT_PROOF_DATA = JSON.parse(JSON.stringify(WORKBENCH_DATA.proof));
 
       const TAXONOMIES = [
-        "ai.llm.chat",
-        "ai.vision.image_generation",
-        "ai.audio.tts",
-        "ai.video.generation",
-        "ai.llm.embedding",
-        "ai.data.search"
+        "ai.llm.chat","ai.vision.image_generation","ai.audio.tts","ai.video.generation","ai.llm.embedding","ai.audio.stt","ai.code.completion","ai.nlp.translation","ai.vision.ocr",
+        "tool.data.search","tool.data.scraping","tool.automation.browser","tool.productivity.spreadsheet","tool.devops.logging","tool.productivity.scheduling","tool.devops.ci","tool.data.conversion","tool.productivity.calendar","tool.productivity.document","tool.data.geolocation","tool.productivity.todo","tool.business.crm","tool.productivity.knowledge","tool.data.pdf","tool.data.analytics","tool.data.visualization","tool.communication.email","tool.data.screenshot","tool.devops.monitoring","tool.payment.processing","tool.communication.sms","tool.productivity.forms","tool.devops.deployment","tool.productivity.project","tool.communication.chat","tool.data.weather",
+        "infra.auth.identity","infra.network.dns","infra.storage.object","infra.compute.sandbox","infra.compute.serverless","infra.compute.gpu","infra.database.postgres","infra.database.vector","infra.security.secrets","infra.messaging.queue","infra.database.kv"
       ];
 
       const state = {
