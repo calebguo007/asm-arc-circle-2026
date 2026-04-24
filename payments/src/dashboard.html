@@ -1748,9 +1748,54 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+
+    /* ── Powered by Strip ── */
+    .powered-by-strip {
+      position: sticky; top:0; z-index:999;
+      display:flex; align-items:center; gap:10px;
+      height:32px; padding:0 16px;
+      background:rgba(15,17,21,0.85);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      font-size:12px; font-weight:500;
+      color:rgba(255,255,255,0.55);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    }
+    .pb-label { letter-spacing:0.04em; text-transform:uppercase; color:rgba(255,255,255,0.35); }
+    .pb-logo { white-space:nowrap; }
+    .pb-logo.pb-arc { color:#5ac8a0; }
+    .pb-logo.pb-arc::before { content:"●"; margin-right:4px; font-size:9px; vertical-align:middle; }
+    .pb-logo.pb-circle { color:#3e7bfa; }
+    .pb-logo.pb-circle::before { content:"◆"; margin-right:4px; font-size:9px; vertical-align:middle; }
+    .pb-divider { color:rgba(255,255,255,0.18); }
+    .pb-chain { font-family:var(--mono); font-size:11px; color:rgba(255,255,255,0.28); }
+
+    /* ── Dual Hero Badges ── */
+    .hero-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:100px; font-family:var(--mono); font-size:11px; font-weight:500; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.04); }
+    .hero-badge-arc { color:#5ac8a0; background:rgba(90,200,160,0.08); border-color:rgba(90,200,160,0.15); }
+    .hero-badge-circle { color:#3e7bfa; background:rgba(62,123,250,0.08); border-color:rgba(62,123,250,0.15); }
+    .dot-arc { width:6px; height:6px; border-radius:50%; background:#5ac8a0; box-shadow:0 0 5px rgba(90,200,160,0.6); flex-shrink:0; }
+    .dot-circle { width:6px; height:6px; border-radius:50%; background:#3e7bfa; box-shadow:0 0 5px rgba(62,123,250,0.6); flex-shrink:0; }
+
+    /* ── Arc Explorer Link ── */
+    .tx-explorer-link {
+      font-family:var(--mono); font-size:10px; color:rgba(119,168,255,0.75);
+      text-decoration:none; white-space:nowrap; transition:color 0.15s;
+      cursor:pointer;
+    }
+    .tx-explorer-link:hover { color:rgba(119,168,255,1); text-decoration:underline; }
+    .tx-explorer-link.tx-mock { color:rgba(255,255,255,0.22); pointer-events:none; cursor:default; }
   </style>
 </head>
 <body>
+  <!-- Powered by Strip -->
+  <div class="powered-by-strip">
+    <span class="pb-label">Powered by</span>
+    <span class="pb-logo pb-arc">Arc Testnet</span>
+    <span class="pb-divider">&times;</span>
+    <span class="pb-logo pb-circle">Circle x402</span>
+    <span class="pb-chain">eip155:5042002 &middot; USDC settlement</span>
+  </div>
+
   <div class="app">
     <div class="shell">
       <header class="topbar panel">
@@ -1776,7 +1821,8 @@
           <div class="pill">70 services</div>
           <div class="pill">47 categories</div>
           <div class="pill">schema v0.3</div>
-          <div class="pill"><span class="live-dot" aria-hidden="true"></span>Arc testnet live</div>
+          <span class="hero-badge hero-badge-arc"><span class="dot dot-arc"></span> Live on Arc Testnet</span>
+          <span class="hero-badge hero-badge-circle"><span class="dot dot-circle"></span> Circle x402 Payments</span>
         </div>
       </header>
 
@@ -3148,7 +3194,13 @@
               <div class="log-bottom">
                 <div>${truncateAddress(log.address)} · ${formatUsd(log.amount)}</div>
                 <div>${log.taxonomy}</div>
-                <div>${log.timestamp} · ${log.txHash.slice(0, 10)}…</div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span>${log.timestamp} · ${log.txHash.slice(0, 10)}…</span>
+                  ${log.txHash && log.txHash.startsWith("0xmock_")
+                    ? `<span class="tx-explorer-link tx-mock">Mock tx (demo mode)</span>`
+                    : `<a href="https://explorer.arc.network/tx/${log.txHash}" target="_blank" rel="noopener" class="tx-explorer-link">View on Arc Explorer ↗</a>`
+                  }
+                </div>
               </div>
             </div>
           `).join("");

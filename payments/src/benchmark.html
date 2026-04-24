@@ -1359,9 +1359,49 @@
         display: none;
       }
     }
+
+    /* ── Powered by Strip ── */
+    .powered-by-strip {
+      position:sticky; top:0; z-index:999;
+      display:flex; align-items:center; gap:10px;
+      height:32px; padding:0 16px;
+      background:rgba(1,1,1,0.88);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      font-size:12px; font-weight:500;
+      color:rgba(247,252,248,0.45);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    }
+    .pb-label { letter-spacing:0.04em; text-transform:uppercase; color:rgba(190,205,195,0.3); }
+    .pb-logo { white-space:nowrap; }
+    .pb-logo.pb-arc { color:#5ac8a0; }
+    .pb-logo.pb-arc::before { content:"●"; margin-right:4px; font-size:9px; vertical-align:middle; }
+    .pb-logo.pb-circle { color:#3e7bfa; }
+    .pb-logo.pb-circle::before { content:"◆"; margin-right:4px; font-size:9px; vertical-align:middle; }
+    .pb-divider { color:rgba(255,255,255,0.15); }
+    .pb-chain { font-family:var(--mono); font-size:11px; color:rgba(190,205,195,0.22); }
+
+    /* ── Benchmark Subtitle ── */
+    .hero-subtitle {
+      margin-top:12px;
+      font-family:var(--mono);
+      font-size:14px;
+      font-weight:500;
+      letter-spacing:0.02em;
+      color:rgba(119,255,158,0.55);
+    }
+    .hero-subtitle span { color:rgba(71,168,255,0.65); }
   </style>
 </head>
 <body>
+  <!-- Powered by Strip -->
+  <div class="powered-by-strip">
+    <span class="pb-label">Powered by</span>
+    <span class="pb-logo pb-arc">Arc Testnet</span>
+    <span class="pb-divider">&times;</span>
+    <span class="pb-logo pb-circle">Circle x402</span>
+    <span class="pb-chain">eip155:5042002 &middot; USDC settlement</span>
+  </div>
+
   <main>
     <section class="hero" id="top">
       <div class="hero-flow" aria-hidden="true">
@@ -1375,6 +1415,7 @@
         <div class="hero-copy">
           <h1>Agent Commerce Manifest</h1>
           <p>Compare services, route work, and settle every agent call with verifiable payment records.</p>
+          <div class="hero-subtitle">50 decisions &middot; settled via <span>Circle x402</span> on Arc Testnet</div>
         </div>
       </div>
       <a class="scroll-cue" href="#showcase" aria-label="Enter showcase"><span class="visually-hidden">Enter showcase</span></a>
