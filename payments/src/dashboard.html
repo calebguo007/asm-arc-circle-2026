@@ -470,6 +470,31 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 3px rgba(var(--success-rgb), 0.045);
     }
 
+    /* Native dropdown list: dark bg to match app theme (Chrome/Firefox honor this) */
+    .select option {
+      background: #0f1115;
+      color: rgba(255, 255, 255, 0.94);
+      padding: 8px 12px;
+    }
+    .select option:checked,
+    .select option:hover {
+      background: rgba(90, 200, 160, 0.18);
+      color: #ffffff;
+    }
+
+    /* Caret indicator (since appearance:none strips native arrow) */
+    .select {
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.55) 50%),
+        linear-gradient(-45deg, transparent 50%, rgba(255,255,255,0.55) 50%);
+      background-position:
+        calc(100% - 16px) 50%,
+        calc(100% - 11px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 28px;
+    }
+
     .slider-row {
       display: grid;
       gap: 7px;
