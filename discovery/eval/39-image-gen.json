@@ -3,31 +3,31 @@
   "category": "image-gen",
   "prompt": "Thumbnail for short video, bold text overlay, 720x1280",
   "expected_taxonomy": "ai.vision.image_generation",
-  "matched_taxonomy": "ai.audio.tts",
-  "confidence": 0.5095,
+  "matched_taxonomy": "ai.vision.image_generation",
+  "confidence": 0.4134,
   "candidates": [
     {
-      "taxonomy": "ai.audio.tts",
-      "score": 0.5095
+      "taxonomy": "ai.video.generation",
+      "score": 0.4994
     },
     {
-      "taxonomy": "tool.business.crm",
-      "score": 0.3038
+      "taxonomy": "tool.data.screenshot",
+      "score": 0.4707
     },
     {
-      "taxonomy": "ai.llm.chat",
-      "score": 0.2884
+      "taxonomy": "tool.data.conversion",
+      "score": 0.4135
     },
     {
-      "taxonomy": "tool.data.visualization",
-      "score": 0.28
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.4134
     },
     {
-      "taxonomy": "tool.productivity.forms",
-      "score": 0.2698
+      "taxonomy": "tool.communication.sms",
+      "score": 0.4015
     }
   ],
-  "reasoning": "LangGraph: selected ai.audio.tts for \"Thumbnail for short video, bold text overlay, 720x1280\" (0.509). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.vision.image_generation for \"Thumbnail for short video, bold text overlay, 720x1280\" (0.413). The user's action is creating a thumbnail (a static image) with specific design elements (bold text overlay, dimensions 720x1280), which involves generating an image, not generating a video or taking a screenshot. Therefore, ai.vision.image_generation is the correct taxonomy for the image creation action, despite the mention of 'short video' as the domain.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

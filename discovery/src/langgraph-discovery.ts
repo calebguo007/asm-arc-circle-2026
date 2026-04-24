@@ -59,15 +59,22 @@ async function llmRerankCandidates(
   }
   const model = new ChatOpenAI({
     apiKey,
-    model: process.env.OPENAI_CHAT_MODEL || "gpt-4o-mini",
+    model: process.env.OPENAI_CHAT_MODEL ?? "gpt-4o-mini",
     temperature: 0,
-    configuration: {
-      baseURL: process.env.OPENAI_BASE_URL || undefined,
-    },
+    configuration: process.env.OPENAI_BASE_URL
+      ? { baseURL: process.env.OPENAI_BASE_URL }
+      : undefined,
   });
   const prompt = [
     "You are ranking ASM taxonomy candidates for a user task.",
     "Return strict JSON only: {\"taxonomy\": string, \"reasoning\": string}.",
+    "CRITICAL RULE: Pick the taxonomy for the VERB / ACTION the user wants to perform, NOT the DOMAIN they mention.",
+    "Examples:",
+    "- 'Write an Instagram caption' → pick ai.llm.chat (the action is writing text), NOT tool.communication.chat",
+    "- 'Generate a Google Analytics snippet' → pick ai.code.completion (the action is generating code), NOT tool.data.analytics",
+    "- 'Generate webhook handler for Circle payment' → pick ai.code.completion (generating code), NOT tool.payment.processing",
+    "- 'Embed landing-page headlines to find similar ones' → pick ai.llm.embedding (embedding creation), NOT tool.data.search",
+    "- '6s product demo video, screen-recording style' → pick ai.video.generation (creating video), NOT tool.data.screenshot",
     `Task: ${task}`,
     `Candidates: ${candidates.map((c) => `${c.taxonomy} (similarity=${c.score.toFixed(4)})`).join(", ")}`,
     "Pick exactly one taxonomy from Candidates.",

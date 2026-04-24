@@ -20,8 +20,8 @@ export class OpenAIEmbedder implements Embedder {
   name = "openai-text-embedding-3-small";
   constructor(
     private readonly apiKey: string,
-    private readonly model = "text-embedding-3-small",
-    private readonly baseUrl = process.env.OPENAI_BASE_URL || "https://api.openai.com",
+    private readonly model = process.env.OPENAI_EMBEDDING_MODEL ?? "text-embedding-3-small",
+    private readonly baseUrl = process.env.OPENAI_BASE_URL ?? "https://api.openai.com",
   ) {}
 
   async embed(text: string): Promise<number[]> {

@@ -3,31 +3,31 @@
   "category": "code-gen",
   "prompt": "Generate TikTok Pixel install snippet for the landing page",
   "expected_taxonomy": "ai.code.completion",
-  "matched_taxonomy": "tool.communication.sms",
-  "confidence": 0.2734,
+  "matched_taxonomy": "ai.code.completion",
+  "confidence": 0.4799,
   "candidates": [
     {
-      "taxonomy": "tool.communication.sms",
-      "score": 0.2734
+      "taxonomy": "ai.code.completion",
+      "score": 0.4799
     },
     {
-      "taxonomy": "tool.data.conversion",
-      "score": 0.2724
+      "taxonomy": "tool.data.analytics",
+      "score": 0.4712
     },
     {
-      "taxonomy": "tool.data.weather",
-      "score": 0.2723
+      "taxonomy": "tool.data.screenshot",
+      "score": 0.4484
     },
     {
-      "taxonomy": "ai.vision.ocr",
-      "score": 0.2587
+      "taxonomy": "tool.productivity.forms",
+      "score": 0.3952
     },
     {
-      "taxonomy": "ai.llm.chat",
-      "score": 0.2568
+      "taxonomy": "tool.data.visualization",
+      "score": 0.3909
     }
   ],
-  "reasoning": "LangGraph: selected tool.communication.sms for \"Generate TikTok Pixel install snippet for the landing page\" (0.273). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.code.completion for \"Generate TikTok Pixel install snippet for the landing page\" (0.480). The user's action is 'Generate...snippet,' which is the act of creating code. The domain (TikTok Pixel, analytics) is secondary; the primary verb is generating code, matching ai.code.completion.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

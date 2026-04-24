@@ -3,31 +3,31 @@
   "category": "video-gen",
   "prompt": "3s logo sting, bear mascot animates, brand palette",
   "expected_taxonomy": "ai.video.generation",
-  "matched_taxonomy": "infra.storage.object",
-  "confidence": 0.3217,
+  "matched_taxonomy": "ai.video.generation",
+  "confidence": 0.3296,
   "candidates": [
     {
-      "taxonomy": "infra.storage.object",
-      "score": 0.3217
+      "taxonomy": "ai.video.generation",
+      "score": 0.3296
     },
     {
-      "taxonomy": "tool.devops.logging",
-      "score": 0.2326
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.292
     },
     {
-      "taxonomy": "ai.llm.chat",
-      "score": 0.2289
+      "taxonomy": "ai.audio.stt",
+      "score": 0.2776
     },
     {
-      "taxonomy": "tool.productivity.knowledge",
-      "score": 0.2183
+      "taxonomy": "tool.communication.sms",
+      "score": 0.2734
     },
     {
-      "taxonomy": "tool.productivity.todo",
-      "score": 0.2001
+      "taxonomy": "ai.audio.tts",
+      "score": 0.2729
     }
   ],
-  "reasoning": "LangGraph: selected infra.storage.object for \"3s logo sting, bear mascot animates, brand palette\" (0.322). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.video.generation for \"3s logo sting, bear mascot animates, brand palette\" (0.330). The user's action is creating a short animated video (a '3s logo sting' with an animating bear mascot), which directly matches generating video content, not generating static images (ai.vision.image_generation) or audio processing tasks.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

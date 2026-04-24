@@ -3,31 +3,31 @@
   "category": "embed",
   "prompt": "Embed landing-page headline candidates, find closest to 'relief'",
   "expected_taxonomy": "ai.llm.embedding",
-  "matched_taxonomy": "infra.compute.serverless",
-  "confidence": 0.2681,
+  "matched_taxonomy": "tool.data.search",
+  "confidence": 0.5065,
   "candidates": [
     {
-      "taxonomy": "infra.compute.serverless",
-      "score": 0.2681
-    },
-    {
-      "taxonomy": "infra.network.dns",
-      "score": 0.2612
-    },
-    {
-      "taxonomy": "tool.productivity.todo",
-      "score": 0.2467
-    },
-    {
-      "taxonomy": "infra.security.secrets",
-      "score": 0.2232
-    },
-    {
       "taxonomy": "tool.data.search",
-      "score": 0.2157
+      "score": 0.5065
+    },
+    {
+      "taxonomy": "tool.data.scraping",
+      "score": 0.4875
+    },
+    {
+      "taxonomy": "tool.productivity.document",
+      "score": 0.4693
+    },
+    {
+      "taxonomy": "tool.productivity.scheduling",
+      "score": 0.4439
+    },
+    {
+      "taxonomy": "tool.productivity.forms",
+      "score": 0.4436
     }
   ],
-  "reasoning": "LangGraph: selected infra.compute.serverless for \"Embed landing-page headline candidates, find closest to 'relief'\" (0.268). LLM rerank skipped (missing OPENAI_API_KEY).",
+  "reasoning": "LangGraph: selected tool.data.search for \"Embed landing-page headline candidates, find closest to 'relief'\" (0.506). The user's action is to find the closest match among candidates based on similarity to a target concept ('relief'), which is a search/similarity lookup operation, not embedding creation. The taxonomy tool.data.search directly corresponds to this action of searching or comparing items for similarity.",
   "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }

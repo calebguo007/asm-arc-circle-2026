@@ -3,31 +3,31 @@
   "category": "image-gen",
   "prompt": "Hero image, ADHD user working peacefully, calm palette, 1024x1024",
   "expected_taxonomy": "ai.vision.image_generation",
-  "matched_taxonomy": "infra.compute.sandbox",
-  "confidence": 0.3597,
+  "matched_taxonomy": "ai.vision.image_generation",
+  "confidence": 0.4825,
   "candidates": [
     {
-      "taxonomy": "infra.compute.sandbox",
-      "score": 0.3597
+      "taxonomy": "ai.vision.image_generation",
+      "score": 0.4825
     },
     {
-      "taxonomy": "tool.data.weather",
-      "score": 0.3463
+      "taxonomy": "tool.productivity.document",
+      "score": 0.432
     },
     {
-      "taxonomy": "tool.payment.processing",
-      "score": 0.3361
+      "taxonomy": "ai.llm.chat",
+      "score": 0.3971
     },
     {
-      "taxonomy": "tool.data.geolocation",
-      "score": 0.3143
+      "taxonomy": "tool.data.screenshot",
+      "score": 0.3925
     },
     {
-      "taxonomy": "tool.devops.ci",
-      "score": 0.2946
+      "taxonomy": "tool.data.visualization",
+      "score": 0.3891
     }
   ],
-  "reasoning": "LangGraph: selected infra.compute.sandbox for \"Hero image, ADHD user working peacefully, calm palette, 1024x1024\" (0.360). LLM rerank skipped (missing OPENAI_API_KEY).",
-  "correct": false,
-  "timestamp": "2026-04-23T09:15:24.788Z"
+  "reasoning": "LangGraph: selected ai.vision.image_generation for \"Hero image, ADHD user working peacefully, calm palette, 1024x1024\" (0.482). The user's task is to create a hero image with specific visual attributes (ADHD user working peacefully, calm palette, 1024x1024). The primary action is generating an image, which directly aligns with ai.vision.image_generation, not with domains like productivity tools or data visualization.",
+  "correct": true,
+  "timestamp": "2026-04-24T03:11:08.178Z"
 }
