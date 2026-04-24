@@ -140,7 +140,17 @@ async function llmRerankTaxonomy(
 ): Promise<string | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey || candidates.length === 0) return null;
-  const model = new ChatOpenAI({ apiKey, model: "gpt-4o-mini", temperature: 0 });
+  const defaultModel = process.env.OPENAI_BASE_URL?.includes("openrouter.ai")
+    ? "openrouter/auto"
+    : "gpt-4o-mini";
+  const model = new ChatOpenAI({
+    apiKey,
+    model: process.env.OPENAI_CHAT_MODEL || defaultModel,
+    configuration: process.env.OPENAI_BASE_URL
+      ? { baseURL: process.env.OPENAI_BASE_URL }
+      : undefined,
+    temperature: 0,
+  });
   const prompt = [
     "Pick the best taxonomy from candidates for this task.",
     "Return strict JSON: {\"taxonomy\": \"...\"}.",
@@ -154,14 +164,17 @@ async function llmRerankTaxonomy(
       ? output.content.map((part: any) => (typeof part === "string" ? part : part?.text ?? "")).join("")
       : "";
   try {
-    const parsed = JSON.parse(text) as { taxonomy?: string };
+    const jsonLike = text.includes("{")
+      ? text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)
+      : text;
+    const parsed = JSON.parse(jsonLike) as { taxonomy?: string };
     if (parsed.taxonomy && candidates.some((c) => c.taxonomy === parsed.taxonomy)) {
       return parsed.taxonomy;
     }
   } catch {
     // ignore
   }
-  return null;
+  return candidates[0]?.taxonomy ?? null;
 }
 
 const DiscoveryState = Annotation.Root({
@@ -222,8 +235,15 @@ async function discoverTaxonomyViaLangGraph(request: string): Promise<{
   }
   cachedLangGraphIndex = cachedLangGraphIndex ?? readDiscoveryIndex(indexPath);
   const apiKey = process.env.OPENAI_API_KEY;
-  const embedder = apiKey
-    ? new OpenAIEmbeddings({ apiKey, model: "text-embedding-3-small" })
+  const useOpenAIEmbeddings = process.env.ASM_USE_OPENAI_EMBEDDINGS !== "0";
+  const embedder = apiKey && useOpenAIEmbeddings
+    ? new OpenAIEmbeddings({
+      apiKey,
+      model: process.env.OPENAI_EMBEDDING_MODEL || "text-embedding-3-small",
+      configuration: process.env.OPENAI_BASE_URL
+        ? { baseURL: process.env.OPENAI_BASE_URL }
+        : undefined,
+    })
     : new LocalFakeHashEmbedder(cachedLangGraphIndex.dimensions || 128);
 
   const graph = new StateGraph(DiscoveryState)

@@ -12,12 +12,13 @@ async function main() {
   const catalog = loadTaxonomyCatalogFromManifests(repoRoot);
   const openAiKey = process.env.OPENAI_API_KEY;
   const allowFake = process.env.ASM_ALLOW_FAKE_EMBEDDER === "1";
+  const useOpenAIEmbeddings = process.env.ASM_USE_OPENAI_EMBEDDINGS !== "0";
   if (!openAiKey && !allowFake) {
     throw new Error(
       "OPENAI_API_KEY is required by default. Set ASM_ALLOW_FAKE_EMBEDDER=1 for local/CI fallback.",
     );
   }
-  const embedder = openAiKey
+  const embedder = openAiKey && useOpenAIEmbeddings
     ? new OpenAIEmbedder(openAiKey)
     : new FakeHashEmbedder(128);
 

@@ -57,9 +57,15 @@ async function llmRerankCandidates(
   if (!apiKey || candidates.length === 0) {
     return { taxonomy: null, reasoning: "LLM rerank skipped (missing OPENAI_API_KEY)." };
   }
+  const defaultModel = process.env.OPENAI_BASE_URL?.includes("openrouter.ai")
+    ? "openrouter/auto"
+    : "gpt-4o-mini";
   const model = new ChatOpenAI({
     apiKey,
-    model: "gpt-4o-mini",
+    model: process.env.OPENAI_CHAT_MODEL || defaultModel,
+    configuration: process.env.OPENAI_BASE_URL
+      ? { baseURL: process.env.OPENAI_BASE_URL }
+      : undefined,
     temperature: 0,
   });
   const prompt = [
@@ -76,7 +82,10 @@ async function llmRerankCandidates(
       ? response.content.map((p: any) => (typeof p === "string" ? p : p?.text ?? "")).join("")
       : "";
   try {
-    const parsed = JSON.parse(text) as { taxonomy?: string; reasoning?: string };
+    const jsonLike = text.includes("{")
+      ? text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)
+      : text;
+    const parsed = JSON.parse(jsonLike) as { taxonomy?: string; reasoning?: string };
     if (parsed.taxonomy && candidates.some((c) => c.taxonomy === parsed.taxonomy)) {
       return {
         taxonomy: parsed.taxonomy,
@@ -84,9 +93,13 @@ async function llmRerankCandidates(
       };
     }
   } catch {
-    // ignore malformed output
+    // Ignore malformed JSON; fallback below.
   }
-  return { taxonomy: null, reasoning: "LLM rerank returned invalid output." };
+  const heuristic = candidates[0]?.taxonomy ?? null;
+  return {
+    taxonomy: heuristic,
+    reasoning: "LLM rerank returned invalid output; fallback to top similarity candidate.",
+  };
 }
 
 export async function discoverTaxonomyWithLangGraph(

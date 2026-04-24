@@ -28,7 +28,8 @@ async function main() {
   fs.mkdirSync(evalDir, { recursive: true });
 
   const index = readIndex(indexPath);
-  const embedder = process.env.OPENAI_API_KEY
+  const useOpenAIEmbeddings = process.env.ASM_USE_OPENAI_EMBEDDINGS !== "0";
+  const embedder = process.env.OPENAI_API_KEY && useOpenAIEmbeddings
     ? new OpenAIEmbedder(process.env.OPENAI_API_KEY)
     : new FakeHashEmbedder(index.dimensions || 128);
 
@@ -62,7 +63,9 @@ async function main() {
     total: records.length,
     correct,
     accuracy: Number((correct / Math.max(records.length, 1)).toFixed(4)),
-    embedding_model: process.env.OPENAI_API_KEY ? "openai-text-embedding-3-small" : "fake-hash-v1",
+    embedding_model: process.env.OPENAI_API_KEY && useOpenAIEmbeddings
+      ? (process.env.OPENAI_EMBEDDING_MODEL || "text-embedding-3-small")
+      : "fake-hash-v1",
   };
 
   const runFile = path.join(evalDir, `eval-run-${runSlug}.json`);

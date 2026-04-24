@@ -10,7 +10,8 @@ async function main() {
   const repoRoot = path.resolve(__dirname, "..", "..");
   const indexPath = path.join(repoRoot, "discovery", "data", "taxonomy-index.json");
   const index = readIndex(indexPath);
-  const embedder = process.env.OPENAI_API_KEY
+  const useOpenAIEmbeddings = process.env.ASM_USE_OPENAI_EMBEDDINGS !== "0";
+  const embedder = process.env.OPENAI_API_KEY && useOpenAIEmbeddings
     ? new OpenAIEmbedder(process.env.OPENAI_API_KEY)
     : new FakeHashEmbedder(index.dimensions || 128);
 
