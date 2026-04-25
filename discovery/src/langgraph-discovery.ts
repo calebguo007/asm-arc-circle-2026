@@ -105,6 +105,64 @@ async function llmRerankCandidates(
     "Pick exactly one taxonomy from Candidates. Use the select_taxonomy_and_score function to submit your choice.",
   ].join("\n");
 
+  // ── Provider 0: AI/ML API (Hackathon Partner, OpenAI Compatible) ────
+  const aimlApiKey = process.env.OPENAI_API_KEY;
+  const aimlBaseUrl = process.env.OPENAI_BASE_URL;
+  if (aimlApiKey && aimlBaseUrl?.includes("aimlapi.com")) {
+    try {
+      const aimlModel = process.env.OPENAI_CHAT_MODEL || "google/gemma-3-27b-it";
+      console.log(`[AIMLAPI] Using ${aimlModel} for reranking via ${aimlBaseUrl}...`);
+
+      const model = new ChatOpenAI({
+        apiKey: aimlApiKey,
+        model: aimlModel,
+        temperature: 0,
+        configuration: { baseURL: aimlBaseUrl },
+      });
+
+      const response = await model.invoke(promptLines);
+      const text =
+        typeof response.content === "string"
+          ? response.content
+          : Array.isArray(response.content)
+            ? response.content
+                .map((p: any) =>
+                  typeof p === "string" ? p : p?.text ?? "",
+                )
+                .join("")
+            : "";
+
+      console.log(`[AIMLAPI] Response: ${JSON.stringify(text).substring(0, 200)}`);
+
+      try {
+        const jsonLike = text.includes("{")
+          ? text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)
+          : text;
+        const parsed = JSON.parse(jsonLike) as {
+          taxonomy?: string;
+          reasoning?: string;
+        };
+        if (
+          parsed.taxonomy &&
+          candidates.some((c) => c.taxonomy === parsed.taxonomy)
+        ) {
+          console.log(
+            `[AIMLAPI] ✅ Selected: ${parsed.taxonomy}`,
+          );
+          return {
+            taxonomy: parsed.taxonomy,
+            reasoning: `[AIMLAPI → /api/score] ${parsed.reasoning ?? "Taxonomy selected via AI/ML API (hackathon partner)."}`,
+          };
+        }
+      } catch {
+        // Malformed JSON — fall through to Gemini
+      }
+      console.warn("[AIMLAPI] No usable output, falling back to Gemini...");
+    } catch (err) {
+      console.error("[AIMLAPI] Error:", err);
+    }
+  }
+
   // ── Provider 1: Gemini with Function Calling (Google track) ──────────
   const geminiKey = process.env.GEMINI_API_KEY;
   if (geminiKey) {

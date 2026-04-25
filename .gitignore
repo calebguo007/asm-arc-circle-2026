@@ -38,3 +38,5 @@ paper/x-twitter-thread.md
 payments/benchmark-results/*.json
 !payments/benchmark-results/.gitkeep
 !payments/benchmark-results/sample-for-frontend.json
+.vercel
+.env*.local

@@ -327,13 +327,72 @@ Rules:
 - io_ratio: high for input-heavy tasks (RAG, summarization), low for output-heavy (generation)`;
 
 /**
- * Call Gemini API to parse Agent intent
+ * Call AI/ML API (OpenAI Compatible) or Gemini API to parse Agent intent
+ *
+ * Provider priority:
+ *   1. AI/ML API (aimlapi.com) — hackathon partner, OpenAI-compatible
+ *   2. Gemini Native API — Google Generative AI SDK
+ *   3. Rule engine fallback — no LLM needed
  */
 export async function parseAgentIntent(
   naturalLanguageRequest: string,
   geminiApiKey?: string
 ): Promise<ParsedIntent> {
   const graphDiscovery = await discoverTaxonomyViaLangGraph(naturalLanguageRequest);
+
+  // ── Provider 1: AI/ML API (Hackathon Partner) ─────────────────────
+  const aimlApiKey = process.env.OPENAI_API_KEY;
+  const aimlBaseUrl = process.env.OPENAI_BASE_URL;
+  if (aimlApiKey && aimlBaseUrl?.includes("aimlapi.com")) {
+    try {
+      const aimlModel = process.env.OPENAI_CHAT_MODEL || "google/gemma-3-27b-it";
+      console.log(`[AIMLAPI] Parsing intent with ${aimlModel}...`);
+
+      const resp = await fetch(`${aimlBaseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${aimlApiKey}`,
+        },
+        body: JSON.stringify({
+          model: aimlModel,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: `Agent request: "${naturalLanguageRequest}"\n\nOutput JSON only:` },
+          ],
+          temperature: 0.1,
+          max_tokens: 500,
+        }),
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text();
+        console.warn(`[AIMLAPI] Error (${resp.status}): ${errText.slice(0, 200)}`);
+      } else {
+        const data = await resp.json() as any;
+        const text = data?.choices?.[0]?.message?.content;
+
+        if (text) {
+          try {
+            const parsed = JSON.parse(text);
+            const normalized = normalizeIntent(parsed, naturalLanguageRequest);
+            if (!normalized.taxonomy && graphDiscovery.taxonomy) {
+              normalized.taxonomy = normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest);
+              normalized.reasoning = `${normalized.reasoning}; ${graphDiscovery.reasoning}`;
+            }
+            console.log(`[AIMLAPI] ✅ Intent parsed: taxonomy=${normalized.taxonomy}`);
+            return normalized;
+          } catch {
+            console.warn("[AIMLAPI] Invalid JSON response, falling back...");
+          }
+        }
+      }
+    } catch (err) {
+      console.error(`[AIMLAPI] Call failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  // ── Provider 2: Gemini Native API ─────────────────────────────────
   const apiKey = geminiApiKey || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
