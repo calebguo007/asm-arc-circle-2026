@@ -38,3 +38,14 @@ paper/x-twitter-thread.md
 payments/benchmark-results/*.json
 !payments/benchmark-results/.gitkeep
 !payments/benchmark-results/sample-for-frontend.json
+.vercel
+.env*.local
+
+# Pre-recording cleanup: local research/build artifacts
+*.zip
+ASM_Hackathon_Presentation.pptx
+generate-ppt.js
+research_plan_*.md
+research_report_*.md
+/slides.html
+discovery/scripts/fc-test.cjs

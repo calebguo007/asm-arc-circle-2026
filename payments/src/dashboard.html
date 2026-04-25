@@ -7,6 +7,7 @@
   <style>
     :root {
       color-scheme: dark;
+      --powered-strip-height: 32px;
       --bg-0: #050608;
       --bg-1: #0b0c10;
       --bg-2: #111319;
@@ -105,7 +106,8 @@
     .app {
       position: relative;
       overflow: hidden;
-      min-height: 100vh;
+      min-height: calc(100vh - var(--powered-strip-height));
+      min-height: calc(100dvh - var(--powered-strip-height));
       padding: 12px;
       background:
         radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.045), transparent 34%),
@@ -119,7 +121,8 @@
       display: grid;
       grid-template-rows: 58px minmax(0, 1fr);
       gap: 12px;
-      height: calc(100vh - 24px);
+      height: calc(100vh - var(--powered-strip-height) - 24px);
+      height: calc(100dvh - var(--powered-strip-height) - 24px);
     }
 
     .panel {
@@ -1399,12 +1402,12 @@
     .session-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
+      gap: 6px;
     }
 
     .session-card {
       position: relative;
-      padding: 12px;
+      padding: 10px 11px;
       background: rgba(255, 255, 255, 0.035);
       border: 0.5px solid var(--hairline);
       border-radius: 11px;
@@ -1419,16 +1422,16 @@
     }
 
     .session-card .label {
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-dim);
     }
 
     .session-card .value {
-      margin-top: 6px;
-      font-size: 18px;
-      line-height: 1.1;
+      margin-top: 4px;
+      font-size: 16px;
+      line-height: 1;
       font-family: var(--mono);
     }
 

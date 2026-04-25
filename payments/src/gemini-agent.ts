@@ -327,17 +327,17 @@ Rules:
 - io_ratio: high for input-heavy tasks (RAG, summarization), low for output-heavy (generation)`;
 
 /**
- * Call Gemini API to parse Agent intent.
+ * Call AI/ML API (OpenAI-compatible) or Gemini API to parse Agent intent.
  *
  * Provider selection (in priority order):
- *   1. AIMLAPI (OpenAI-compatible proxy, supports Gemini models) — if AIMLAPI_KEY set
- *      Why: AIMLAPI is a hackathon sponsor providing $10 credit, also gives access
- *      to many models behind one OpenAI-compatible endpoint.
- *   2. Google Gemini native API — if GEMINI_API_KEY set
- *   3. Deterministic rule-based parser — if neither key is set
- *
- * The AIMLAPI route uses /v1/chat/completions (OpenAI shape) with model name
- * configurable via AIMLAPI_MODEL (default "google/gemini-2.0-flash").
+ *   1. AIMLAPI (aimlapi.com) — hackathon partner, OpenAI-compatible proxy
+ *      that supports Gemini models. Provides $10 credit for hackathon
+ *      participants. Triggered when AIMLAPI_KEY is set.
+ *      Endpoint: /v1/chat/completions
+ *      Model: configurable via AIMLAPI_MODEL (default "google/gemini-2.0-flash")
+ *   2. Google Gemini Native API — Google Generative AI SDK.
+ *      Triggered when GEMINI_API_KEY is set (and no AIMLAPI_KEY).
+ *   3. Deterministic rule-based parser — fallback when no LLM key is set.
  */
 // Module-scope flags so we log provider/error info ONCE per server lifetime
 // instead of spamming on every request.
@@ -378,6 +378,61 @@ export async function parseAgentIntent(
       reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
     };
   };
+
+  // ── Provider 1: AI/ML API (Hackathon Partner) ─────────────────────
+  const aimlApiKey = process.env.OPENAI_API_KEY;
+  const aimlBaseUrl = process.env.OPENAI_BASE_URL;
+  if (aimlApiKey && aimlBaseUrl?.includes("aimlapi.com")) {
+    try {
+      const aimlModel = process.env.OPENAI_CHAT_MODEL || "google/gemma-3-27b-it";
+      console.log(`[AIMLAPI] Parsing intent with ${aimlModel}...`);
+
+      const resp = await fetch(`${aimlBaseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${aimlApiKey}`,
+        },
+        body: JSON.stringify({
+          model: aimlModel,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: `Agent request: "${naturalLanguageRequest}"\n\nOutput JSON only:` },
+          ],
+          temperature: 0.1,
+          max_tokens: 500,
+        }),
+      });
+
+      if (!resp.ok) {
+        const errText = await resp.text();
+        console.warn(`[AIMLAPI] Error (${resp.status}): ${errText.slice(0, 200)}`);
+      } else {
+        const data = await resp.json() as any;
+        const text = data?.choices?.[0]?.message?.content;
+
+        if (text) {
+          try {
+            const parsed = JSON.parse(text);
+            const normalized = normalizeIntent(parsed, naturalLanguageRequest);
+            if (!normalized.taxonomy && graphDiscovery.taxonomy) {
+              normalized.taxonomy = normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest);
+              normalized.reasoning = `${normalized.reasoning}; ${graphDiscovery.reasoning}`;
+            }
+            console.log(`[AIMLAPI] ✅ Intent parsed: taxonomy=${normalized.taxonomy}`);
+            return normalized;
+          } catch {
+            console.warn("[AIMLAPI] Invalid JSON response, falling back...");
+          }
+        }
+      }
+    } catch (err) {
+      console.error(`[AIMLAPI] Call failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  // ── Provider 2: Gemini Native API ─────────────────────────────────
+  const apiKey = geminiApiKey || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     // No API Key → using rule engine fallback
