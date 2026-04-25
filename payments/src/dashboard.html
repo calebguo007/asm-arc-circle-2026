@@ -7,6 +7,7 @@
   <style>
     :root {
       color-scheme: dark;
+      --powered-strip-height: 32px;
       --bg-0: #050608;
       --bg-1: #0b0c10;
       --bg-2: #111319;
@@ -105,7 +106,8 @@
     .app {
       position: relative;
       overflow: hidden;
-      min-height: 100vh;
+      min-height: calc(100vh - var(--powered-strip-height));
+      min-height: calc(100dvh - var(--powered-strip-height));
       padding: 12px;
       background:
         radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.045), transparent 34%),
@@ -119,7 +121,8 @@
       display: grid;
       grid-template-rows: 58px minmax(0, 1fr);
       gap: 12px;
-      height: calc(100vh - 24px);
+      height: calc(100vh - var(--powered-strip-height) - 24px);
+      height: calc(100dvh - var(--powered-strip-height) - 24px);
     }
 
     .panel {
