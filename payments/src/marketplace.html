@@ -325,10 +325,48 @@
       .page { padding:0 16px; }
       .tl-weights { gap:3px; }
       .ob-title { font-size:18px; }
+
+    /* ── Powered by Strip ── */
+    .powered-by-strip {
+      position:sticky; top:0; z-index:999;
+      display:flex; align-items:center; gap:10px;
+      height:32px; padding:0 16px;
+      background:rgba(15,17,21,0.85);
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      font-size:12px; font-weight:500;
+      color:rgba(255,255,255,0.55);
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    }
+    .pb-label { letter-spacing:0.04em; text-transform:uppercase; color:rgba(255,255,255,0.35); }
+    .pb-logo { white-space:nowrap; }
+    .pb-logo.pb-arc { color:#5ac8a0; }
+    .pb-logo.pb-arc::before { content:"●"; margin-right:4px; font-size:9px; vertical-align:middle; }
+    .pb-logo.pb-circle { color:#3e7bfa; }
+    .pb-logo.pb-circle::before { content:"◆"; margin-right:4px; font-size:9px; vertical-align:middle; }
+    .pb-divider { color:rgba(255,255,255,0.18); }
+    .pb-chain { font-family:var(--mono); font-size:11px; color:rgba(255,255,255,0.28); }
+
+    /* ── Site Footer (hackathon) ── */
+    .site-footer {
+      padding:24px 0; text-align:center; font-size:11px; color:var(--t2);
+      border-top:1px solid var(--border); margin-top:32px;
+    }
+    .site-footer strong { color:var(--t0); }
+    .site-footer a { color:#5ac8a0; text-decoration:none; margin:0 6px; transition:color 0.15s; }
+    .site-footer a:hover { color:#7ce4b8; text-decoration:underline; }
     }
   </style>
 </head>
 <body>
+  <!-- Powered by Strip -->
+  <div class="powered-by-strip">
+    <span class="pb-label">Powered by</span>
+    <span class="pb-logo pb-arc">Arc Testnet</span>
+    <span class="pb-divider">&times;</span>
+    <span class="pb-logo pb-circle">Circle x402</span>
+    <span class="pb-chain">eip155:5042002 &middot; USDC settlement</span>
+  </div>
+
   <div class="page">
 
     <!-- ═══ TOPBAR ═══ -->
@@ -410,8 +448,13 @@
     </div>
 
     <!-- ═══ FOOTER ═══ -->
+    <footer class="site-footer">
+      Built for <strong>lablab &times; Arc &times; Circle</strong> hackathon 2026 &middot;
+      <a href="https://arc.network" target="_blank" rel="noopener">Arc</a> &middot;
+      <a href="https://www.circle.com/x402" target="_blank" rel="noopener">Circle x402</a>
+    </footer>
     <div class="footer">
-      ASM v0.3 · Agent Service Marketplace · Circle Nanopayments on Arc<br>
+      ASM v0.3 &middot; Agent Service Marketplace &middot; Circle Nanopayments on Arc<br>
       <a href="/api/health">Health</a>
       <a href="/api/services">Services</a>
       <a href="/api/stats">Stats</a>

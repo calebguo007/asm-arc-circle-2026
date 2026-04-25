@@ -12,6 +12,12 @@
  * Uses Gemini Free Tier (gemini-2.5-flash, no credit card needed)
  */
 
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+import crypto from "crypto";
+import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
+import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
 
 // ── Gemini Request/Response Types ──────────────────────────────
 
@@ -80,13 +86,218 @@ interface AgentDecision {
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
+type TaxonomyIndexEntry = {
+  taxonomy: string;
+  aliases?: string[];
+  embedding?: number[];
+};
+
+let cachedTaxonomies: TaxonomyIndexEntry[] | null = null;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+let cachedLangGraphIndex: { dimensions: number; taxonomies: TaxonomyIndexEntry[] } | null = null;
+
+function readDiscoveryIndex(indexPath: string): { dimensions: number; taxonomies: TaxonomyIndexEntry[] } {
+  const raw = fs.readFileSync(indexPath, "utf-8");
+  const parsed = JSON.parse(raw) as { dimensions?: number; taxonomies?: TaxonomyIndexEntry[] };
+  return {
+    dimensions: parsed.dimensions ?? 128,
+    taxonomies: parsed.taxonomies ?? [],
+  };
+}
+
+class LocalFakeHashEmbedder {
+  constructor(private readonly dimensions: number = 128) {}
+  async embedQuery(text: string): Promise<number[]> {
+    const values = new Array<number>(this.dimensions).fill(0);
+    const digest = crypto.createHash("sha256").update(text).digest();
+    for (let i = 0; i < this.dimensions; i++) {
+      const b = digest[i % digest.length];
+      values[i] = (b / 255) * 2 - 1;
+    }
+    return values;
+  }
+}
+
+function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length === 0 || b.length === 0 || a.length !== b.length) return 0;
+  let dot = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    normA += a[i] * a[i];
+    normB += b[i] * b[i];
+  }
+  const denom = Math.sqrt(normA) * Math.sqrt(normB);
+  if (denom === 0) return 0;
+  return dot / denom;
+}
+
+async function llmRerankTaxonomy(
+  task: string,
+  candidates: Array<{ taxonomy: string; score: number }>,
+): Promise<string | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey || candidates.length === 0) return null;
+  const model = new ChatOpenAI({ apiKey, model: "gpt-4o-mini", temperature: 0 });
+  const prompt = [
+    "Pick the best taxonomy from candidates for this task.",
+    "Return strict JSON: {\"taxonomy\": \"...\"}.",
+    `Task: ${task}`,
+    `Candidates: ${candidates.map((c) => `${c.taxonomy} (${c.score.toFixed(4)})`).join(", ")}`,
+  ].join("\n");
+  const output = await model.invoke(prompt);
+  const text = typeof output.content === "string"
+    ? output.content
+    : Array.isArray(output.content)
+      ? output.content.map((part: any) => (typeof part === "string" ? part : part?.text ?? "")).join("")
+      : "";
+  try {
+    const parsed = JSON.parse(text) as { taxonomy?: string };
+    if (parsed.taxonomy && candidates.some((c) => c.taxonomy === parsed.taxonomy)) {
+      return parsed.taxonomy;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+const DiscoveryState = Annotation.Root({
+  task: Annotation<string>(),
+  taskEmbedding: Annotation<number[]>({ reducer: (_p: number[], n: number[]) => n, default: () => [] }),
+  candidates: Annotation<Array<{ taxonomy: string; score: number }>>({
+    reducer: (_p: Array<{ taxonomy: string; score: number }>, n: Array<{ taxonomy: string; score: number }>) => n,
+    default: () => [],
+  }),
+  rerankedTaxonomy: Annotation<string | null>({ reducer: (_p: string | null, n: string | null) => n, default: () => null }),
+  taxonomy: Annotation<string | null>({ reducer: (_p: string | null, n: string | null) => n, default: () => null }),
+  confidence: Annotation<number>({ reducer: (_p: number, n: number) => n, default: () => 0 }),
+});
+
+function loadTaxonomyUniverse(): TaxonomyIndexEntry[] {
+  if (cachedTaxonomies) return cachedTaxonomies;
+
+  const indexPath = path.resolve(__dirname, "..", "..", "discovery", "data", "taxonomy-index.json");
+  if (fs.existsSync(indexPath)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(indexPath, "utf-8")) as {
+        taxonomies?: TaxonomyIndexEntry[];
+      };
+      if (parsed.taxonomies && parsed.taxonomies.length > 0) {
+        cachedTaxonomies = parsed.taxonomies;
+        return cachedTaxonomies;
+      }
+    } catch (_e) {
+      // fall through to manifest scan
+    }
+  }
+
+  const manifestDir = path.resolve(__dirname, "..", "..", "manifests");
+  const set = new Set<string>();
+  if (fs.existsSync(manifestDir)) {
+    for (const file of fs.readdirSync(manifestDir).filter((f: string) => f.endsWith(".asm.json"))) {
+      try {
+        const raw = fs.readFileSync(path.join(manifestDir, file), "utf-8");
+        const parsed = JSON.parse(raw) as { taxonomy?: string };
+        if (parsed.taxonomy) set.add(parsed.taxonomy);
+      } catch (_e) {
+        // ignore invalid manifest
+      }
+    }
+  }
+  cachedTaxonomies = Array.from(set).sort().map((taxonomy) => ({ taxonomy }));
+  return cachedTaxonomies;
+}
+
+async function discoverTaxonomyViaLangGraph(request: string): Promise<{
+  taxonomy: string | null;
+  confidence: number;
+  reasoning: string;
+}> {
+  const indexPath = path.resolve(__dirname, "..", "..", "discovery", "data", "taxonomy-index.json");
+  if (!fs.existsSync(indexPath)) {
+    return { taxonomy: null, confidence: 0, reasoning: "LangGraph discovery index not found" };
+  }
+  cachedLangGraphIndex = cachedLangGraphIndex ?? readDiscoveryIndex(indexPath);
+  const apiKey = process.env.OPENAI_API_KEY;
+  const embedder = apiKey
+    ? new OpenAIEmbeddings({ apiKey, model: "text-embedding-3-small" })
+    : new LocalFakeHashEmbedder(cachedLangGraphIndex.dimensions || 128);
+
+  const graph = new StateGraph(DiscoveryState)
+    .addNode("embedTask", async (state: typeof DiscoveryState.State) => {
+      const taskEmbedding = await embedder.embedQuery(state.task);
+      return { taskEmbedding };
+    })
+    .addNode("retrieveCandidates", async (state: typeof DiscoveryState.State) => {
+      const candidates = cachedLangGraphIndex!.taxonomies
+        .filter((t) => Array.isArray(t.embedding))
+        .map((t) => ({
+          taxonomy: t.taxonomy,
+          score: Number(cosineSimilarity(state.taskEmbedding, t.embedding as number[]).toFixed(4)),
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+      return { candidates };
+    })
+    .addNode("rerankCandidates", async (state: typeof DiscoveryState.State) => {
+      const rerankedTaxonomy = await llmRerankTaxonomy(state.task, state.candidates);
+      return { rerankedTaxonomy };
+    })
+    .addNode("selectWinner", async (state: typeof DiscoveryState.State) => {
+      const best = state.rerankedTaxonomy
+        ? state.candidates.find((c: { taxonomy: string; score: number }) => c.taxonomy === state.rerankedTaxonomy) ?? state.candidates[0]
+        : state.candidates[0];
+      return {
+        taxonomy: best?.taxonomy ?? null,
+        confidence: best?.score ?? 0,
+      };
+    })
+    .addEdge(START, "embedTask")
+    .addEdge("embedTask", "retrieveCandidates")
+    .addEdge("retrieveCandidates", "rerankCandidates")
+    .addEdge("rerankCandidates", "selectWinner")
+    .addEdge("selectWinner", END)
+    .compile();
+
+  const result = await graph.invoke({ task: request });
+  return {
+    taxonomy: result.taxonomy,
+    confidence: result.confidence,
+    reasoning: `LangGraph discovery confidence=${result.confidence.toFixed(3)}`,
+  };
+}
+
+function normalizeTaxonomy(taxonomy: string | null, request: string): string | null {
+  if (!taxonomy) return null;
+  const universe = loadTaxonomyUniverse();
+  const exact = universe.find((t) => t.taxonomy === taxonomy);
+  if (exact) return exact.taxonomy;
+
+  const lowered = taxonomy.toLowerCase();
+  const aliasMatch = universe.find((t) => (t.aliases ?? []).some((a) => a.toLowerCase() === lowered));
+  if (aliasMatch) return aliasMatch.taxonomy;
+
+  // Last resort: simple lexical similarity against task words
+  const words = new Set(request.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean));
+  let best: { taxonomy: string; score: number } | null = null;
+  for (const t of universe) {
+    const tokens = t.taxonomy.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+    const overlap = tokens.filter((token) => words.has(token)).length;
+    const score = overlap / Math.max(tokens.length, 1);
+    if (!best || score > best.score) best = { taxonomy: t.taxonomy, score };
+  }
+  return best && best.score > 0 ? best.taxonomy : null;
+}
+
 const SYSTEM_PROMPT = `You are an AI service procurement engine. Your job is to parse a natural language request from an AI Agent and extract structured parameters for a multi-criteria service selection system called ASM (Agent Service Manifest).
 
 You must output ONLY valid JSON with this exact schema:
 {
   "taxonomy": string or null,  // Service category. Must be one of:
-  // AI Models: "ai.llm.chat", "ai.vision.image_generation", "ai.video.generation", "ai.audio.tts", "ai.audio.stt", "ai.llm.embedding", "infra.compute.gpu"
-  // Tools: "tool.productivity.todo", "tool.productivity.knowledge", "tool.productivity.project", "tool.automation.browser", "tool.devops.ci", "tool.communication.email", "tool.data.search"
+  // Use valid ASM taxonomy names from the registry manifest set
   // Use null for cross-category search
   "weights": {
     "w_cost": number,      // 0-1, importance of low cost
@@ -122,12 +333,21 @@ export async function parseAgentIntent(
   naturalLanguageRequest: string,
   geminiApiKey?: string
 ): Promise<ParsedIntent> {
+  const graphDiscovery = await discoverTaxonomyViaLangGraph(naturalLanguageRequest);
   const apiKey = geminiApiKey || process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     // No API Key → using rule engine fallback
     console.log("⚠️  No Gemini API Key, using rule engine to parse intent");
-    return ruleBasedParse(naturalLanguageRequest);
+    const fallback = ruleBasedParse(naturalLanguageRequest);
+    if (graphDiscovery.taxonomy) {
+      return {
+        ...fallback,
+        taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
+        reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
+      };
+    }
+    return fallback;
   }
 
   try {
@@ -170,10 +390,23 @@ export async function parseAgentIntent(
 
     // Parse JSON
     const parsed = JSON.parse(text);
-    return normalizeIntent(parsed);
+    const normalized = normalizeIntent(parsed, naturalLanguageRequest);
+    if (!normalized.taxonomy && graphDiscovery.taxonomy) {
+      normalized.taxonomy = normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest);
+      normalized.reasoning = `${normalized.reasoning}; ${graphDiscovery.reasoning}`;
+    }
+    return normalized;
   } catch (err: unknown) {
     console.warn(`⚠️  Gemini call failed: ${(err instanceof Error ? err.message : String(err))}，using rule engine`);
-    return ruleBasedParse(naturalLanguageRequest);
+    const fallback = ruleBasedParse(naturalLanguageRequest);
+    if (graphDiscovery.taxonomy) {
+      return {
+        ...fallback,
+        taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
+        reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
+      };
+    }
+    return fallback;
   }
 }
 
@@ -339,7 +572,7 @@ function ruleBasedParse(request: string): ParsedIntent {
   if (/\b(generat|create|write|writing|create)\b/.test(lower)) io_ratio = 0.15;
 
   return {
-    taxonomy,
+    taxonomy: normalizeTaxonomy(taxonomy, request),
     weights: { w_cost, w_quality, w_speed, w_reliability },
     constraints: {},
     io_ratio,
@@ -350,7 +583,7 @@ function ruleBasedParse(request: string): ParsedIntent {
 /**
  * Normalize intent parameters
  */
-function normalizeIntent(raw: any): ParsedIntent {
+function normalizeIntent(raw: any, request: string): ParsedIntent {
   const weights = raw.weights || {};
   let w_cost = parseFloat(weights.w_cost) || 0.25;
   let w_quality = parseFloat(weights.w_quality) || 0.25;
@@ -367,7 +600,7 @@ function normalizeIntent(raw: any): ParsedIntent {
   }
 
   return {
-    taxonomy: raw.taxonomy || null,
+    taxonomy: normalizeTaxonomy(raw.taxonomy || null, request),
     weights: { w_cost, w_quality, w_speed, w_reliability },
     constraints: raw.constraints || {},
     io_ratio: parseFloat(raw.io_ratio) || 0.3,

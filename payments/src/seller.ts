@@ -43,9 +43,42 @@ const config = loadConfig();
 // ── Express App ───────────────────────────────────────
 
 const app = express();
-app.use(cors());
-app.use(helmet({ contentSecurityPolicy: false })); // Security headers (CSP disabled for SSE)
+
+// ── CORS: allow Vercel frontend + local dev + configurable origins ──────────
+const CORS_ALLOW_ALL = process.env.CORS_ALLOW_ALL === "true";
+const ALLOWED_ORIGINS = (
+  process.env.CORS_ORIGINS ||
+  "http://localhost:4173,http://localhost:3000,http://localhost:5173,https://*.vercel.app"
+)
+  .split(",")
+  .map((s) => s.trim());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow all origins if CORS_ALLOW_ALL is set (useful for demos/public APIs)
+      if (CORS_ALLOW_ALL) return callback(null, true);
+      // Allow non-browser requests (mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      const allowed = ALLOWED_ORIGINS.some((o) =>
+        o.startsWith("*.") ? origin.endsWith(o.slice(1)) : o === origin,
+      );
+      if (allowed) return callback(null, true);
+      callback(new Error(`CORS blocked: ${origin}`));
+    },
+    credentials: true,
+  }),
+);
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
+
+// ── API Key guard for mutating endpoints ─────────────
+const API_KEY = process.env.API_KEY || "";
+function requireApiKey(req: Request, res: Response, next: NextFunction) {
+  if (!API_KEY) return next(); // skip if not configured (local dev)
+  const provided = req.headers["x-api-key"] || req.query.api_key;
+  if (provided === API_KEY) return next();
+  res.status(401).json({ error: "unauthorized", message: "Missing or invalid X-API-Key header" });
+}
 
 // Rate limiting: 100 requests per minute per IP for paid endpoints
 const apiLimiter = rateLimit({
@@ -421,6 +454,45 @@ function registerRoutes() {
     }
   });
 
+  app.get("/benchmark", (_req: Request, res: Response) => {
+    res.setHeader("Content-Type", "text/html");
+    const htmlPath = path.resolve(__dirname, "benchmark.html");
+    try {
+      const html = fs.readFileSync(htmlPath, "utf-8");
+      res.send(html);
+    } catch (_e) {
+      res.send("<h1>Benchmark HTML not found</h1><p>Expected at: " + htmlPath + "</p>");
+    }
+  });
+
+  app.get("/assets/benchmark/:file", (req: Request, res: Response) => {
+    const fileName = path.basename(req.params.file);
+    const assetPath = path.resolve(__dirname, "assets", "benchmark", fileName);
+    if (!assetPath.startsWith(path.resolve(__dirname, "assets", "benchmark"))) {
+      res.status(400).send("Invalid asset path");
+      return;
+    }
+    if (!fs.existsSync(assetPath)) {
+      res.status(404).send("Benchmark asset not found");
+      return;
+    }
+    res.sendFile(assetPath);
+  });
+
+  app.get("/benchmark-results/sample-for-frontend.json", (_req: Request, res: Response) => {
+    const snapshotPath = path.resolve(__dirname, "..", "benchmark-results", "sample-for-frontend.json");
+    if (!fs.existsSync(snapshotPath)) {
+      res.status(404).json({ error: "benchmark_snapshot_not_found" });
+      return;
+    }
+    res.setHeader("Content-Type", "application/json");
+    res.send(fs.readFileSync(snapshotPath, "utf-8"));
+  });
+
+  app.get("/workbench", (_req: Request, res: Response) => {
+    res.redirect("/api/dashboard");
+  });
+
   // ── SSE Event Stream (free) ─────────────────────────────────
   app.get("/api/events", (req: Request, res: Response) => {
     res.setHeader("Content-Type", "text/event-stream");
@@ -490,7 +562,7 @@ function registerRoutes() {
     ? mockPaymentMiddleware(config.scorePrice)
     : gatewayInstance.require(config.scorePrice);
 
-  app.post("/api/score", apiLimiter, scoreMiddleware, async (req: Request, res: Response) => {
+  app.post("/api/score", apiLimiter, requireApiKey, scoreMiddleware, async (req: Request, res: Response) => {
     try {
       const data = await proxyToRegistry("/api/score", "POST", req.body);
       // live mode: settlement info decoded from PAYMENT-RESPONSE header by recordPayment hook
@@ -579,7 +651,7 @@ function registerRoutes() {
     ? mockPaymentMiddleware(config.queryPrice)
     : gatewayInstance.require(config.queryPrice);
 
-  app.post("/api/query", apiLimiter, queryMiddleware, async (req: Request, res: Response) => {
+  app.post("/api/query", apiLimiter, requireApiKey, queryMiddleware, async (req: Request, res: Response) => {
     try {
       const data = await proxyToRegistry("/api/query", "POST", req.body);
       const settlement = (req as any).settlement;
@@ -650,7 +722,7 @@ function registerRoutes() {
     ? mockPaymentMiddleware(config.scorePrice)
     : gatewayInstance.require(config.scorePrice);
 
-  app.post("/api/agent-decide", apiLimiter, agentMiddleware, async (req: Request, res: Response) => {
+  app.post("/api/agent-decide", apiLimiter, requireApiKey, agentMiddleware, async (req: Request, res: Response) => {
     const startTime = Date.now();
     try {
       const { request: agentRequest, gemini_api_key } = req.body;
@@ -884,6 +956,8 @@ async function main() {
     console.log(`     GET  /api/trust     — Trust scores`);
     console.log(`     GET  /api/events    — SSE real-time event stream`);
     console.log(`     GET  /api/dashboard — Dashboard`);
+    console.log(`     GET  /benchmark     — Benchmark showcase`);
+    console.log(`     GET  /workbench     — Workbench shortcut`);
     console.log(`\n   Depends on: ASM Registry → ${config.asmRegistryUrl}`);
     console.log("");
   });
