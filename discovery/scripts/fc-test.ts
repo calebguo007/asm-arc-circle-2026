@@ -45,22 +45,31 @@ const TAXONOMIES = [
   "infra.storage.object","infra.auth.identity","infra.security.secrets",
 ];
 
+// Use gemini-2.5-flash-lite (has generous free tier quota)
+const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+
 async function runTest() {
   console.log("╔══════════════════════════════════════════════════════════════╗");
-  console.log("  Gemini 2.5 Flash — Function Calling Demo");
+  console.log(`  Gemini Function Calling Demo — Model: ${MODEL}`);
   console.log("  Google Track: FC → Circle x402 /api/score");
   console.log("╚══════════════════════════════════════════════════════════════╝\n");
 
+  // Initial cooldown: wait for rate limit to fully reset
+  console.log("[Cooldown] Waiting 90s for API rate limit quota to reset...");
+  await new Promise(r => setTimeout(r, 90000));
+  console.log("[Cooldown] Done. Starting tests.\n");
+
   const genAI = new GoogleGenerativeAI(API_KEY);
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
+    model: MODEL,
     tools: [{ functionDeclarations: [TOOL] }],
     safetySettings: [{ category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE }],
     generationConfig: { temperature: 0, maxOutputTokens: 256 },
   });
 
   let success = 0;
-  for (const { task, label, expectCat } of TASKS) {
+  for (let i = 0; i < TASKS.length; i++) {
+    const { task, label, expectCat } = TASKS[i];
     const prompt = [
       "You are an AI service router for ASM protocol.",
       `Task: "${task}"`,
@@ -68,13 +77,23 @@ async function runTest() {
       "MUST call select_taxonomy_and_score with the best match.",
     ].join("\n");
 
-    // Retry up to 3x
+    // Retry with aggressive backoff on 429
     let result: any = null;
     for (let attempt = 1; attempt <= 3; attempt++) {
-      try { result = await model.generateContent(prompt); break; }
-      catch (err: any) {
-        if (attempt < 3) { console.log(`    retry ${attempt}/3`); await new Promise(r => setTimeout(r, 1000)); }
-        else { console.log(`[❌] ${label}: ${(err.message||err).toString().slice(0,80)}`); console.log(""); }
+      try {
+        result = await model.generateContent(prompt);
+        break;
+      } catch (err: any) {
+        const msg = (err.message || err).toString();
+        const isRateLimit = msg.includes("429") || msg.includes("quota") || msg.includes("RESOURCE_EXHAUSTED");
+        if (attempt < 3) {
+          const waitSec = isRateLimit ? 60 : 5;
+          console.log(`    [${label}] retry ${attempt}/3${isRateLimit ? " (429, wait " + waitSec + "s)" : ""}`);
+          await new Promise(r => setTimeout(r, waitSec * 1000));
+        } else {
+          console.log(`[❌] ${label}: ${msg.slice(0, 80)}`);
+          console.log("");
+        }
       }
     }
     if (!result) continue;
@@ -85,15 +104,20 @@ async function runTest() {
       const call = fc[0];
       const ok = call.args.taxonomy?.includes(expectCat.split(".")[0]);
       console.log(`[${ok ? "✅" : "⚠️"}] ${label} → ${call.name}(${call.args.taxonomy})`);
-      console.log(`    ${(call.args.reasoning||"").slice(0,100)}`);
+      console.log(`    ${(call.args.reasoning || "").slice(0, 100)}`);
     } else {
-      console.log(`[❌] ${label}: no FC — "${(result.response.text()||"").slice(0,60)}"`);
+      console.log(`[❌] ${label}: no FC — "${(result.response.text() || "").slice(0, 60)}"`);
     }
     console.log("");
+
+    // Rate limit guard: 15s between requests = max 4/min
+    if (i < TASKS.length - 1) {
+      await new Promise(r => setTimeout(r, 15000));
+    }
   }
 
   console.log("══════════════════════════════════════════════════════════════");
-  console.log(`  ✅ ${success}/${TASKS.length} Function Calls | ${Math.round(success/TASKS.length*100)}%`);
+  console.log(`  ✅ ${success}/${TASKS.length} Function Calls | ${Math.round(success / TASKS.length * 100)}%`);
   console.log("══════════════════════════════════════════════════════════════");
 }
 runTest().catch(e => { console.error(e); process.exit(1); });
