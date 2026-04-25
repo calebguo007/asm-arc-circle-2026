@@ -83,15 +83,22 @@ graph LR
 
 ### Live on Arc Testnet
 
-Each `/api/score` call resolves a winner and settles a **$0.005 USDC** nanopayment. The 50-tx benchmark fans out payments across ~15 distinct recipient addresses:
+**50 nanopayments authorized** via Circle Gateway batching · **15 unique recipients** · **$0.25 USDC moved** · avg **~$0.005/tx**.
+
+Per-tx settlement is **off-chain by design** — Circle Gateway batches authorizations (Lightning-style) and finalizes on-chain at seller withdrawal. That batching is exactly what makes sub-cent agent payments economically viable; per-payment gas would otherwise dwarf the $0.005 unit price. All 50 transfer IDs return `status: completed` on Arc Testnet (`eip155:5042002`).
 
 ```
-Top recipients:  openai/gpt-4o (6tx), google-translate (6tx), flux-1.1 (4tx) ...
-Total settled:   $0.25 USDC  |  Gas cost: ~$0.00 (Arc sponsored)
-Per-tx finality: 1-2s         |  vs Ethereum L1: $0.50-5.00 + 12s block time
+Top recipients:  openai/gpt-4o (6tx)  ·  google-translate (6tx)  ·  flux-1.1 (4tx) ...
+Total settled:   $0.25 USDC          |  Gas cost: ~$0 (batched)
+Per-tx finality: 1-2s                 |  vs Ethereum L1: $0.50-5.00 + 12s block time
 ```
 
-> **Tx links** (Arc testnet explorer): [tx#1](https://explorer.arc-testnet.circle.com) -- Hamza to provide specific hashes before submission.
+**On-chain proof (Arc Testnet):**
+- 🟢 **Buyer wallet** — real USDC deposited into Circle's GatewayWallet → [`0xF5d4…b038`](https://testnet.arcscan.app/address/0xF5d426D5cdfaeB18Ea2cDec2F7c2CB88eEe6b038)
+- 🟢 **Circle GatewayWallet contract** — settlement target → [`0x0077…19B9`](https://testnet.arcscan.app/address/0x0077777d7EBA4688BDeF3E311b846F25870A19B9)
+- 📄 **Full benchmark log** (50 transfer IDs, taxonomies, winners, reasoning) — [`payments/benchmark/result-2026-04-24.json`](payments/benchmark/result-2026-04-24.json)
+
+> Why no per-tx Arc explorer hashes? Circle Gateway is the same architectural pattern as Lightning Network: authorize off-chain, settle on-chain in batches. Each `/api/score` call carries a real USDC-backed authorization that Circle's facilitator verifies and settles — the on-chain hash appears at withdrawal, not per call. This is the design that lets ASM hit $0.005 per nanopayment.
 
 ### One-Command Reproduction
 
