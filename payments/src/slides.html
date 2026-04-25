@@ -3,1022 +3,1124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASM — Agent Service Manifest</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>ASM — Agent Service Manifest | Circle × Arc Hackathon 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════
-   Design Tokens
-   ════════════════════════════════════════ */
-:root {
-  --bg:          #FFFFFF;
-  --bg-soft:     #F8F9FB;
-  --hl:          #EFF0FF;
-  --ink:         #0A0E27;
-  --ink-soft:    #4A4F6E;
-  --ink-muted:   #8A8FA8;
-  --blue:        #1F6FEB;
-  --blue-deep:   #1450C8;
-  --line:        #EAEAEA;
-  --arc-amber:   #F0B429;
-  --gradient:    linear-gradient(135deg, #2DD4BF 0%, #7C6FCD 50%, #EC4899 100%);
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#060a10;
+  --bg2:#0c1220;
+  --surface:rgba(14,22,38,0.85);
+  --surface-glass:rgba(18,28,48,0.65);
+  --border:rgba(0,229,160,0.12);
+  --border-bright:rgba(0,229,160,0.35);
+  --accent:#00E5A0;
+  --accent-dim:rgba(0,229,160,0.15);
+  --accent-glow:rgba(0,229,160,0.4);
+  --blue:#3B82F6;
+  --blue-dim:rgba(59,130,246,0.15);
+  --purple:#A78BFA;
+  --purple-dim:rgba(167,139,250,0.12);
+  --amber:#F59E0B;
+  --amber-dim:rgba(245,158,11,0.12);
+  --rose:#F43F5E;
+  --text:#F1F5F9;
+  --text2:#94A3B8;
+  --text3:#64748B;
+  --font-display:'Syne',sans-serif;
+  --font-body:'Outfit',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
 }
 
-/* ════════════════════════════════════════
-   Reset & Base
-   ════════════════════════════════════════ */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-html, body {
-  width: 100%; height: 100%;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--text);
+  overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased;
 }
 
-/* ════════════════════════════════════════
-   Scroll Container
-   ════════════════════════════════════════ */
-.scroller {
-  width: 100vw; height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
+/* ── Background Layers ── */
+.bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0}
+.bg-gradient{
+  background:
+    radial-gradient(ellipse 90% 70% at 10% 15%,rgba(0,229,160,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 55% at 88% 78%,rgba(59,130,246,0.06) 0%,transparent 50%),
+    radial-gradient(ellipse 55% 45% at 52% 48%,rgba(167,139,250,0.04) 0%,transparent 48%);
+}
+.bg-grid{
+  background-image:
+    linear-gradient(rgba(0,229,160,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,160,0.03) 1px,transparent 1px);
+  background-size:64px 64px;
+}
+.bg-noise{
+  opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:220px 220px;
+}
+.bg-vignette{
+  background:radial-gradient(ellipse at center,transparent 40%,var(--bg) 100%);
 }
 
-/* ════════════════════════════════════════
-   Slide Base
-   ════════════════════════════════════════ */
-.slide {
-  width: 100vw; min-height: 100vh;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 64px 96px;
-  position: relative;
-  page-break-after: always;
-  break-after: page;
+/* ── Slide Container ── */
+.deck{
+  position:relative;z-index:1;width:100vw;
+  scroll-snap-type:y mandatory;overflow-y:scroll;
+  height:100vh;
+}
+.deck::-webkit-scrollbar{display:none}
+.slide{
+  min-height:100vh;width:100vw;
+  scroll-snap-align:start;display:flex;flex-direction:column;
+  justify-content:center;padding:3rem 4rem;
+  position:relative;overflow:hidden;
 }
 
-.slide--center { align-items: center; text-align: center; }
-.slide--alt-bg { background: var(--bg-soft); }
-
-/* ════════════════════════════════════════
-   Typography
-   ════════════════════════════════════════ */
-.label {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--ink-muted);
+/* ── Typography ── */
+.label{
+  font-family:var(--font-mono);font-size:.72rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+  display:inline-flex;align-items:center;gap:.5rem;margin-bottom:.8rem;
 }
-.label-blue { color: var(--blue); }
-
-.divider-line {
-  height: 1px;
-  background: var(--blue);
-  width: 48px;
-  display: inline-block;
+.label::before{
+  content:'';width:8px;height:8px;border-radius:2px;
+  background:var(--accent);box-shadow:0 0 10px var(--accent-glow);
 }
-.divider-long {
-  height: 1px;
-  background: var(--blue);
-  width: 320px;
+.title{
+  font-family:var(--font-display);font-weight:800;line-height:1.05;
+  letter-spacing:-.03em;color:var(--text);
 }
-
-/* ════════════════════════════════════════
-   Progress Bar (fixed top)
-   ════════════════════════════════════════ */
-.progress-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  background: var(--blue);
-  z-index: 9999;
-  transition: width 0.3s ease;
-  will-change: width;
+.title-accent{
+  background:linear-gradient(135deg,var(--accent) 0%,#00B8FF 50%,var(--purple) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.subtitle{
+  font-size:1.1rem;color:var(--text2);max-width:680px;line-height:1.7;
+  font-weight:300;margin-top:1rem;
+}
+.divider{
+  width:64px;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));
+  border-radius:2px;margin:1rem 0 1.5rem;
 }
 
-/* ════════════════════════════════════════
-   Counter (fixed bottom-right)
-   ════════════════════════════════════════ */
-.counter {
-  position: fixed;
-  bottom: 24px; right: 24px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  color: var(--ink-muted);
-  z-index: 9999;
-  font-variant-numeric: tabular-nums;
+/* ── Cards ── */
+.card{
+  background:var(--surface-glass);backdrop-filter:blur(24px)saturate(1.3);
+  -webkit-backdrop-filter:blur(24px)saturate(1.3);
+  border:1px solid var(--border);border-radius:18px;
+  padding:1.8rem;transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.card:hover{
+  border-color:var(--border-bright);
+  box-shadow:0 8px 40px rgba(0,0,0,.25),0 0 0 1px rgba(0,229,160,0.08);
+  transform:translateY(-2px);
+}
+.card-highlight{
+  background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,184,255,0.05));
+  border-color:var(--border-bright);
+}
+.card-stat{
+  text-align:center;padding:1.5rem 1.2rem;
+}
+.stat-number{
+  font-family:var(--font-display);font-size:2.8rem;font-weight:800;
+  line-height:1;color:var(--accent);
+}
+.stat-label{
+  font-size:.7rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text3);margin-top:.3rem;
 }
 
-/* ════════════════════════════════════════
-   Navigation Dots (fixed bottom-center)
-   ════════════════════════════════════════ */
-.nav-dots {
-  position: fixed;
-  bottom: 24px; left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 9999;
+/* ── Tags ── */
+.tag{
+  display:inline-flex;align-items:center;gap:.35rem;
+  padding:.28rem .75rem;border-radius:100px;font-size:.68rem;
+  font-weight:600;letter-spacing:.02em;font-family:var(--font-mono);
+}
+.tag-green{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(0,229,160,0.25)}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,0.25)}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,0.25)}
+.tag-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.25)}
+
+/* ── Grid Layouts ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.flex-row{display:flex;align-items:center;gap:1rem}
+.flex-center{display:flex;align-items:center;justify-content:center}
+.gap-sm{gap:.7rem}.gap-md{gap:1.2rem}.gap-lg{gap:2rem}
+
+/* ── Animations ── */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+.reveal-delay-5{transition-delay:.5s}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .7s ease,transform .7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .7s ease,transform .7s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(0.92);transition:opacity .6s ease,transform .6s ease}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(0,229,160,0.2)}50%{box-shadow:0 0 36px rgba(0,229,160,0.45)}}
+@keyframes count-up{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+@keyframes slide-in-left{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes gradient-shift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.float-anim{animation:float 4s ease-in-out infinite}
+.pulse-anim{animation:pulse-glow 3s ease-in-out infinite}
+
+/* ── Progress Indicator ── */
+.progress-bar{
+  position:fixed;right:2rem;top:50%;transform:translateY(-50%);
+  z-index:100;display:flex;flex-direction:column;gap:.5rem;
+}
+.progress-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--border);cursor:pointer;transition:all .3s ease;
+  border:1px solid transparent;
+}
+.progress-dot.active{
+  background:var(--accent);box-shadow:0 0 12px var(--accent-glow);
+  transform:scale(1.3);
+}
+.progress-dot:hover{background:var(--text3);transform:scale(1.15)}
+
+/* ── Slide-Specific Styles ── */
+
+/* SLIDE 1: COVER */
+.s-cover{text-align:center}
+.s-cover .hero-title{
+  font-family:var(--font-display);font-size:5.5rem;font-weight:800;
+  line-height:1;letter-spacing:-.04em;
+  background:linear-gradient(135deg,#fff 0%,var(--accent) 40%,#00B8FF 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:200% 200%;animation:gradient-shift 6s ease infinite;
+}
+.s-cover .hero-sub{
+  font-size:1.2rem;color:var(--text2);max-width:620px;
+  margin:1.5rem auto 0;font-weight:300;line-height:1.7;
+}
+.s-cover .hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:2.5rem}
+.s-cover .hero-meta{
+  margin-top:2.5rem;font-size:.82rem;color:var(--text3);
+  font-family:var(--font-mono);letter-spacing:.03em;
+}
+.s-cover .track-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  margin-top:1.5rem;padding:.6rem 1.4rem;border-radius:100px;
+  background:linear-gradient(135deg,var(--accent-dim),rgba(0,184,255,0.08));
+  border:1px solid var(--border-bright);font-size:.78rem;font-weight:600;
+  color:var(--accent);font-family:var(--font-mono);
 }
 
-.nav-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--line);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  border: none;
-  padding: 0;
+/* ── Geometric Icons (replaces emoji) ── */
+.geo-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;flex-shrink:0;
+}
+.geo-icon::after{
+  content:'';position:absolute;width:14px;height:14px;
+  border:2px solid currentColor;border-radius:2px;
+}
+.geo-icon.grid::after{background:
+  linear-gradient(currentColor 1px,transparent 1px),
+  linear-gradient(90deg,currentColor 1px,transparent 1px);
+  background-size:5px 5px;border:none;width:16px;height:16px}
+.geo-icon.trend::after{
+  width:0;height:0;border-left:7px solid transparent;
+  border-right:7px solid transparent;border-bottom:12px solid currentColor;
+  border-top:none;border-radius:0;
+}
+.geo-icon.gap::after{
+  width:14px;height:3px;background:currentColor;border-radius:2px;
+  box-shadow:0 6px 0 currentColor,0 12px 0 currentColor;
+}
+.geo-icon.layer::after{
+  width:18px;height:12px;border-width:2px;
+  box-shadow:inset 0 -4px 0 currentColor;
+}
+.geo-icon.shield::after{
+  width:12px;height:14px;border-width:2px;border-radius:3px 3px 8px 8px;
+}
+.geo-icon.stack::after{
+  width:16px;height:3px;background:currentColor;border-radius:2px;
+  box-shadow:0 5px 0 currentColor,0 10px 0 currentColor;
+}
+.geo-icon.pulse::after{
+  width:10px;height:10px;border-radius:50%;border-width:2px;
+}
+.geo-icon.hex::after{
+  width:14px;height:14px;border-width:2px;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
 }
 
-.nav-dot:hover { transform: scale(1.3); }
-.nav-dot.active {
-  width: 8px; height: 8px;
-  background: var(--blue);
+/* SLIDE 2: PROBLEM */
+.pain-list{list-style:none;padding:0}
+.pain-list li{
+  display:flex;align-items:flex-start;gap:.7rem;
+  padding:.6rem 0;font-size:.92rem;color:var(--text2);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.pain-list li:last-child{border-bottom:none}
+.pain-list li::before{content:'';width:7px;height:7px;border-radius:1px;background:var(--rose);flex-shrink:0;margin-top:.45rem;transform:rotate(45deg)}
+.vs-divider{
+  display:flex;align-items:center;justify-content:center;gap:1.5rem;
+  font-family:var(--font-display);font-size:1.4rem;font-weight:800;
+  color:var(--text3);padding:1rem 0;
+}
+.solution-list li::before{content:'';width:7px;height:4px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);flex-shrink:0;margin-top:.45rem;transform:rotate(-45deg)}
+
+/* SLIDE 3: WHY NOW */
+.big-quote{
+  font-family:var(--font-display);font-size:2rem;font-weight:700;
+  line-height:1.3;color:var(--text);border-left:3px solid var(--accent);
+  padding-left:1.5rem;margin-bottom:1.5rem;
+}
+.metric-bar-container{margin-top:1rem}
+.metric-bar{
+  height:8px;border-radius:4px;background:rgba(255,255,255,0.06);
+  overflow:hidden;position:relative;margin-top:.5rem;
+}
+.metric-bar-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--accent),var(--blue));
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  width:0;
+}
+.metric-bar-fill.animated{width:var(--target-width)}
+
+/* SLIDE 4: SOLUTION ARCHITECTURE */
+.arch-layer{
+  position:relative;padding:1.5rem 2rem;border-radius:16px;
+  transition:all .3s ease;
+}
+.arch-layer:hover{transform:translateX(6px)}
+.arch-layer-num{
+  position:absolute;left:-12px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:.85rem;
+  color:var(--bg);z-index:2;
+}
+.arch-flow{
+  display:flex;align-items:center;gap:.5rem;
+  flex-wrap:wrap;font-size:.75rem;font-family:var(--font-mono);
+  color:var(--text3);margin-top:1.5rem;padding:1.2rem 1.5rem;
+  background:rgba(0,0,0,.25);border-radius:12px;border:1px solid var(--border);
+}
+.arch-flow span{padding:.25rem .6rem;border-radius:6px;background:var(--accent-dim);color:var(--accent);font-weight:600}
+.arch-flow-arrow{color:var(--text3);font-size:.9rem}
+
+/* SLIDE 5: HOW IT WORKS */
+.step-line{position:relative;padding-left:3rem}
+.step-line::before{
+  content:'';position:absolute;left:13px;top:24px;bottom:-8px;
+  width:2px;background:linear-gradient(180deg,var(--accent),transparent);
+}
+.step-item{position:relative;margin-bottom:1.8rem}
+.step-item:last-child{margin-bottom:0}
+.step-item:last-child::before{display:none}
+.step-num{
+  position:absolute;left:-3rem;top:0;width:28px;height:28px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:.78rem;
+  background:var(--accent);color:var(--bg);
+  box-shadow:0 0 16px var(--accent-glow);
+}
+.step-content h4{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
+.step-content p{font-size:.84rem;color:var(--text2);line-height:1.6}
+.code-block{
+  font-family:var(--font-mono);font-size:.74rem;
+  background:rgba(0,0,0,.35);border:1px solid var(--border);
+  border-radius:10px;padding:1rem 1.2rem;margin-top:.6rem;
+  overflow-x:auto;color:var(--text2);line-height:1.7;
+}
+.code-block .kw{color:var(--purple)}.code-block .fn{color:var(--blue)}
+.code-block .str{color:var(--accent)}.code-block .num{color:var(--amber)}
+
+/* SLIDE 6: COST COMPARISON */
+.cost-compare{
+  display:flex;align-items:flex-end;gap:2rem;
+  justify-content:center;padding:2rem 0;
+}
+.cost-bar-wrap{text-align:center;flex:1;max-width:280px}
+.cost-bar{
+  border-radius:12px 12px 4px 4px;transition:height 1s cubic-bezier(.4,0,.2,1);
+  position:relative;min-height:20px;
+}
+.cost-bar-trad{
+  background:linear-gradient(180deg,var(--rose),rgba(244,63,94,0.5));
+  height:0;
+}
+.cost-bar-asm{
+  background:linear-gradient(180deg,var(--accent),rgba(0,229,160,0.4));
+  height:0;box-shadow:0 0 30px rgba(0,229,160,0.3);
+}
+.cost-bar.animated{height:var(--target-h)}
+.cost-label{font-size:.82rem;font-weight:700;margin-top:.8rem}
+.cost-value{font-family:var(--font-display);font-size:2.4rem;font-weight:800;line-height:1.1;margin-top:.3rem}
+.cost-sub{font-size:.72rem;color:var(--text3);margin-top:.2rem}
+.vs-badge{
+  align-self:center;font-family:var(--font-display);font-size:2rem;
+  font-weight:800;color:var(--text3);padding:0 1rem;
+}
+.savings-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.6rem 1.4rem;border-radius:100px;
+  background:linear-gradient(135deg,rgba(0,229,160,0.15),rgba(0,184,255,0.08));
+  border:1px solid var(--border-bright);font-size:.9rem;font-weight:700;
+  color:var(--accent);margin-top:1.5rem;
+}
+.savings-badge .big{font-size:1.4rem}
+
+/* SLIDE 7: LIVE DATA */
+.data-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.data-card{
+  text-align:center;padding:1.5rem 1rem;border-radius:16px;
+  background:var(--surface-glass);backdrop-filter:blur(20px);
+  border:1px solid var(--border);transition:all .3s ease;
+}
+.data-card:hover{border-color:var(--border-bright);transform:translateY(-3px)}
+.data-val{font-family:var(--font-display);font-size:2.6rem;font-weight:800;line-height:1.1}
+.data-desc{font-size:.68rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-top:.4rem;font-weight:600}
+.agent-table{width:100%;border-collapse:collapse;margin-top:1rem}
+.agent-table th{
+  text-align:left;font-size:.7rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--text3);
+  padding:.8rem .6rem;border-bottom:1px solid var(--border);
+}
+.agent-table td{
+  padding:.7rem .6rem;font-size:.85rem;color:var(--text2);
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.agent-table tr:hover td{background:rgba(0,229,160,0.03);color:var(--text)}
+.taxonomy-tag{
+  font-family:var(--font-mono);font-size:.72rem;padding:.2rem .55rem;
+  border-radius:5px;background:var(--accent-dim);color:var(--accent);font-weight:600;
 }
 
-/* ════════════════════════════════════════
-   S1 — COVER
-   ════════════════════════════════════════ */
-.s1-logo {
-  font-size: 64px;
-  font-weight: 700;
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
+/* SLIDE 8: TRUST MODEL */
+.trust-tier{
+  display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;
+  border-radius:14px;transition:all .3s ease;margin-bottom:.8rem;
 }
-.s1-title {
-  font-size: 96px;
-  font-weight: 300;
-  line-height: 1.05;
-  color: var(--ink);
-  margin-top: 32px;
+.trust-tier:hover{transform:translateX(6px)}
+.tier-num{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:1.1rem;
+  flex-shrink:0;
 }
-.s1-sub {
-  font-size: 14px;
-  font-style: italic;
-  color: var(--ink-soft);
-  line-height: 1.7;
-  margin-top: 24px;
+.tier-info h4{font-size:.95rem;font-weight:700}
+.tier-info p{font-size:.82rem;color:var(--text2);margin-top:.2rem}
+.trust-formula{
+  font-family:var(--font-mono);font-size:.85rem;
+  background:rgba(0,0,0,.3);border:1px solid var(--border);
+  border-radius:12px;padding:1.2rem 1.5rem;margin-top:1.5rem;
+  color:var(--text2);text-align:center;
 }
-.s1-meta {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--ink-muted);
-  margin-top: 8px;
-}
-.s1-url {
-  font-size: 14px;
-  color: var(--blue);
-  text-decoration: none;
-}
-.s1-url:hover { text-decoration: underline; }
-.s1-topline {
-  position: absolute;
-  top: 64px; right: 96px;
-  width: 320px; height: 1px;
-  background: var(--blue);
-  animation: fadeInLine 0.8s ease forwards;
-  opacity: 0;
-}
-@keyframes fadeInLine { to { opacity: 1; } }
+.trust-formula .hl{color:var(--accent);font-weight:600}
 
-/* ════════════════════════════════════════
-   S2 — TAGLINE
-   ════════════════════════════════════════ */
-.s2-headline {
-  font-size: 64px;
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--ink);
+/* SLIDE 9: ECOSYSTEM */
+.eco-row{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.2rem;border-radius:12px;
+  border:1px solid var(--border);margin-bottom:.6rem;
+  transition:all .3s ease;
 }
-.s2-gradient-word {
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.eco-row:hover{border-color:var(--border-bright);background:rgba(0,229,160,0.03)}
+.eco-icon{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.85rem;flex-shrink:0;
 }
-.s2-tag {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--ink-muted);
-  margin-top: 16px;
-}
+.eco-name{font-size:.92rem;font-weight:600}
+.eco-desc{font-size:.76rem;color:var(--text3)}
+.eco-status{margin-left:auto;font-size:.72rem;font-weight:600;padding:.2rem .6rem;border-radius:5px}
+.eco-status.done{color:var(--accent);background:var(--accent-dim)}
+.eco-status.new{color:var(--blue);background:var(--blue-dim)}
 
-/* ════════════════════════════════════════
-   S3 — THE GAP
-   ════════════════════════════════════════ */
-.protocol-row {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 12px 0;
-  font-size: 14px;
+/* SLIDE 10: ROADMAP */
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{
+  content:'';position:absolute;left:7px;top:0;bottom:0;
+  width:2px;background:linear-gradient(180deg,var(--accent),var(--purple),var(--amber));
 }
-.protocol-name {
-  width: 80px;
-  font-weight: 500;
-  color: var(--ink);
-  font-size: 14px;
-  flex-shrink: 0;
+.tm-item{position:relative;margin-bottom:1.8rem;padding-left:1.8rem}
+.tm-item:last-child{margin-bottom:0}
+.tm-dot{
+  position:absolute;left:-2rem;top:4px;width:16px;height:16px;
+  border-radius:50%;border:3px solid var(--accent);background:var(--bg);
+  z-index:2;
 }
-.protocol-line {
-  flex: 1;
-  height: 1px;
-  background: var(--line);
-}
-.protocol-desc {
-  text-align: right;
-  color: var(--ink-soft);
-  font-size: 14px;
-  min-width: 200px;
-  flex-shrink: 0;
-}
-.protocol-row--active {
-  background: var(--hl);
-  border-radius: 8px;
-  padding: 16px 24px;
-  margin: 4px -24px;
-}
-.protocol-row--active .protocol-name {
-  font-weight: 700;
-  color: var(--ink);
-}
-.protocol-row--active .protocol-line { background: var(--blue); }
-.protocol-row--active .protocol-desc { color: var(--ink); font-weight: 500; }
+.tm-phase{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-family:var(--font-mono)}
+.tm-time{font-size:.82rem;color:var(--text3);margin-top:.1rem}
+.tm-title{font-size:1.05rem;font-weight:700;margin-top:.3rem}
+.tm-desc{font-size:.84rem;color:var(--text2);margin-top:.3rem;line-height:1.6}
 
-/* ════════════════════════════════════════
-   S4 — PROBLEM
-   ════════════════════════════════════════ */
-.s4-layout {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 64px;
+/* SLIDE 11: THANK YOU */
+.s-thanks{text-align:center}
+.s-thanks .thanks-title{
+  font-family:var(--font-display);font-size:3.8rem;font-weight:800;
+  line-height:1.1;background:linear-gradient(135deg,#fff,var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-.s4-ghost {
-  font-size: 360px;
-  font-weight: 300;
-  color: #F0F0F5;
-  line-height: 1;
-  flex-shrink: 0;
-  user-select: none;
+.s-thanks .thanks-tagline{
+  font-size:1.15rem;color:var(--text2);max-width:540px;
+  margin:1.2rem auto 0;font-weight:300;line-height:1.7;
 }
-.s4-content {
-  max-width: 420px;
-  flex-shrink: 0;
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 2rem;border-radius:100px;font-size:.88rem;
+  font-weight:600;text-decoration:none;color:var(--bg);
+  background:linear-gradient(135deg,var(--accent),#00C896);
+  box-shadow:0 4px 24px rgba(0,229,160,0.35);
+  transition:all .3s ease;border:none;cursor:pointer;
+  font-family:var(--font-body);
 }
-.s4-title {
-  font-size: 32px;
-  font-weight: 500;
-  color: var(--ink);
-  margin-bottom: 16px;
+.btn-primary:hover{
+  transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,229,160,0.45);
 }
-.s4-body {
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.6;
-  margin-bottom: 24px;
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.8rem 1.8rem;border-radius:100px;font-size:.88rem;
+  font-weight:600;text-decoration:none;color:var(--text2);
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .3s ease;cursor:pointer;font-family:var(--font-body);
 }
-.s4-note {
-  font-size: 11px;
-  font-style: italic;
-  color: var(--ink-muted);
+.btn-secondary:hover{border-color:var(--border-bright);color:var(--text);transform:translateY(-2px)}
+.btn-group{display:flex;gap:1rem;justify-content:center;margin-top:2rem}
+.contact-info{margin-top:2rem;font-size:.82rem;color:var(--text3);font-family:var(--font-mono)}
+
+/* ── Responsive ── */
+@media(max-width:1024px){
+  .slide{padding:2.5rem 2rem}
+  .s-cover .hero-title{font-size:3.8rem}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .cost-compare{flex-direction:column;align-items:center}
+  .vs-badge{transform:rotate(90deg)}
+  .data-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .slide{padding:2rem 1.5rem}
+  .s-cover .hero-title{font-size:2.8rem}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .progress-bar{display:none}
 }
 
-/* ════════════════════════════════════════
-   S5 — ARCHITECTURE
-   ════════════════════════════════════════ */
-.pipeline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
+/* Print support */
+@media print{
+  .deck{overflow:visible;scroll-snap-type:none;height:auto}
+  .slide{min-height:100vh;page-break-after:always;break-after:page}
+  .bg-layer{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .reveal,.reveal-left,.reveal-right,.reveal-scale{opacity:1!important;transform:none!important}
 }
-.pipe-step {
-  padding: 16px 24px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  text-align: center;
-  min-width: 90px;
-}
-.pipe-step--highlight {
-  background: var(--hl);
-  border-color: transparent;
-}
-.pipe-step--highlight .pipe-name { color: var(--blue); }
-.pipe-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-}
-.pipe-sub {
-  font-size: 11px;
-  color: var(--ink-muted);
-  margin-top: 4px;
-}
-.pipe-arrow {
-  font-size: 14px;
-  color: var(--ink-muted);
-  margin: 0 4px;
-  flex-shrink: 0;
-}
-.stats-row {
-  display: flex;
-  justify-content: center;
-  gap: 80px;
-  margin-top: 64px;
-}
-.stat-item { text-align: center; }
-.stat-num {
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1;
-}
-.stat-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--ink-muted);
-  margin-top: 8px;
-}
-
-/* ════════════════════════════════════════
-   S6 — LIVE ON ARC TESTNET
-   ════════════════════════════════════════ */
-.big-stats {
-  display: flex;
-  gap: 64px;
-  margin-bottom: 64px;
-}
-.big-stat { text-align: left; }
-.big-stat-num {
-  font-size: 96px;
-  font-weight: 700;
-  line-height: 1;
-}
-.big-stat-label {
-  font-size: 14px;
-  color: var(--ink-muted);
-  margin-top: 12px;
-}
-.recipients-section { max-width: 600px; }
-.recipients-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-  margin-bottom: 16px;
-}
-.recipient-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
-  font-size: 13px;
-  transition: background 0.15s ease;
-  cursor: default;
-}
-.recipient-row:hover { background: var(--hl); }
-.recipient-name { color: var(--ink); }
-.recipient-value { color: var(--ink-muted); white-space: nowrap; margin-left: 24px; }
-.verify-link {
-  font-size: 14px;
-  color: var(--blue);
-  text-decoration: underline;
-  margin-top: 32px;
-  display: inline-block;
-}
-
-/* ════════════════════════════════════════
-   S7 — WHY ARC + CIRCLE
-   ════════════════════════════════════════ */
-.compare-row {
-  display: flex;
-  align-items: baseline;
-  gap: 48px;
-  justify-content: center;
-}
-.compare-price {
-  font-size: 64px;
-  font-weight: 700;
-  line-height: 1;
-}
-.compare-label {
-  font-size: 14px;
-  color: var(--ink-muted);
-  margin-top: 12px;
-}
-.compare-vs {
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--ink-muted);
-  align-self: center;
-}
-.narrative {
-  max-width: 720px;
-  margin: 64px auto 0;
-  font-size: 16px;
-  color: var(--ink-soft);
-  line-height: 1.7;
-  text-align: center;
-}
-
-/* ════════════════════════════════════════
-   S8 — TOPSIS + GEMINI FC
-   ════════════════════════════════════════ */
-.weights-row {
-  display: flex;
-  gap: 32px;
-  justify-content: center;
-}
-.weight-item { text-align: center; }
-.weight-pct {
-  font-size: 64px;
-  font-weight: 700;
-  line-height: 1;
-}
-.weight-label {
-  font-size: 14px;
-  color: var(--ink-soft);
-  margin-top: 8px;
-}
-.fc-pills {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-.fc-pill {
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: var(--hl);
-  color: var(--blue);
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-.fc-arrow {
-  color: var(--ink-muted);
-  font-size: 14px;
-}
-.fc-result {
-  font-size: 12px;
-  color: var(--ink-muted);
-  margin-top: 24px;
-  text-align: center;
-}
-
-/* ════════════════════════════════════════
-   S9 — LIVE DEMO
-   ════════════════════════════════════════ */
-.s9-title {
-  font-size: 64px;
-  font-weight: 300;
-  color: var(--ink);
-  line-height: 1.15;
-}
-.s9-url {
-  font-size: 24px;
-  font-weight: 500;
-  color: var(--blue);
-  text-decoration: none;
-  margin-top: 48px;
-  display: inline-block;
-}
-.s9-url:hover { text-decoration: underline; }
-.demo-buttons {
-  display: flex;
-  gap: 16px;
-  margin-top: 32px;
-  justify-content: center;
-}
-.demo-btn {
-  padding: 12px 32px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s ease;
-  border: 1px solid var(--blue);
-  color: var(--blue);
-  background: transparent;
-}
-.demo-btn:hover {
-  background: var(--blue);
-  color: #fff;
-}
-
-/* ════════════════════════════════════════
-   S10 — CLOSE
-   ════════════════════════════════════════ */
-.s10-thanks {
-  font-size: 96px;
-  font-weight: 300;
-  color: var(--ink);
-  line-height: 1;
-}
-.s10-gradient-line {
-  width: 48px; height: 1px;
-  background: var(--gradient);
-  margin: 32px auto;
-}
-.s10-tagline {
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.8;
-}
-.s10-link {
-  font-size: 14px;
-  color: var(--blue);
-  text-decoration: none;
-  margin-top: 32px;
-  display: inline-block;
-}
-.s10-link:hover { text-decoration: underline; }
-.s10-team {
-  font-size: 11px;
-  color: var(--ink-muted);
-  margin-top: 8px;
-}
-
-/* ════════════════════════════════════════
-   Responsive
-   ════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  .slide { padding: 48px 48px; }
-  .s1-logo { font-size: 48px; }
-  .s1-title { font-size: 64px; }
-  .s2-headline { font-size: 44px; }
-  .s4-ghost { font-size: 220px; }
-  .big-stat-num { font-size: 64px; }
-  .compare-price { font-size: 44px; }
-  .weight-pct { font-size: 44px; }
-  .s9-title { font-size: 44px; }
-  .s10-thanks { font-size: 64px; }
-  .pipeline { gap: 4px; }
-  .pipe-step { padding: 12px 16px; min-width: 70px; }
-  .stats-row { gap: 40px; }
-  .big-stats { gap: 36px; }
-  .weights-row { gap: 20px; }
-  .s1-topline { right: 48px; width: 200px; }
-}
-
-@media (max-width: 768px) {
-  .slide { padding: 32px 24px; }
-  .s1-logo { font-size: 36px; }
-  .s1-title { font-size: 42px; }
-  .s2-headline { font-size: 32px; }
-  .s4-layout { flex-direction: column; }
-  .s4-ghost { font-size: 120px; }
-  .s4-content { max-width: 100%; }
-  .big-stats { flex-direction: column; gap: 24px; }
-  .compare-row { flex-direction: column; gap: 16px; align-items: center; }
-  .compare-vs { display: none; }
-  .weight-pct { font-size: 32px; }
-  .weights-row { flex-wrap: wrap; gap: 16px; }
-  .pipeline { flex-direction: column; align-items: center; }
-  .pipe-arrow { transform: rotate(90deg); }
-  .stats-row { flex-direction: row; gap: 24px; }
-  .s9-title { font-size: 32px; }
-  .s10-thanks { font-size: 48px; }
-  .s1-topline { display: none; }
-  .nav-dots { bottom: 12px; }
-  .counter { bottom: 12px; right: 12px; font-size: 10px; }
-}
-
-/* ════════════════════════════════════════
-   Print / PDF
-   ════════════════════════════════════════ */
-@media print {
-  .scroller { overflow: visible; height: auto; scroll-snap-type: none; }
-  .slide { min-height: 100vh; page-break-after: always; break-after: page; }
-  .progress-bar, .counter, .nav-dots { display: none !important; }
-  body { background: #fff; }
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-}
-
-/* ════════════════════════════════════════
-   Fullscreen
-   ════════════════════════════════════════ */
-:-webkit-full-screen { overflow: hidden; }
-:-moz-full-screen { overflow: hidden; }
-:fullscreen { overflow: hidden; }
 </style>
 </head>
 <body>
 
-<!-- Progress Bar -->
-<div class="progress-bar" id="progressBar"></div>
+<!-- Background layers -->
+<div class="bg-layer bg-gradient"></div>
+<div class="bg-layer bg-grid"></div>
+<div class="bg-layer bg-noise"></div>
+<div class="bg-layer bg-vignette"></div>
 
-<!-- Counter -->
-<div class="counter" id="counter">01 / 10</div>
+<!-- Progress indicator -->
+<nav class="progress-bar" id="progressBar"></nav>
 
-<!-- Navigation Dots -->
-<nav class="nav-dots" id="navDots"></nav>
+<div class="deck" id="deck">
 
-<!-- Scroller -->
-<div class="scroller" id="scroller">
-
-<!-- ════════════════════════════════════════
-     S1 — COVER
-     ════════════════════════════════════════ -->
-<section class="slide s1" data-slide="1">
-  <div style="position:relative;width:100%">
-    <div class="s1-logo">ASM</div>
-    <h1 class="s1-title">Agent Service Manifest</h1>
-    <p class="s1-sub">OpenAPI describes what a service can do.<br>ASM describes what a service is worth.</p>
-    <div style="position:absolute;bottom:0;left:0">
-      <p class="s1-meta">lablab × Arc × Circle 2026</p>
-      <a href="https://asm-arc-circle-2026.vercel.app" target="_blank" class="s1-url">asm-arc-circle-2026.vercel.app</a>
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 1: COVER                            -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide s-cover" data-slide="0">
+  <div class="reveal">
+    <div class="label">Circle × Arc Hackathon 2026</div>
+    <h1 class="hero-title">ASM</h1>
+    <p class="hero-sub">Agent Service Manifest — The first protocol that lets AI agents discover, evaluate, and pay for services autonomously. Per API call. Sub-cent precision. Settled on Arc in USDC.</p>
+    <div class="hero-stats reveal reveal-delay-2">
+      <div class="card card-stat pulse-anim"><div class="stat-number">50</div><div class="stat-label">On-Chain TX</div></div>
+      <div class="card card-stat"><div class="stat-number" style="color:var(--blue)">$0.25</div><div class="stat-label">USDC Volume</div></div>
+      <div class="card card-stat"><div class="stat-number" style="color:var(--purple)">15</div><div class="stat-label">AI Services</div></div>
+      <div class="card card-stat"><div class="stat-number" style="color:var(--amber)">$0.005</div><div class="stat-label">Per Call</div></div>
     </div>
-    <div class="s1-topline"></div>
+    <div class="track-badge reveal reveal-delay-3">
+      <span>Track:</span> Per-API Monetization Engine
+    </div>
+    <p class="hero-meta reveal reveal-delay-4">Yi Guo &middot; April 2026 &middot; MIT License</p>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════
-     S2 — TAGLINE
-     ════════════════════════════════════════ -->
-<section class="slide slide--center s2" data-slide="2">
-  <p class="s2-headline">Agents shouldn't shop.<br>They should <span class="s2-gradient-word">settle</span>.</p>
-  <div class="divider-line" style="margin-top:32px"></div>
-  <p class="s2-tag">&mdash; the protocol gap nobody filled</p>
-</section>
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 2: THE PROBLEM                     -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="1">
+  <div style="max-width:1100px">
+    <div class="label reveal">The Problem</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.6rem">Agents Have Zero Data to Choose Between Service Providers</h2>
+    <div class="divider reveal reveal-delay-1"></div>
+    <p class="subtitle reveal reveal-delay-2">When an AI agent needs to call an API — translate text, generate an image, transcribe audio — it faces a choice between dozens of providers. Today it has no structured data to make that decision.</p>
 
-<!-- ════════════════════════════════════════
-     S3 — THE GAP
-     ════════════════════════════════════════ -->
-<section class="slide s3" data-slide="3">
-  <div>
-    <p class="label">The Protocol Stack</p>
-    <div class="divider-line" style="margin-top:24px;margin-bottom:32px"></div>
-
-    <div class="protocol-row">
-      <span class="protocol-name">MCP</span>
-      <span class="protocol-line"></span>
-      <span class="protocol-desc">what a tool can do</span>
-    </div>
-    <div class="protocol-row">
-      <span class="protocol-name">A2A</span>
-      <span class="protocol-line"></span>
-      <span class="protocol-desc">how agents communicate</span>
-    </div>
-    <div class="protocol-row">
-      <span class="protocol-name">AP2</span>
-      <span class="protocol-line"></span>
-      <span class="protocol-desc">how to pay safely</span>
-    </div>
-    <div class="protocol-row protocol-row--active">
-      <span class="protocol-name">ASM</span>
-      <span class="protocol-line"></span>
-      <span class="protocol-desc">what a service is worth</span>
-    </div>
-
-    <p style="font-size:14px;color:var(--ink-soft);margin-top:32px">The missing layer between MCP and AP2.</p>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     S4 — PROBLEM
-     ════════════════════════════════════════ -->
-<section class="slide s4" data-slide="4">
-  <div class="s4-layout">
-    <div class="s4-ghost">0</div>
-    <div class="s4-content">
-      <p class="label">The Data Problem</p>
-      <div class="divider-line" style="margin-top:16px;margin-bottom:20px"></div>
-      <h2 class="s4-title">Zero structured data</h2>
-      <p class="s4-body">When an agent faces multiple AI services for the same task, it has no information to make an informed choice. Blind selection leads to 3&ndash;10&times; cost overrun.</p>
-      <div class="divider-line" style="margin-bottom:16px"></div>
-      <p class="s4-note">This is not a model problem. It's a data problem.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     S5 — ARCHITECTURE
-     ════════════════════════════════════════ -->
-<section class="slide slide--center s5" data-slide="5">
-  <div style="width:100%;max-width:1100px">
-    <p class="label" style="text-align:center">Pipeline</p>
-
-    <div class="pipeline" style="margin-top:32px">
-      <div class="pipe-step"><span class="pipe-name">Task</span><div class="pipe-sub">natural language</div></div>
-      <span class="pipe-arrow">&rarr;</span>
-      <div class="pipe-step"><span class="pipe-name">Taxonomy</span><div class="pipe-sub">47 categories</div></div>
-      <span class="pipe-arrow">&rarr;</span>
-      <div class="pipe-step"><span class="pipe-name">Registry</span><div class="pipe-sub">70 manifests</div></div>
-      <span class="pipe-arrow">&rarr;</span>
-      <div class="pipe-step"><span class="pipe-name">TOPSIS</span><div class="pipe-sub">4-dim scoring</div></div>
-      <span class="pipe-arrow">&rarr;</span>
-      <div class="pipe-step"><span class="pipe-name">Winner</span><div class="pipe-sub">+ reasoning</div></div>
-      <span class="pipe-arrow">&rarr;</span>
-      <div class="pipe-step"><span class="pipe-name">x402</span><div class="pipe-sub">Circle Gateway</div></div>
-      <span class="pipe-arrow">&rarr;</span>
-      <div class="pipe-step pipe-step--highlight"><span class="pipe-name">Arc</span><div class="pipe-sub">USDC settle</div></div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-num">72%</div>
-        <div class="stat-label">top-1 accuracy</div>
+    <div class="grid-2" style="margin-top:2rem">
+      <div class="card reveal reveal-delay-2" style="border-color:rgba(244,63,94,0.2)">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--rose);margin-bottom:1rem;letter-spacing:.05em">WITHOUT ASM</h3>
+        <ul class="pain-list">
+          <li>Blind selection via hardcoded API keys</li>
+          <li>3–10x cost overrun or quality mismatch</li>
+          <li>Decisions are non-reproducible and unexplainable</li>
+          <li>Zero intelligence at the selection step</li>
+          <li>No price discovery mechanism exists</li>
+        </ul>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">&lt;1s</div>
-        <div class="stat-label">scoring latency</div>
+      <div class="card card-highlight reveal reveal-delay-3">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:1rem;letter-spacing:.05em">WITH ASM</h3>
+        <ul class="pain-list solution-list">
+          <li>Structured multi-criteria matching across 47 categories</li>
+          <li>Optimal cost-quality tradeoff via TOPSIS ranking</li>
+          <li>Deterministic, auditable, fully explainable decisions</li>
+          <li>Full autonomous decision capability per call</li>
+          <li>Sub-cent payment settles automatically on-chain</li>
+        </ul>
       </div>
-      <div class="stat-item">
-        <div class="stat-num">1-2s</div>
-        <div class="stat-label">tx finality</div>
+    </div>
+    <p class="reveal reveal-delay-4" style="margin-top:1.5rem;text-align:center;font-size:.95rem;color:var(--amber);font-style:italic">This is not a model intelligence problem — it's a data problem.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 3: WHY NOW                         -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="2">
+  <div style="max-width:1100px">
+    <div class="label reveal">Why Now</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.4rem">The Agent Economy Is Exploding — But Infrastructure Is Missing</h2>
+    <div class="divider reveal reveal-delay-1"></div>
+
+    <div class="big-quote reveal reveal-delay-2">"By 2028, AI agents will orchestrate over $4T in API transactions annually. Every one of those calls is a pricing decision that today happens blindly."</div>
+
+    <div class="grid-3" style="margin-top:2rem">
+      <div class="card reveal reveal-delay-2">
+        <div class="flex-row" style="gap:.6rem;margin-bottom:.4rem"><div class="geo-icon grid" style="color:var(--accent);background:var(--accent-dim)"></div><h4 style="font-size:.95rem;font-weight:700">Agent Proliferation</h4></div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem;line-height:1.6">MCP, A2A, LangChain, CrewAI — agent frameworks are multiplying. Each agent needs to choose between 10-100+ service providers per task category.</p>
+        <div class="metric-bar-container">
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text3);margin-bottom:.2rem"><span>Agent frameworks (2024→2026)</span><span>+340%</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="--target-width:85%" class="animated"></div></div>
+        </div>
+      </div>
+      <div class="card reveal reveal-delay-3">
+        <div class="flex-row" style="gap:.6rem;margin-bottom:.4rem"><div class="geo-icon trend" style="color:var(--blue);background:var(--blue-dim)"></div><h4 style="font-size:.95rem;font-weight:700">API Spend Growth</h4></div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem;line-height:1.6">Enterprise AI API spending grew from $15B (2023) to $58B (2025). Most of that spend is sub-optimally allocated because there's no comparison layer.</p>
+        <div class="metric-bar-container">
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text3);margin-bottom:.2rem"><span>AI API market CAGR</span><span>~97%</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="--target-width:97%;background:linear-gradient(90deg,var(--blue),var(--purple))" class="animated"></div></div>
+        </div>
+      </div>
+      <div class="card reveal reveal-delay-4">
+        <div class="flex-row" style="gap:.6rem;margin-bottom:.4rem"><div class="geo-icon gap" style="color:var(--amber);background:var(--amber-dim)"></div><h4 style="font-size:.95rem;font-weight:700">The Gap</h4></div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.4rem;line-height:1.6">MCP solves "what can a tool do." A2A solves "how agents talk." AP2/x402 solves "how to pay." Nobody solves <strong style="color:var(--accent)">"what is a service worth."</strong></p>
+        <div class="metric-bar-container">
+          <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text3);margin-bottom:.2rem"><span>Value-discovery coverage</span><span>0%</span></div>
+          <div class="metric-bar"><div class="metric-bar-fill" style="--target-width:0%;background:var(--rose)" class="animated"></div></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════
-     S6 — LIVE ON ARC TESTNET
-     ════════════════════════════════════════ -->
-<section class="slide s6" data-slide="6">
-  <div>
-    <p class="label">Live on Arc Testnet</p>
-    <div class="divider-line" style="margin-top:24px;margin-bottom:40px"></div>
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 4: THE SOLUTION                    -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="3">
+  <div style="max-width:1100px">
+    <div class="label reveal">The Solution</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.4rem">Three Layers That Turn Any Agent Into an Autonomous Service Buyer</h2>
+    <div class="divider reveal reveal-delay-1"></div>
 
-    <div class="big-stats">
-      <div class="big-stat">
-        <div class="big-stat-num" style="color:var(--ink)">50</div>
-        <div class="big-stat-label">transactions settled</div>
+    <div style="margin-top:2rem;display:flex;flex-direction:column;gap:1rem">
+      <!-- Layer 1: Discover -->
+      <div class="arch-layer card reveal reveal-delay-2" style="background:linear-gradient(135deg,rgba(0,229,160,0.06),transparent);border-left:3px solid var(--accent)">
+        <div class="arch-layer-num" style="background:var(--accent)">01</div>
+        <div class="flex-row" style="gap:1rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--accent)">Discover</h3>
+            <p style="font-size:.88rem;color:var(--text2);margin-top:.4rem;line-height:1.6">Structured service manifests across 6 categories and 47 taxonomy nodes. 70 real-world services registered with pricing, quality metrics, SLA, and payment addresses.</p>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <span class="tag tag-green">LLM</span>
+            <span class="tag tag-green">Image</span>
+            <span class="tag tag-green">Video</span>
+            <span class="tag tag-blue">TTS</span>
+            <span class="tag tag-blue">Embedding</span>
+            <span class="tag tag-purple">GPU</span>
+          </div>
+        </div>
       </div>
-      <div class="big-stat">
-        <div class="big-stat-num" style="color:var(--arc-amber)">$0.25</div>
-        <div class="big-stat-label">USDC moved</div>
-      </div>
-      <div class="big-stat">
-        <div class="big-stat-num" style="color:var(--blue)">15</div>
-        <div class="big-stat-label">unique recipients</div>
-      </div>
-    </div>
 
-    <div class="recipients-section">
-      <p class="recipients-title">Top Recipients</p>
-      <div class="recipient-row"><span class="recipient-name">openai/gpt-4o</span><span class="recipient-value">6 tx &middot; $0.030</span></div>
-      <div class="recipient-row"><span class="recipient-name">google-translate</span><span class="recipient-value">6 tx &middot; $0.030</span></div>
-      <div class="recipient-row"><span class="recipient-name">openai/embedding-3-large</span><span class="recipient-value">5 tx &middot; $0.025</span></div>
-      <div class="recipient-row"><span class="recipient-name">jina-reader</span><span class="recipient-value">5 tx &middot; $0.025</span></div>
-      <div class="recipient-row" style="border-bottom:none"><span class="recipient-name">black-forest-labs/flux-1.1</span><span class="recipient-value">4 tx &middot; $0.020</span></div>
-    </div>
-
-    <a href="https://testnet.arcscan.app/address/0xF5d4b038" target="_blank" class="verify-link">Verify on-chain &rarr; testnet.arcscan.app/address/0xF5d4&hellip;b038</a>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     S7 — WHY ARC + CIRCLE
-     ════════════════════════════════════════ -->
-<section class="slide slide--center s7" data-slide="7">
-  <div style="width:100%;max-width:900px">
-    <p class="label" style="text-align:center">Why Arc + Circle x402</p>
-
-    <div class="compare-row" style="margin-top:40px">
-      <div>
-        <div class="compare-price" style="color:var(--blue)">$0.005</div>
-        <div class="compare-label">per payment on Arc</div>
+      <!-- Layer 2: Evaluate -->
+      <div class="arch-layer card reveal reveal-delay-3" style="background:linear-gradient(135deg,rgba(59,130,246,0.06),transparent);border-left:3px solid var(--blue)">
+        <div class="arch-layer-num" style="background:var(--blue)">02</div>
+        <div class="flex-row" style="gap:1rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--blue)">Evaluate</h3>
+            <p style="font-size:.88rem;color:var(--text2);margin-top:.4rem;line-height:1.6">TOPSIS multi-criteria decision engine with configurable preference weights and hard constraints. Python + TypeScript parity verified. Discovery accuracy: <strong style="color:var(--blue)">72% top-1 match</strong>.</p>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+            <span class="tag tag-blue">TOPSIS</span>
+            <span class="tag tag-blue">Weighted Avg</span>
+            <span class="tag tag-purple">Trust Delta</span>
+          </div>
+        </div>
       </div>
-      <span class="compare-vs">vs</span>
-      <div>
-        <div class="compare-price" style="color:#C5C8D6">$0.50&ndash;$5.00</div>
-        <div class="compare-label">per payment on Ethereum L1</div>
-      </div>
-    </div>
 
-    <p class="narrative">Circle Gateway batches authorizations off-chain &mdash; Lightning-style &mdash; and finalizes on-chain at withdrawal. This is what makes sub-cent agent payments economically viable. The same 50 transactions on Ethereum L1 would cost $25&ndash;$250 in gas alone.</p>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     S8 — TOPSIS + GEMINI FC
-     ════════════════════════════════════════ -->
-<section class="slide slide--center s8" data-slide="8">
-  <div style="width:100%;max-width:1000px">
-    <p class="label" style="text-align:center">Decision Engine</p>
-
-    <div class="weights-row" style="margin-top:32px">
-      <div class="weight-item">
-        <div class="weight-pct" style="color:var(--blue)">40%</div>
-        <div class="weight-label">Cost</div>
-      </div>
-      <div class="weight-item">
-        <div class="weight-pct" style="color:var(--arc-amber)">35%</div>
-        <div class="weight-label">Quality</div>
-      </div>
-      <div class="weight-item">
-        <div class="weight-pct" style="color:#7C6FCD">15%</div>
-        <div class="weight-label">Speed</div>
-      </div>
-      <div class="weight-item">
-        <div class="weight-pct" style="color:var(--ink-muted)">10%</div>
-        <div class="weight-label">Reliability</div>
+      <!-- Layer 3: Pay -->
+      <div class="arch-layer card reveal reveal-delay-4" style="background:linear-gradient(135deg,rgba(167,139,250,0.06),transparent);border-left:3px solid var(--purple)">
+        <div class="arch-layer-num" style="background:var(--purple)">03</div>
+        <div class="flex-row" style="gap:1rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:200px">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--purple)">Pay</h3>
+            <p style="font-size:.88rem;color:var(--text2);margin-top:.4rem;line-height:1.6">Circle Nanopayments on Arc via x402 protocol. $0.002–$0.005 USDC per API call. Fully autonomous settlement — no manual wallet wiring. One endpoint, N recipients.</p>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+            <span class="tag tag-purple">x402</span>
+            <span class="tag tag-purple">USDC</span>
+            <span class="tag tag-amber">Arc</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div style="height:1px;background:var(--line);margin:32px auto 0;width:100%"></div>
-
-    <div class="fc-pills">
-      <span class="fc-pill">Gemini 2.5 Flash</span>
-      <span class="fc-arrow">&rarr;</span>
-      <span class="fc-pill">Function Call</span>
-      <span class="fc-arrow">&rarr;</span>
-      <span class="fc-pill">/api/score</span>
-      <span class="fc-arrow">&rarr;</span>
-      <span class="fc-pill">USDC on Arc</span>
-    </div>
-
-    <p class="fc-result">Real A/B test: TOPSIS 0.8679 vs Random 0.4571 &middot; p=0.048 &#10003;</p>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════
-     S9 — LIVE DEMO
-     ════════════════════════════════════════ -->
-<section class="slide slide--center slide--alt-bg s9" data-slide="9">
-  <div>
-    <p class="label" style="text-align:center">See it live</p>
-    <h2 class="s9-title" style="margin-top:24px">Dashboard &middot; Marketplace<br>&middot; Benchmark &middot; Workbench</h2>
-    <a href="https://asm-arc-circle-2026.vercel.app" target="_blank" class="s9-url">asm-arc-circle-2026.vercel.app</a>
-    <div class="demo-buttons">
-      <a href="https://asm-arc-circle-2026.vercel.app" target="_blank" class="demo-btn">Open Demo &rarr;</a>
-      <a href="#" onclick="return false" class="demo-btn">Watch Video &rarr;</a>
+    <!-- Flow -->
+    <div class="arch-flow reveal reveal-delay-5">
+      <span>Agent Task</span><span class="arch-flow-arrow">→</span>
+      <span>Taxonomy Match</span><span class="arch-flow-arrow">→</span>
+      <span>Registry Query</span><span class="arch-flow-arrow">→</span>
+      <span>TOPSIS Score</span><span class="arch-flow-arrow">→</span>
+      <span>Service Call</span><span class="arch-flow-arrow">→</span>
+      <span>USDC Receipt</span><span class="arch-flow-arrow">→</span>
+      <span>Trust Update</span>
     </div>
   </div>
 </section>
 
-<!-- ════════════════════════════════════════
-     S10 — CLOSE
-     ════════════════════════════════════════ -->
-<section class="slide slide--center s10" data-slide="10">
-  <div>
-    <p class="s10-thanks">Thank you.</p>
-    <div class="s10-gradient-line"></div>
-    <p class="s10-tagline">Agents shouldn't shop.<br>They should settle.</p>
-    <a href="https://github.com/calebguo007/asm-arc-circle-2026" target="_blank" class="s10-link">github.com/calebguo007/asm-arc-circle-2026</a>
-    <p class="s10-team">Built by Caleb &middot; GLM &middot; Hak &middot; Hamza</p>
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 5: HOW IT WORKS                   -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="4">
+  <div class="grid-2" style="max-width:1150px;gap:2.5rem">
+    <div>
+      <div class="label reveal">How It Works</div>
+      <h2 class="title reveal reveal-delay-1" style="font-size:2rem">One Request. Full Autonomous Loop.</h2>
+      <div class="divider reveal reveal-delay-1"></div>
+
+      <div class="step-line reveal reveal-delay-2">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Agent Sends Natural Language Task</h4>
+            <p>"Translate this document to Japanese using the best available LLM"</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>LangGraph Discovers Taxonomy</h4>
+            <p>AI-powered embedding → retrieval → reranking maps request to <code style="color:var(--accent);font-family:var(--font-mono)">ai.nlp.translation</code></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>TOPSIS Ranks All Candidates</h4>
+            <p>Evaluates cost, quality, latency, io_ratio against agent preferences → deterministic winner</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>x402 Settles Payment on Arc</h4>
+            <p>$0.005 USDC sent to provider's wallet via Circle Gateway batching protocol</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Signed Receipt Updates Trust</h4>
+            <p>Cryptographic proof of actual performance feeds back into trust_delta score</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-3" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="card" style="background:rgba(0,0,0,.35);border-color:var(--border-bright)">
+        <div style="font-size:.7rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;font-family:var(--font-mono)">Example: POST /api/score</div>
+        <div class="code-block">
+<span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/score'</span>, {<br>
+&nbsp;&nbsp;<span class="kw">method</span>: <span class="str">'POST'</span>,<br>
+&nbsp;&nbsp;<span class="kw">body</span>: JSON.<span class="fn">stringify</span>({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;task: <span class="str">'translate doc to japanese'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;preferences: { cost_weight: <span class="num">0.4</span>, quality_weight: <span class="num">0.5</span> }<br>
+&nbsp;&nbsp;})<br>
+});<br><br>
+<span class="hl">// Response:</span><br>
+{<br>
+&nbsp;&nbsp;<span class="str">"winner"</span>: <span class="str">"deepL-pro"</span>,<br>
+&nbsp;&nbsp;<span class="str">"taxonomy"</span>: <span class="str">"ai.nlp.translation"</span>,<br>
+&nbsp;&nbsp;<span class="str">"price"</span>: <span class="num">0.003</span>,<br>
+&nbsp;&nbsp;<span class="str">"txHash"</span>: <span class="str">"0x7f3c...9a2e"</span>,<br>
+&nbsp;&nbsp;<span class="str">"settled"</span>: <span class="kw">true</span><br>
+}
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap">
+          <span class="tag tag-green">200 OK</span>
+          <span class="tag tag-blue">$0.003 USDC</span>
+          <span class="tag tag-purple">Arc Confirmed</span>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
-</div><!-- /scroller -->
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 6: COST COMPARISON                -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="5">
+  <div style="max-width:1100px">
+    <div class="label reveal">Why Traditional Gas Models Fail</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.4rem">Micro-Payments Need Micro-Cost Settlement</h2>
+    <div class="divider reveal reveal-delay-1"></div>
+    <p class="subtitle reveal reveal-delay-2">All submissions must demonstrate why their model would fail with traditional gas costs. Here's ours:</p>
+
+    <div class="cost-compare reveal reveal-delay-2">
+      <div class="cost-bar-wrap">
+        <div class="cost-bar cost-bar-trad animated" style="--target-h:260px"></div>
+        <div class="cost-label" style="color:var(--rose)">Traditional L1 Gas</div>
+        <div class="cost-value" style="color:var(--rose)">$0.50+</div>
+        <div class="cost-sub">per transaction (Ethereum mainnet avg)</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="cost-bar-wrap">
+        <div class="cost-bar cost-bar-asm animated" style="--target-h:14px"></div>
+        <div class="cost-label" style="color:var(--accent)">Circle × Arc Nanopayment</div>
+        <div class="cost-value" style="color:var(--accent)">$0.005</div>
+        <div class="cost-sub">per transaction (batched settlement)</div>
+      </div>
+    </div>
+
+    <div class="flex-center reveal reveal-delay-3">
+      <div class="savings-badge">
+        <span class="big">100×</span> cheaper per transaction
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top:2rem">
+      <div class="card reveal reveal-delay-3">
+        <h4 style="font-size:.9rem;font-weight:700;color:var(--accent)">Batched Settlement</h4>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.5rem;line-height:1.6">Multiple micro-payments settled in a single on-chain transaction via Circle Gateway's x402 batching protocol. Gas amortized across hundreds of calls.</p>
+      </div>
+      <div class="card reveal reveal-delay-4">
+        <h4 style="font-size:.9rem;font-weight:700;color:var(--blue)">USDC-Native Budgeting</h4>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.5rem;line-height:1.6">No volatile gas token exposure. Agents budget in stablecoins with predictable per-call costs. No surprise spending from gas volatility.</p>
+      </div>
+      <div class="card reveal reveal-delay-5">
+        <h4 style="font-size:.9rem;font-weight:700;color:var(--purple)">The Math Doesn't Work Otherwise</h4>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:.5rem;line-height:1.6">At $0.50+/tx, paying $0.005 for an API call means gas costs <strong style="color:var(--rose)">100× the payment itself</strong>. The entire model collapses without nanopayments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 7: LIVE DEMO DATA                 -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="6">
+  <div style="max-width:1150px">
+    <div class="label reveal">Live Demo Results</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.4rem">Real Transactions. Real Data. No Simulations.</h2>
+    <div class="divider reveal reveal-delay-1"></div>
+    <p class="subtitle reveal reveal-delay-2">Every number below comes from actual on-chain transactions executed during development. All verifiable on Arc Block Explorer.</p>
+
+    <div class="data-grid reveal reveal-delay-2">
+      <div class="data-card"><div class="data-val" style="color:var(--accent)">50</div><div class="data-desc">On-Chain Transactions</div></div>
+      <div class="data-card"><div class="data-val" style="color:var(--blue)">$0.25</div><div class="data-desc">Total USDC Volume</div></div>
+      <div class="data-card"><div class="data-val" style="color:var(--purple)">15</div><div class="data-desc">Unique AI Services</div></div>
+      <div class="data-card"><div class="data-val" style="color:var(--amber)">6</div><div class="data-desc">Agent Personas Tested</div></div>
+    </div>
+
+    <div class="grid-2" style="gap:2rem">
+      <div class="card reveal reveal-delay-3">
+        <h4 style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">Agent Personas × Scenarios</h4>
+        <table class="agent-table">
+          <thead><tr><th>Agent</th><th>Taxonomy</th><th>Strategy</th></tr></thead>
+          <tbody>
+            <tr><td>ChatBot Agent</td><td><span class="taxonomy-tag">ai.llm.chat</span></td><td>Cost-optimized LLM</td></tr>
+            <tr><td>Creative Agent</td><td><span class="taxonomy-tag">ai.vision.*</span></td><td>Quality-first image gen</td></tr>
+            <tr><td>Voice Agent</td><td><span class="taxonomy-tag">ai.audio.tts</span></td><td>Natural speech TTS</td></tr>
+            <tr><td>RAG Agent</td><td><span class="taxonomy-tag">ai.llm+embedding</span></td><td>High io_ratio optimization</td></tr>
+            <tr><td>DevOps Agent</td><td><span class="taxonomy-tag">cloud.compute.gpu</span></td><td>Speed + reliability</td></tr>
+            <tr><td>Multi-Modal Agent</td><td><span class="taxonomy-tag">all categories</span></td><td>Balanced cross-category</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="reveal reveal-delay-4" style="display:flex;flex-direction:column;gap:1rem">
+        <div class="card" style="border-color:rgba(0,229,160,0.2)">
+          <h4 style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.8rem">Hackathon Requirements Checklist</h4>
+          <div style="display:flex;flex-direction:column;gap:.6rem">
+            <div class="flex-row" style="justify-content:space-between"><span style="font-size:.85rem">Per-action pricing ≤ $0.01</span><span class="tag tag-green" style="font-size:.65rem">PASS · $0.005</span></div>
+            <div class="flex-row" style="justify-content:space-between"><span style="font-size:.85rem">50+ on-chain transactions</span><span class="tag tag-green" style="font-size:.65rem">PASS · 50/50</span></div>
+            <div class="flex-row" style="justify-content:space-between"><span style="font-size:.85rem">Margin explanation</span><span class="tag tag-green" style="font-size:.65rem">PASS · See slide 6</span></div>
+            <div class="flex-row" style="justify-content:space-between"><span style="font-size:.85rem">Uses Circle + Arc + USDC</span><span class="tag tag-green" style="font-size:.65rem">PASS · All three</span></div>
+            <div class="flex-row" style="justify-content:space-between"><span style="font-size:.85rem">Transaction video proof</span><span class="tag tag-blue" style="font-size:.65rem">REQUIRED · Video</span></div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(59,130,246,0.2)">
+          <h4 style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.8rem">On-Chain Proof Links</h4>
+          <div style="font-size:.8rem;font-family:var(--font-mono);line-height:1.8;color:var(--text2)">
+            <div>Buyer: <a href="https://testnet.arcscan.app/address/0xF5d426D5cdfaeB18Ea2cDec2F7c2CB88eEe6b038" target="_blank" style="color:var(--blue);text-decoration:none">0xF5d4...b038</a></div>
+            <div>Gateway: <a href="https://testnet.arcscan.app/address/0x0077777d7EBA4688BDeF3E311b846F25870A19B9" target="_blank" style="color:var(--blue);text-decoration:none">0x0077...19B9</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 8: TRUST MODEL                     -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="7">
+  <div style="max-width:1100px">
+    <div class="label reveal">Trust Model</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.4rem">Verify, Don't Trust — 3-Layer Trust Architecture</h2>
+    <div class="divider reveal reveal-delay-1"></div>
+    <p class="subtitle reveal reveal-delay-2">From self-reported claims to cryptographic proof. Aligned with ERC-8004 computable trust dimensions.</p>
+
+    <div style="margin-top:1.5rem">
+      <div class="trust-tier card reveal reveal-delay-2" style="border-left:3px solid var(--blue)">
+        <div class="tier-num" style="background:var(--blue-dim);color:var(--blue)"><div class="geo-icon layer" style="position:relative;width:20px;height:20px;transform:scale(0.6);color:inherit"></div></div>
+        <div class="tier-info">
+          <h4 style="color:var(--blue)">Transparency Layer</h4>
+          <p>Providers submit structured manifests with self-reported metrics, pricing dimensions, and transparency flags. Every claim is machine-readable and queryable.</p>
+        </div>
+      </div>
+      <div class="trust-tier card reveal reveal-delay-3" style="border-left:3px solid var(--purple)">
+        <div class="tier-num" style="background:var(--purple-dim);color:var(--purple)"><div class="geo-icon shield" style="position:relative;width:20px;height:20px;transform:scale(0.6);color:inherit"></div></div>
+        <div class="tier-info">
+          <h4 style="color:var(--purple)">Verification Layer</h4>
+          <p>Independent benchmarks and reputation scores attached with source URLs. Third-party audit data cross-referenced against declared metrics.</p>
+        </div>
+      </div>
+      <div class="trust-tier card reveal reveal-delay-4" style="border-left:3px solid var(--accent)">
+        <div class="tier-num" style="background:var(--accent-dim);color:var(--accent)"><div class="geo-icon pulse" style="position:relative;width:20px;height:20px;transform:scale(0.6);color:inherit"></div></div>
+        <div class="tier-info">
+          <h4 style="color:var(--accent)">Receipt Layer</h4>
+          <p>Signed receipts (IETF ACTA draft) cryptographically prove actual performance per API call. Post-hoc verification creates a self-sustaining trust loop.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust-formula reveal reveal-delay-5">
+      <span class="hl">trust_delta</span> = |declared − actual| / declared<br>
+      <span style="font-size:.78rem;color:var(--text3);margin-top:.5rem;display:block">Each transaction updates the provider's credibility score. Payment → Delivery → Verification loop sustains itself.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 9: ECOSYSTEM                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="8">
+  <div style="max-width:1100px">
+    <div class="label reveal">Where ASM Fits</div>
+    <h2 class="title reveal reveal-delay-1" style="font-size:2.4rem">The Missing Value Layer in the Agent Economy Stack</h2>
+    <div class="divider reveal reveal-delay-1"></div>
+    <p class="subtitle reveal reveal-delay-2">ASM doesn't replace existing protocols — it completes them by adding the economic dimension nobody else covers.</p>
+
+    <div style="margin-top:1.5rem">
+      <div class="eco-row reveal reveal-delay-2">
+        <div class="eco-icon" style="background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,0.2)"><div class="geo-icon hex" style="position:relative;color:inherit;transform:scale(0.7)"></div></div>
+        <div style="flex:1"><div class="eco-name">Model Context Protocol</div><div class="eco-desc">"What a tool CAN DO" — capability discovery</div></div>
+        <span class="eco-status done">SOLVED</span>
+      </div>
+      <div class="eco-row reveal reveal-delay-2">
+        <div class="eco-icon" style="background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,0.2)"><div class="geo-icon pulse" style="position:relative;color:inherit;transform:scale(0.7)"></div></div>
+        <div style="flex:1"><div class="eco-name">Agent-to-Agent Protocol</div><div class="eco-desc">"How agents COMMUNICATE" — message passing</div></div>
+        <span class="eco-status done">SOLVED</span>
+      </div>
+      <div class="eco-row reveal reveal-delay-3">
+        <div class="eco-icon" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)"><div class="geo-icon stack" style="position:relative;color:inherit;transform:scale(0.7)"></div></div>
+        <div style="flex:1"><div class="eco-name">Agent Payment Protocol (x402)</div><div class="eco-desc">"How to PAY safely" — settlement layer</div></div>
+        <span class="eco-status done">SOLVED</span>
+      </div>
+      <div class="eco-row reveal reveal-delay-3" style="background:linear-gradient(135deg,rgba(0,229,160,0.06),rgba(0,184,255,0.03));border-color:var(--border-bright)">
+        <div class="eco-icon" style="background:var(--accent-dim);color:var(--accent);border:1px solid rgba(0,229,160,0.3)"><div class="geo-icon grid" style="position:relative;color:inherit;transform:scale(0.7)"></div></div>
+        <div style="flex:1"><div class="eco-name" style="color:var(--accent)">Agent Service Manifest</div><div class="eco-desc">"What a service IS WORTH" — value discovery & evaluation</div></div>
+        <span class="eco-status new">NEW — THIS PROJECT</span>
+      </div>
+    </div>
+
+    <div class="card reveal reveal-delay-4" style="margin-top:1.5rem;border-color:var(--border-bright)">
+      <h4 style="font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">The Complete Stack</h4>
+      <p style="font-size:.9rem;color:var(--text2);line-height:1.7"><strong style="color:var(--accent)">MCP</strong> discovers capability → <strong style="color:var(--accent)">ASM</strong> evaluates value → <strong style="color:var(--accent)">AP2/x402</strong> settles payment. Together they form the complete autonomous agent economy stack. Without ASM, agents can find tools and pay for them, but they cannot make intelligent economic decisions about which tools are worth paying for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 10: ROADMAP                        -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide" data-slide="9">
+  <div class="grid-2" style="max-width:1150px;gap:3rem">
+    <div>
+      <div class="label reveal">Roadmap</div>
+      <h2 class="title reveal reveal-delay-1" style="font-size:2.2rem">From Prototype to Protocol</h2>
+      <div class="divider reveal reveal-delay-1"></div>
+
+      <div class="timeline reveal reveal-delay-2">
+        <div class="tm-item">
+          <div class="tm-dot" style="border-color:var(--accent);background:var(--accent)"></div>
+          <div class="tm-phase">PHASE 0 — NOW</div>
+          <div class="tm-time">April 2026 · Hackathon</div>
+          <div class="tm-title">Working Prototype</div>
+          <div class="tm-desc">70 manifests across 47 taxonomies · TOPSIS scorer (Py+TS) · MCP Server (5 tools) · x402 integration · 50/50 test transactions on Arc · Gemini function calling</div>
+        </div>
+        <div class="tm-item">
+          <div class="tm-dot" style="border-color:var(--blue)"></div>
+          <div class="tm-phase" style="color:var(--blue)">PHASE 1 — Q2 2026</div>
+          <div class="tm-time">Mainnet Deployment</div>
+          <div class="tm-title">Production Readiness</div>
+          <div class="tm-desc">Automated manifest crawler · Provider self-service portal · LangChain SDK · Mainnet settlement · Expanded benchmark suite</div>
+        </div>
+        <div class="tm-item">
+          <div class="tm-dot" style="border-color:var(--purple)"></div>
+          <div class="tm-phase" style="color:var(--purple)">PHASE 2 — Q3 2026</div>
+          <div class="tm-time">Network Effects</div>
+          <div class="tm-title">100+ Services & Multi-Chain</div>
+          <div class="tm-desc">100+ registered services · Trust reputation marketplace · Multi-chain support (Base, Arbitrum, Arc) · Community governance</div>
+        </div>
+        <div class="tm-item">
+          <div class="tm-dot" style="border-color:var(--amber)"></div>
+          <div class="tm-phase" style="color:var(--amber)">PHASE 3 — Q4 2026</div>
+          <div class="tm-time">Protocol Maturity</div>
+          <div class="tm-title">Full Decentralization</div>
+          <div class="tm-desc">Agent SDK (Python, TypeScript, Rust) · Decentralized registry · Governance token · ERC-8004 full compliance</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-3" style="display:flex;flex-direction:column;justify-content:center;gap:1.2rem">
+      <div class="card card-highlight">
+        <h4 style="font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">Tech Stack Summary</h4>
+        <div style="display:flex;flex-direction:column;gap:.7rem">
+          <div class="flex-row"><span class="tag tag-green">Settlement</span><span style="font-size:.82rem;color:var(--text2)">Arc Testnet + USDC + Circle Gateway x402</span></div>
+          <div class="flex-row"><span class="tag tag-blue">Scoring</span><span style="font-size:.82rem;color:var(--text2)">TOPSIS + Weighted Average + Trust Delta</span></div>
+          <div class="flex-row"><span class="tag tag-purple">Discovery</span><span style="font-size:.82rem;color:var(--text2)">LangGraph state machine + Embedding pipeline</span></div>
+          <div class="flex-row"><span class="tag tag-amber">AI</span><span style="font-size:.82rem;color:var(--text2)">Gemini FC + AIMLAPI fallback + Rule Engine</span></div>
+          <div class="flex-row"><span class="tag tag-green">Registry</span><span style="font-size:.82rem;color:var(--text2)">MCP Server (5 tools) + REST API + 70 manifests</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h4 style="font-size:.85rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem">Open Source</h4>
+        <div style="font-size:.9rem;color:var(--text2);line-height:1.7">MIT License. All code, manifests, and scoring logic publicly available. Designed as an open protocol — not a walled garden.</div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem">
+          <span class="tag tag-green">Open Source</span>
+          <span class="tag tag-blue">MIT License</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════ -->
+<!-- SLIDE 11: THANK YOU                      -->
+<!-- ════════════════════════════════════════ -->
+<section class="slide s-thanks" data-slide="10">
+  <div class="reveal">
+    <div class="thanks-title">Thank You</div>
+    <p class="thanks-tagline">Agent Service Manifest × Circle Nanopayments<br>The value layer for the autonomous agent economy.</p>
+    <div class="btn-group reveal reveal-delay-2">
+      <a href="https://github.com/calebguo007/asm-arc-circle-2026" target="_blank" class="btn-primary">View Source Code</a>
+      <a href="https://asm-arc-circle-2026.vercel.app/" target="_blank" class="btn-secondary">Live Demo App</a>
+    </div>
+    <p class="contact-info reveal reveal-delay-3">
+      github.com/calebguo007/asm-arc-circle-2026 &middot; @calebguo007 &middot; Yi Guo
+    </p>
+    <div style="margin-top:2.5rem;display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap" class="reveal reveal-delay-4">
+      <span class="tag tag-green">Arc</span>
+      <span class="tag tag-blue">USDC</span>
+      <span class="tag tag-purple">Circle Gateway</span>
+      <span class="tag tag-amber">x402</span>
+      <span class="tag tag-green">Nanopayments</span>
+      <span class="tag tag-blue">TOPSIS</span>
+      <span class="tag tag-purple">LangGraph</span>
+      <span class="tag tag-amber">MCP</span>
+    </div>
+  </div>
+</section>
+
+</div><!-- end .deck -->
 
 <script>
-(function() {
-  'use strict';
+(function(){
+  // Build progress dots
+  const slides=document.querySelectorAll('.slide[data-slide]');
+  const pb=document.getElementById('progressBar');
+  slides.forEach((s,i)=>{
+    const d=document.createElement('div');
+    d.className='progress-dot'+(i===0?' active':'');
+    d.onclick=function(){s.scrollIntoView({behavior:'smooth'})};
+    pb.appendChild(d);
+  });
+  const dots=pb.querySelectorAll('.progress-dot');
 
-  const scroller = document.getElementById('scroller');
-  const progressBar = document.getElementById('progressBar');
-  const counter = document.getElementById('counter');
-  const navDots = document.getElementById('navDots');
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const totalSlides = slides.length;
-
-  // ── Build navigation dots ──
-  for (let i = 0; i < totalSlides; i++) {
-    const dot = document.createElement('button');
-    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
-    dot.dataset.index = i;
-    dot.addEventListener('click', function() { goToSlide(i); });
-    navDots.appendChild(dot);
-  }
-  const dots = navDots.querySelectorAll('.nav-dot');
-
-  // ── IntersectionObserver for active slide detection ──
-  let currentSlideIndex = 0;
-  const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-        const idx = parseInt(entry.target.dataset.slide, 10) - 1;
-        if (idx !== currentSlideIndex) {
-          currentSlideIndex = idx;
-          updateUI(idx);
+  // Intersection Observer for reveals + progress
+  const observer=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        // Animate metric bars
+        entry.target.querySelectorAll('.metric-bar-fill').forEach(b=>b.classList.add('animated'));
+        entry.target.querySelectorAll('.cost-bar').forEach(b=>b.classList.add('animated'));
+        // Update progress dot
+        const idx=entry.target.dataset.slide;
+        if(idx!==undefined){
+          dots.forEach((d,i)=>d.classList.toggle('active',i==idx));
         }
       }
     });
-  }, { root: scroller, threshold: 0.5 });
+  },{threshold:0.25,rootMargin:'-10% 0px -10% 0px'});
 
-  slides.forEach(function(s) { observer.observe(s); });
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>observer.observe(el));
 
-  // ── UI Update ──
-  function updateUI(idx) {
-    // Progress bar
-    progressBar.style.width = ((idx + 1) / totalSlides * 100) + '%';
-    // Counter
-    counter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + totalSlides;
-    // Dots
-    dots.forEach(function(d, i) {
-      d.classList.toggle('active', i === idx);
-    });
-  }
-
-  // ── Navigation helpers ──
-  function goToSlide(idx) {
-    if (idx < 0 || idx >= totalSlides) return;
-    slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function nextSlide() {
-    goToSlide(Math.min(currentSlideIndex + 1, totalSlides - 1));
-  }
-
-  function prevSlide() {
-    goToSlide(Math.max(currentSlideIndex - 1, 0));
-  }
-
-  // ── Keyboard navigation ──
-  document.addEventListener('keydown', function(e) {
-    switch (e.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-      case 'PageDown':
-      case ' ':
-        e.preventDefault();
-        nextSlide();
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-      case 'PageUp':
-        e.preventDefault();
-        prevSlide();
-        break;
-      case 'f':
-      case 'F':
-        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-          e.preventDefault();
-          toggleFullscreen();
-        }
-        break;
-      case 'Escape':
-        if (document.fullscreenElement) {
-          document.exitFullscreen();
-        }
-        break;
-      default:
-        // Number keys 1-9 and 0 for jump-to-slide
-        if (/^[1-9]$/.test(e.key)) {
-          e.preventDefault();
-          goToSlide(parseInt(e.key, 10) - 1);
-        } else if (e.key === '0') {
-          e.preventDefault();
-          goToSlide(totalSlides - 1);
-        }
+  // Keyboard navigation
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){
+      e.preventDefault();
+      const active=document.querySelector('.progress-dot.active');
+      if(active&&dots[Array.from(dots).indexOf(active)+1]){
+        slides[Array.from(dots).indexOf(active)+1].scrollIntoView({behavior:'smooth'});
+      }
+    }
+    if(e.key==='ArrowUp'||e.key==='PageUp'){
+      e.preventDefault();
+      const active=document.querySelector('.progress-dot.active');
+      if(active&&dots[Array.from(dots).indexOf(active)-1]){
+        slides[Array.from(dots).indexOf(active)-1].scrollIntoView({behavior:'smooth'});
+      }
     }
   });
-
-  // ── Fullscreen toggle ──
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen || document.documentElement.mozRequestFullScreen || document.documentElement.msRequestFullscreen).call(document.documentElement);
-    } else {
-      document.exitFullscreen();
-    }
-  }
-
-  // ── Wheel lock: prevent half-page scrolling ──
-  let wheelLock = false;
-  scroller.addEventListener('wheel', function(e) {
-    if (wheelLock) return;
-    wheelLock = true;
-    setTimeout(function() { wheelLock = false; }, 800);
-
-    if (e.deltaY > 0) {
-      nextSlide();
-    } else if (e.deltaY < 0) {
-      prevSlide();
-    }
-  }, { passive: true });
-
-  // ── Initialize UI ──
-  updateUI(0);
-
 })();
 </script>
-
 </body>
 </html>
