@@ -139,8 +139,8 @@ When an agent faces multiple services that can fulfill the same task, it has **z
 ### Run the Demo
 
 ```bash
-git clone https://github.com/calebguo007/asm-spec.git
-cd asm-spec
+git clone https://github.com/calebguo007/asm-arc-circle-2026.git
+cd asm-arc-circle-2026
 
 # End-to-end demo — pure Python, no dependencies
 python3 demo/e2e_demo.py
@@ -298,7 +298,7 @@ ai.video.editing                 infra.storage.vector
 ## What's Included
 
 ```
-asm-spec/
+asm-arc-circle-2026/
 ├── schema/
 │   ├── asm-v0.2.schema.json          # JSON Schema (v0.2)
 │   └── asm-v0.3.schema.json          # JSON Schema (v0.3: +receipts, verification, ttl)
@@ -404,7 +404,7 @@ The `asm-registry` MCP server provides 5 tools:
   "mcpServers": {
     "asm-registry": {
       "command": "node",
-      "args": ["/path/to/asm-spec/registry/dist/index.js"]
+      "args": ["/path/to/asm-arc-circle-2026/registry/dist/index.js"]
     }
   }
 }
@@ -624,7 +624,7 @@ ASM is an open protocol. Contributions welcome:
          for Autonomous Service Selection in Multi-Agent Systems},
   author={Guo, Yi},
   year={2026},
-  howpublished={\url{https://github.com/calebguo007/asm-spec}}
+  howpublished={\url{https://github.com/calebguo007/asm-arc-circle-2026}}
 }
 ```
 
