@@ -25,6 +25,20 @@ npm run test:smoke
 - default: requires `OPENAI_API_KEY` and uses OpenAI `text-embedding-3-small`.
 - fallback mode: set `ASM_ALLOW_FAKE_EMBEDDER=1` to use deterministic `FakeHashEmbedder` (CI/local without keys).
 
+## LLM provider (reranking)
+
+**Powered by Gemini 2.5 Flash via Function Calling to Circle x402 endpoints**
+
+The LangGraph rerank node supports a 3-tier fallback chain:
+
+| Priority | Env Var | Model | Notes |
+|----------|---------|-------|-------|
+| 1 (Google track) | `GEMINI_API_KEY` | `gemini-2.5-flash` | **Function Calling** to `/api/score` — agents securely interact with Circle APIs |
+| 2 | `OPENAI_API_KEY` + `OPENAI_BASE_URL=openrouter.ai/...` | `openrouter/auto` | OpenRouter fallback |
+| 3 | `OPENAI_API_KEY` | `gpt-4o-mini` | Default OpenAI fallback |
+
+When Gemini is active, the model uses native **Function Calling** (`select_taxonomy_and_score`) to structure its taxonomy selection as a tool invocation that maps directly to the seller's `/api/score` endpoint — satisfying the Google track requirement for "Function Calling, allowing agents to securely interact with Circle APIs."
+
 ## Output contract
 
 `discoverTaxonomy(...)` returns:
