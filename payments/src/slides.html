@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASM — Agent Service Manifest</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   Design Tokens
+   ════════════════════════════════════════ */
+:root {
+  --bg:          #FFFFFF;
+  --bg-soft:     #F8F9FB;
+  --hl:          #EFF0FF;
+  --ink:         #0A0E27;
+  --ink-soft:    #4A4F6E;
+  --ink-muted:   #8A8FA8;
+  --blue:        #1F6FEB;
+  --blue-deep:   #1450C8;
+  --line:        #EAEAEA;
+  --arc-amber:   #F0B429;
+  --gradient:    linear-gradient(135deg, #2DD4BF 0%, #7C6FCD 50%, #EC4899 100%);
+}
+
+/* ════════════════════════════════════════
+   Reset & Base
+   ════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ════════════════════════════════════════
+   Scroll Container
+   ════════════════════════════════════════ */
+.scroller {
+  width: 100vw; height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+/* ════════════════════════════════════════
+   Slide Base
+   ════════════════════════════════════════ */
+.slide {
+  width: 100vw; min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 96px;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+}
+
+.slide--center { align-items: center; text-align: center; }
+.slide--alt-bg { background: var(--bg-soft); }
+
+/* ════════════════════════════════════════
+   Typography
+   ════════════════════════════════════════ */
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink-muted);
+}
+.label-blue { color: var(--blue); }
+
+.divider-line {
+  height: 1px;
+  background: var(--blue);
+  width: 48px;
+  display: inline-block;
+}
+.divider-long {
+  height: 1px;
+  background: var(--blue);
+  width: 320px;
+}
+
+/* ════════════════════════════════════════
+   Progress Bar (fixed top)
+   ════════════════════════════════════════ */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--blue);
+  z-index: 9999;
+  transition: width 0.3s ease;
+  will-change: width;
+}
+
+/* ════════════════════════════════════════
+   Counter (fixed bottom-right)
+   ════════════════════════════════════════ */
+.counter {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--ink-muted);
+  z-index: 9999;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ════════════════════════════════════════
+   Navigation Dots (fixed bottom-center)
+   ════════════════════════════════════════ */
+.nav-dots {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  padding: 0;
+}
+
+.nav-dot:hover { transform: scale(1.3); }
+.nav-dot.active {
+  width: 8px; height: 8px;
+  background: var(--blue);
+}
+
+/* ════════════════════════════════════════
+   S1 — COVER
+   ════════════════════════════════════════ */
+.s1-logo {
+  font-size: 64px;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.s1-title {
+  font-size: 96px;
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-top: 32px;
+}
+.s1-sub {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  margin-top: 24px;
+}
+.s1-meta {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink-muted);
+  margin-top: 8px;
+}
+.s1-url {
+  font-size: 14px;
+  color: var(--blue);
+  text-decoration: none;
+}
+.s1-url:hover { text-decoration: underline; }
+.s1-topline {
+  position: absolute;
+  top: 64px; right: 96px;
+  width: 320px; height: 1px;
+  background: var(--blue);
+  animation: fadeInLine 0.8s ease forwards;
+  opacity: 0;
+}
+@keyframes fadeInLine { to { opacity: 1; } }
+
+/* ════════════════════════════════════════
+   S2 — TAGLINE
+   ════════════════════════════════════════ */
+.s2-headline {
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.s2-gradient-word {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.s2-tag {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ink-muted);
+  margin-top: 16px;
+}
+
+/* ════════════════════════════════════════
+   S3 — THE GAP
+   ════════════════════════════════════════ */
+.protocol-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 0;
+  font-size: 14px;
+}
+.protocol-name {
+  width: 80px;
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.protocol-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.protocol-desc {
+  text-align: right;
+  color: var(--ink-soft);
+  font-size: 14px;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+.protocol-row--active {
+  background: var(--hl);
+  border-radius: 8px;
+  padding: 16px 24px;
+  margin: 4px -24px;
+}
+.protocol-row--active .protocol-name {
+  font-weight: 700;
+  color: var(--ink);
+}
+.protocol-row--active .protocol-line { background: var(--blue); }
+.protocol-row--active .protocol-desc { color: var(--ink); font-weight: 500; }
+
+/* ════════════════════════════════════════
+   S4 — PROBLEM
+   ════════════════════════════════════════ */
+.s4-layout {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 64px;
+}
+.s4-ghost {
+  font-size: 360px;
+  font-weight: 300;
+  color: #F0F0F5;
+  line-height: 1;
+  flex-shrink: 0;
+  user-select: none;
+}
+.s4-content {
+  max-width: 420px;
+  flex-shrink: 0;
+}
+.s4-title {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.s4-body {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.s4-note {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-muted);
+}
+
+/* ════════════════════════════════════════
+   S5 — ARCHITECTURE
+   ════════════════════════════════════════ */
+.pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pipe-step {
+  padding: 16px 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-align: center;
+  min-width: 90px;
+}
+.pipe-step--highlight {
+  background: var(--hl);
+  border-color: transparent;
+}
+.pipe-step--highlight .pipe-name { color: var(--blue); }
+.pipe-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.pipe-sub {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+.pipe-arrow {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 64px;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-muted);
+  margin-top: 8px;
+}
+
+/* ════════════════════════════════════════
+   S6 — LIVE ON ARC TESTNET
+   ════════════════════════════════════════ */
+.big-stats {
+  display: flex;
+  gap: 64px;
+  margin-bottom: 64px;
+}
+.big-stat { text-align: left; }
+.big-stat-num {
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1;
+}
+.big-stat-label {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-top: 12px;
+}
+.recipients-section { max-width: 600px; }
+.recipients-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.recipient-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  transition: background 0.15s ease;
+  cursor: default;
+}
+.recipient-row:hover { background: var(--hl); }
+.recipient-name { color: var(--ink); }
+.recipient-value { color: var(--ink-muted); white-space: nowrap; margin-left: 24px; }
+.verify-link {
+  font-size: 14px;
+  color: var(--blue);
+  text-decoration: underline;
+  margin-top: 32px;
+  display: inline-block;
+}
+
+/* ════════════════════════════════════════
+   S7 — WHY ARC + CIRCLE
+   ════════════════════════════════════════ */
+.compare-row {
+  display: flex;
+  align-items: baseline;
+  gap: 48px;
+  justify-content: center;
+}
+.compare-price {
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+}
+.compare-label {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-top: 12px;
+}
+.compare-vs {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  align-self: center;
+}
+.narrative {
+  max-width: 720px;
+  margin: 64px auto 0;
+  font-size: 16px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════
+   S8 — TOPSIS + GEMINI FC
+   ════════════════════════════════════════ */
+.weights-row {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+.weight-item { text-align: center; }
+.weight-pct {
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+}
+.weight-label {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+.fc-pills {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.fc-pill {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--hl);
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.fc-arrow {
+  color: var(--ink-muted);
+  font-size: 14px;
+}
+.fc-result {
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-top: 24px;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════
+   S9 — LIVE DEMO
+   ════════════════════════════════════════ */
+.s9-title {
+  font-size: 64px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.s9-url {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--blue);
+  text-decoration: none;
+  margin-top: 48px;
+  display: inline-block;
+}
+.s9-url:hover { text-decoration: underline; }
+.demo-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  justify-content: center;
+}
+.demo-btn {
+  padding: 12px 32px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  border: 1px solid var(--blue);
+  color: var(--blue);
+  background: transparent;
+}
+.demo-btn:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* ════════════════════════════════════════
+   S10 — CLOSE
+   ════════════════════════════════════════ */
+.s10-thanks {
+  font-size: 96px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+}
+.s10-gradient-line {
+  width: 48px; height: 1px;
+  background: var(--gradient);
+  margin: 32px auto;
+}
+.s10-tagline {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+.s10-link {
+  font-size: 14px;
+  color: var(--blue);
+  text-decoration: none;
+  margin-top: 32px;
+  display: inline-block;
+}
+.s10-link:hover { text-decoration: underline; }
+.s10-team {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 8px;
+}
+
+/* ════════════════════════════════════════
+   Responsive
+   ════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .slide { padding: 48px 48px; }
+  .s1-logo { font-size: 48px; }
+  .s1-title { font-size: 64px; }
+  .s2-headline { font-size: 44px; }
+  .s4-ghost { font-size: 220px; }
+  .big-stat-num { font-size: 64px; }
+  .compare-price { font-size: 44px; }
+  .weight-pct { font-size: 44px; }
+  .s9-title { font-size: 44px; }
+  .s10-thanks { font-size: 64px; }
+  .pipeline { gap: 4px; }
+  .pipe-step { padding: 12px 16px; min-width: 70px; }
+  .stats-row { gap: 40px; }
+  .big-stats { gap: 36px; }
+  .weights-row { gap: 20px; }
+  .s1-topline { right: 48px; width: 200px; }
+}
+
+@media (max-width: 768px) {
+  .slide { padding: 32px 24px; }
+  .s1-logo { font-size: 36px; }
+  .s1-title { font-size: 42px; }
+  .s2-headline { font-size: 32px; }
+  .s4-layout { flex-direction: column; }
+  .s4-ghost { font-size: 120px; }
+  .s4-content { max-width: 100%; }
+  .big-stats { flex-direction: column; gap: 24px; }
+  .compare-row { flex-direction: column; gap: 16px; align-items: center; }
+  .compare-vs { display: none; }
+  .weight-pct { font-size: 32px; }
+  .weights-row { flex-wrap: wrap; gap: 16px; }
+  .pipeline { flex-direction: column; align-items: center; }
+  .pipe-arrow { transform: rotate(90deg); }
+  .stats-row { flex-direction: row; gap: 24px; }
+  .s9-title { font-size: 32px; }
+  .s10-thanks { font-size: 48px; }
+  .s1-topline { display: none; }
+  .nav-dots { bottom: 12px; }
+  .counter { bottom: 12px; right: 12px; font-size: 10px; }
+}
+
+/* ════════════════════════════════════════
+   Print / PDF
+   ════════════════════════════════════════ */
+@media print {
+  .scroller { overflow: visible; height: auto; scroll-snap-type: none; }
+  .slide { min-height: 100vh; page-break-after: always; break-after: page; }
+  .progress-bar, .counter, .nav-dots { display: none !important; }
+  body { background: #fff; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ════════════════════════════════════════
+   Fullscreen
+   ════════════════════════════════════════ */
+:-webkit-full-screen { overflow: hidden; }
+:-moz-full-screen { overflow: hidden; }
+:fullscreen { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Counter -->
+<div class="counter" id="counter">01 / 10</div>
+
+<!-- Navigation Dots -->
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- Scroller -->
+<div class="scroller" id="scroller">
+
+<!-- ════════════════════════════════════════
+     S1 — COVER
+     ════════════════════════════════════════ -->
+<section class="slide s1" data-slide="1">
+  <div style="position:relative;width:100%">
+    <div class="s1-logo">ASM</div>
+    <h1 class="s1-title">Agent Service Manifest</h1>
+    <p class="s1-sub">OpenAPI describes what a service can do.<br>ASM describes what a service is worth.</p>
+    <div style="position:absolute;bottom:0;left:0">
+      <p class="s1-meta">lablab × Arc × Circle 2026</p>
+      <a href="https://asm-arc-circle-2026.vercel.app" target="_blank" class="s1-url">asm-arc-circle-2026.vercel.app</a>
+    </div>
+    <div class="s1-topline"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S2 — TAGLINE
+     ════════════════════════════════════════ -->
+<section class="slide slide--center s2" data-slide="2">
+  <p class="s2-headline">Agents shouldn't shop.<br>They should <span class="s2-gradient-word">settle</span>.</p>
+  <div class="divider-line" style="margin-top:32px"></div>
+  <p class="s2-tag">&mdash; the protocol gap nobody filled</p>
+</section>
+
+<!-- ════════════════════════════════════════
+     S3 — THE GAP
+     ════════════════════════════════════════ -->
+<section class="slide s3" data-slide="3">
+  <div>
+    <p class="label">The Protocol Stack</p>
+    <div class="divider-line" style="margin-top:24px;margin-bottom:32px"></div>
+
+    <div class="protocol-row">
+      <span class="protocol-name">MCP</span>
+      <span class="protocol-line"></span>
+      <span class="protocol-desc">what a tool can do</span>
+    </div>
+    <div class="protocol-row">
+      <span class="protocol-name">A2A</span>
+      <span class="protocol-line"></span>
+      <span class="protocol-desc">how agents communicate</span>
+    </div>
+    <div class="protocol-row">
+      <span class="protocol-name">AP2</span>
+      <span class="protocol-line"></span>
+      <span class="protocol-desc">how to pay safely</span>
+    </div>
+    <div class="protocol-row protocol-row--active">
+      <span class="protocol-name">ASM</span>
+      <span class="protocol-line"></span>
+      <span class="protocol-desc">what a service is worth</span>
+    </div>
+
+    <p style="font-size:14px;color:var(--ink-soft);margin-top:32px">The missing layer between MCP and AP2.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S4 — PROBLEM
+     ════════════════════════════════════════ -->
+<section class="slide s4" data-slide="4">
+  <div class="s4-layout">
+    <div class="s4-ghost">0</div>
+    <div class="s4-content">
+      <p class="label">The Data Problem</p>
+      <div class="divider-line" style="margin-top:16px;margin-bottom:20px"></div>
+      <h2 class="s4-title">Zero structured data</h2>
+      <p class="s4-body">When an agent faces multiple AI services for the same task, it has no information to make an informed choice. Blind selection leads to 3&ndash;10&times; cost overrun.</p>
+      <div class="divider-line" style="margin-bottom:16px"></div>
+      <p class="s4-note">This is not a model problem. It's a data problem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S5 — ARCHITECTURE
+     ════════════════════════════════════════ -->
+<section class="slide slide--center s5" data-slide="5">
+  <div style="width:100%;max-width:1100px">
+    <p class="label" style="text-align:center">Pipeline</p>
+
+    <div class="pipeline" style="margin-top:32px">
+      <div class="pipe-step"><span class="pipe-name">Task</span><div class="pipe-sub">natural language</div></div>
+      <span class="pipe-arrow">&rarr;</span>
+      <div class="pipe-step"><span class="pipe-name">Taxonomy</span><div class="pipe-sub">47 categories</div></div>
+      <span class="pipe-arrow">&rarr;</span>
+      <div class="pipe-step"><span class="pipe-name">Registry</span><div class="pipe-sub">70 manifests</div></div>
+      <span class="pipe-arrow">&rarr;</span>
+      <div class="pipe-step"><span class="pipe-name">TOPSIS</span><div class="pipe-sub">4-dim scoring</div></div>
+      <span class="pipe-arrow">&rarr;</span>
+      <div class="pipe-step"><span class="pipe-name">Winner</span><div class="pipe-sub">+ reasoning</div></div>
+      <span class="pipe-arrow">&rarr;</span>
+      <div class="pipe-step"><span class="pipe-name">x402</span><div class="pipe-sub">Circle Gateway</div></div>
+      <span class="pipe-arrow">&rarr;</span>
+      <div class="pipe-step pipe-step--highlight"><span class="pipe-name">Arc</span><div class="pipe-sub">USDC settle</div></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">72%</div>
+        <div class="stat-label">top-1 accuracy</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">&lt;1s</div>
+        <div class="stat-label">scoring latency</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1-2s</div>
+        <div class="stat-label">tx finality</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S6 — LIVE ON ARC TESTNET
+     ════════════════════════════════════════ -->
+<section class="slide s6" data-slide="6">
+  <div>
+    <p class="label">Live on Arc Testnet</p>
+    <div class="divider-line" style="margin-top:24px;margin-bottom:40px"></div>
+
+    <div class="big-stats">
+      <div class="big-stat">
+        <div class="big-stat-num" style="color:var(--ink)">50</div>
+        <div class="big-stat-label">transactions settled</div>
+      </div>
+      <div class="big-stat">
+        <div class="big-stat-num" style="color:var(--arc-amber)">$0.25</div>
+        <div class="big-stat-label">USDC moved</div>
+      </div>
+      <div class="big-stat">
+        <div class="big-stat-num" style="color:var(--blue)">15</div>
+        <div class="big-stat-label">unique recipients</div>
+      </div>
+    </div>
+
+    <div class="recipients-section">
+      <p class="recipients-title">Top Recipients</p>
+      <div class="recipient-row"><span class="recipient-name">openai/gpt-4o</span><span class="recipient-value">6 tx &middot; $0.030</span></div>
+      <div class="recipient-row"><span class="recipient-name">google-translate</span><span class="recipient-value">6 tx &middot; $0.030</span></div>
+      <div class="recipient-row"><span class="recipient-name">openai/embedding-3-large</span><span class="recipient-value">5 tx &middot; $0.025</span></div>
+      <div class="recipient-row"><span class="recipient-name">jina-reader</span><span class="recipient-value">5 tx &middot; $0.025</span></div>
+      <div class="recipient-row" style="border-bottom:none"><span class="recipient-name">black-forest-labs/flux-1.1</span><span class="recipient-value">4 tx &middot; $0.020</span></div>
+    </div>
+
+    <a href="https://testnet.arcscan.app/address/0xF5d4b038" target="_blank" class="verify-link">Verify on-chain &rarr; testnet.arcscan.app/address/0xF5d4&hellip;b038</a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S7 — WHY ARC + CIRCLE
+     ════════════════════════════════════════ -->
+<section class="slide slide--center s7" data-slide="7">
+  <div style="width:100%;max-width:900px">
+    <p class="label" style="text-align:center">Why Arc + Circle x402</p>
+
+    <div class="compare-row" style="margin-top:40px">
+      <div>
+        <div class="compare-price" style="color:var(--blue)">$0.005</div>
+        <div class="compare-label">per payment on Arc</div>
+      </div>
+      <span class="compare-vs">vs</span>
+      <div>
+        <div class="compare-price" style="color:#C5C8D6">$0.50&ndash;$5.00</div>
+        <div class="compare-label">per payment on Ethereum L1</div>
+      </div>
+    </div>
+
+    <p class="narrative">Circle Gateway batches authorizations off-chain &mdash; Lightning-style &mdash; and finalizes on-chain at withdrawal. This is what makes sub-cent agent payments economically viable. The same 50 transactions on Ethereum L1 would cost $25&ndash;$250 in gas alone.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S8 — TOPSIS + GEMINI FC
+     ════════════════════════════════════════ -->
+<section class="slide slide--center s8" data-slide="8">
+  <div style="width:100%;max-width:1000px">
+    <p class="label" style="text-align:center">Decision Engine</p>
+
+    <div class="weights-row" style="margin-top:32px">
+      <div class="weight-item">
+        <div class="weight-pct" style="color:var(--blue)">40%</div>
+        <div class="weight-label">Cost</div>
+      </div>
+      <div class="weight-item">
+        <div class="weight-pct" style="color:var(--arc-amber)">35%</div>
+        <div class="weight-label">Quality</div>
+      </div>
+      <div class="weight-item">
+        <div class="weight-pct" style="color:#7C6FCD">15%</div>
+        <div class="weight-label">Speed</div>
+      </div>
+      <div class="weight-item">
+        <div class="weight-pct" style="color:var(--ink-muted)">10%</div>
+        <div class="weight-label">Reliability</div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--line);margin:32px auto 0;width:100%"></div>
+
+    <div class="fc-pills">
+      <span class="fc-pill">Gemini 2.5 Flash</span>
+      <span class="fc-arrow">&rarr;</span>
+      <span class="fc-pill">Function Call</span>
+      <span class="fc-arrow">&rarr;</span>
+      <span class="fc-pill">/api/score</span>
+      <span class="fc-arrow">&rarr;</span>
+      <span class="fc-pill">USDC on Arc</span>
+    </div>
+
+    <p class="fc-result">Real A/B test: TOPSIS 0.8679 vs Random 0.4571 &middot; p=0.048 &#10003;</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S9 — LIVE DEMO
+     ════════════════════════════════════════ -->
+<section class="slide slide--center slide--alt-bg s9" data-slide="9">
+  <div>
+    <p class="label" style="text-align:center">See it live</p>
+    <h2 class="s9-title" style="margin-top:24px">Dashboard &middot; Marketplace<br>&middot; Benchmark &middot; Workbench</h2>
+    <a href="https://asm-arc-circle-2026.vercel.app" target="_blank" class="s9-url">asm-arc-circle-2026.vercel.app</a>
+    <div class="demo-buttons">
+      <a href="https://asm-arc-circle-2026.vercel.app" target="_blank" class="demo-btn">Open Demo &rarr;</a>
+      <a href="#" onclick="return false" class="demo-btn">Watch Video &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     S10 — CLOSE
+     ════════════════════════════════════════ -->
+<section class="slide slide--center s10" data-slide="10">
+  <div>
+    <p class="s10-thanks">Thank you.</p>
+    <div class="s10-gradient-line"></div>
+    <p class="s10-tagline">Agents shouldn't shop.<br>They should settle.</p>
+    <a href="https://github.com/calebguo007/asm-arc-circle-2026" target="_blank" class="s10-link">github.com/calebguo007/asm-arc-circle-2026</a>
+    <p class="s10-team">Built by Caleb &middot; GLM &middot; Hak &middot; Hamza</p>
+  </div>
+</section>
+
+</div><!-- /scroller -->
+
+<script>
+(function() {
+  'use strict';
+
+  const scroller = document.getElementById('scroller');
+  const progressBar = document.getElementById('progressBar');
+  const counter = document.getElementById('counter');
+  const navDots = document.getElementById('navDots');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const totalSlides = slides.length;
+
+  // ── Build navigation dots ──
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    dot.dataset.index = i;
+    dot.addEventListener('click', function() { goToSlide(i); });
+    navDots.appendChild(dot);
+  }
+  const dots = navDots.querySelectorAll('.nav-dot');
+
+  // ── IntersectionObserver for active slide detection ──
+  let currentSlideIndex = 0;
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        const idx = parseInt(entry.target.dataset.slide, 10) - 1;
+        if (idx !== currentSlideIndex) {
+          currentSlideIndex = idx;
+          updateUI(idx);
+        }
+      }
+    });
+  }, { root: scroller, threshold: 0.5 });
+
+  slides.forEach(function(s) { observer.observe(s); });
+
+  // ── UI Update ──
+  function updateUI(idx) {
+    // Progress bar
+    progressBar.style.width = ((idx + 1) / totalSlides * 100) + '%';
+    // Counter
+    counter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + totalSlides;
+    // Dots
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ── Navigation helpers ──
+  function goToSlide(idx) {
+    if (idx < 0 || idx >= totalSlides) return;
+    slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function nextSlide() {
+    goToSlide(Math.min(currentSlideIndex + 1, totalSlides - 1));
+  }
+
+  function prevSlide() {
+    goToSlide(Math.max(currentSlideIndex - 1, 0));
+  }
+
+  // ── Keyboard navigation ──
+  document.addEventListener('keydown', function(e) {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case 'PageDown':
+      case ' ':
+        e.preventDefault();
+        nextSlide();
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        prevSlide();
+        break;
+      case 'f':
+      case 'F':
+        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          toggleFullscreen();
+        }
+        break;
+      case 'Escape':
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        break;
+      default:
+        // Number keys 1-9 and 0 for jump-to-slide
+        if (/^[1-9]$/.test(e.key)) {
+          e.preventDefault();
+          goToSlide(parseInt(e.key, 10) - 1);
+        } else if (e.key === '0') {
+          e.preventDefault();
+          goToSlide(totalSlides - 1);
+        }
+    }
+  });
+
+  // ── Fullscreen toggle ──
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen || document.documentElement.mozRequestFullScreen || document.documentElement.msRequestFullscreen).call(document.documentElement);
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // ── Wheel lock: prevent half-page scrolling ──
+  let wheelLock = false;
+  scroller.addEventListener('wheel', function(e) {
+    if (wheelLock) return;
+    wheelLock = true;
+    setTimeout(function() { wheelLock = false; }, 800);
+
+    if (e.deltaY > 0) {
+      nextSlide();
+    } else if (e.deltaY < 0) {
+      prevSlide();
+    }
+  }, { passive: true });
+
+  // ── Initialize UI ──
+  updateUI(0);
+
+})();
+</script>
+
+</body>
+</html>
