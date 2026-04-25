@@ -43,7 +43,7 @@ cd asm-arc-circle-2026/payments && npm install && npm run dev:seller
 
 ### Why it matters in one screenshot
 
-[![ASM dashboard hero shot](TBD-HERO-SCREENSHOT-URL)](https://asm-arc-circle-2026.vercel.app/)
+[![ASM dashboard hero shot — agent ranks 3 image-gen services with TOPSIS, settles USDC payment to winner via Circle x402 on Arc testnet](docs/assets/hero-shot.jpg)](https://asm-arc-circle-2026.vercel.app/)
 
 *Each green flow = one autonomous agent decision. Each blue flow = a USDC nanopayment to the winning provider on Arc testnet. Powered by Circle x402.*
 
