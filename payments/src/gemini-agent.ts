@@ -327,65 +327,137 @@ Rules:
 - io_ratio: high for input-heavy tasks (RAG, summarization), low for output-heavy (generation)`;
 
 /**
- * Call Gemini API to parse Agent intent
+ * Call Gemini API to parse Agent intent.
+ *
+ * Provider selection (in priority order):
+ *   1. AIMLAPI (OpenAI-compatible proxy, supports Gemini models) — if AIMLAPI_KEY set
+ *      Why: AIMLAPI is a hackathon sponsor providing $10 credit, also gives access
+ *      to many models behind one OpenAI-compatible endpoint.
+ *   2. Google Gemini native API — if GEMINI_API_KEY set
+ *   3. Deterministic rule-based parser — if neither key is set
+ *
+ * The AIMLAPI route uses /v1/chat/completions (OpenAI shape) with model name
+ * configurable via AIMLAPI_MODEL (default "google/gemini-2.0-flash").
  */
+// Module-scope flags so we log provider/error info ONCE per server lifetime
+// instead of spamming on every request.
+let loggedProviderChoice = false;
+let loggedFirstApiError = false;
+
 export async function parseAgentIntent(
   naturalLanguageRequest: string,
   geminiApiKey?: string
 ): Promise<ParsedIntent> {
   const graphDiscovery = await discoverTaxonomyViaLangGraph(naturalLanguageRequest);
-  const apiKey = geminiApiKey || process.env.GEMINI_API_KEY;
+  const aimlApiKey = process.env.AIMLAPI_KEY;
+  const directApiKey = geminiApiKey || process.env.GEMINI_API_KEY;
+  const apiKey = aimlApiKey || directApiKey;
+
+  // One-time provider announcement (helps debug "is AIMLAPI actually firing?")
+  if (!loggedProviderChoice) {
+    loggedProviderChoice = true;
+    if (aimlApiKey) {
+      const model = process.env.AIMLAPI_MODEL || "google/gemini-2.0-flash";
+      console.log(`🤖 LLM provider: AIMLAPI (model=${model})`);
+    } else if (directApiKey) {
+      console.log(`🤖 LLM provider: Google Gemini direct (model=${GEMINI_MODEL})`);
+    } else {
+      console.log(`🤖 LLM provider: rule engine (no AIMLAPI_KEY or GEMINI_API_KEY)`);
+    }
+  }
+
+  // Helper: combine rule-engine result with LangGraph discovery WITHOUT clobbering
+  // a working taxonomy. LangGraph's confidence is often <0.1 and its taxonomy
+  // overrides used to break recommendations (e.g. "todo tool" → OpenWeatherMap).
+  // Rule: only adopt LangGraph's taxonomy when ruleBasedParse found nothing.
+  const fuseFallback = (fallback: ParsedIntent): ParsedIntent => {
+    if (fallback.taxonomy || !graphDiscovery.taxonomy) return fallback;
+    return {
+      ...fallback,
+      taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
+      reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
+    };
+  };
 
   if (!apiKey) {
     // No API Key → using rule engine fallback
-    console.log("⚠️  No Gemini API Key, using rule engine to parse intent");
-    const fallback = ruleBasedParse(naturalLanguageRequest);
-    if (graphDiscovery.taxonomy) {
-      return {
-        ...fallback,
-        taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
-        reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
-      };
-    }
-    return fallback;
+    if (process.env.DEBUG) console.log("⚠️  No LLM API Key (AIMLAPI_KEY or GEMINI_API_KEY), using rule engine");
+    return fuseFallback(ruleBasedParse(naturalLanguageRequest));
   }
 
   try {
-    const url = `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+    const useAimlapi = !!aimlApiKey;
+    let url: string;
+    let body: any;
+    let headers: Record<string, string> = { "Content-Type": "application/json" };
 
-    const body: GeminiRequest = {
-      contents: [
-        {
-          parts: [
-            { text: `${SYSTEM_PROMPT}\n\nAgent request: "${naturalLanguageRequest}"\n\nOutput JSON only:` },
-          ],
-        },
-      ],
-      generationConfig: {
+    if (useAimlapi) {
+      // ── AIMLAPI route (OpenAI-compatible chat-completions) ────────────────
+      url = "https://api.aimlapi.com/v1/chat/completions";
+      headers["Authorization"] = `Bearer ${aimlApiKey}`;
+      body = {
+        // AIMLAPI's verified Gemini 2.0 Flash model id — confirmed via
+        // GET https://api.aimlapi.com/models (Apr 2026). The "-exp" suffix
+        // does NOT exist on AIMLAPI; using it returns 404.
+        model: process.env.AIMLAPI_MODEL || "google/gemini-2.0-flash",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          { role: "user", content: `Agent request: "${naturalLanguageRequest}"\n\nOutput JSON only:` },
+        ],
         temperature: 0.1,
-        maxOutputTokens: 500,
-        responseMimeType: "application/json",
-      },
-    };
+        max_tokens: 500,
+        response_format: { type: "json_object" },
+      };
+    } else {
+      // ── Google Gemini native route (existing path) ────────────────────────
+      url = `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent?key=${directApiKey}`;
+      body = {
+        contents: [
+          {
+            parts: [
+              { text: `${SYSTEM_PROMPT}\n\nAgent request: "${naturalLanguageRequest}"\n\nOutput JSON only:` },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 500,
+          responseMimeType: "application/json",
+        },
+      } as GeminiRequest;
+    }
 
     const resp = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(body),
     });
 
     if (!resp.ok) {
       const errText = await resp.text();
-      console.warn(`⚠️  Gemini API error (${resp.status}): ${errText.slice(0, 200)}`);
-      return ruleBasedParse(naturalLanguageRequest);
+      // Surface the first failure prominently so we don't silent-fallback in mystery —
+      // happened during AIMLAPI integration when "google/gemini-2.0-flash-exp" was 404'd.
+      // After that, gate by DEBUG to avoid spamming on free-tier 429s.
+      if (!loggedFirstApiError) {
+        loggedFirstApiError = true;
+        console.warn(`⚠️  ${useAimlapi ? "AIMLAPI" : "Gemini"} API error (${resp.status}): ${errText.slice(0, 300)}`);
+        console.warn(`    → Falling back to rule engine. Set DEBUG=1 to see all subsequent errors.`);
+      } else if (process.env.DEBUG) {
+        console.warn(`⚠️  ${useAimlapi ? "AIMLAPI" : "Gemini"} API error (${resp.status}): ${errText.slice(0, 200)}`);
+      }
+      return fuseFallback(ruleBasedParse(naturalLanguageRequest));
     }
 
     const data = await resp.json() as any;
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    // OpenAI-compatible (AIMLAPI): data.choices[0].message.content
+    // Google native: data.candidates[0].content.parts[0].text
+    const text = useAimlapi
+      ? data?.choices?.[0]?.message?.content
+      : data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!text) {
-      console.warn("⚠️  Gemini returned empty content, using rule engine");
-      return ruleBasedParse(naturalLanguageRequest);
+      if (process.env.DEBUG) console.warn(`⚠️  ${useAimlapi ? "AIMLAPI" : "Gemini"} returned empty content, using rule engine`);
+      return fuseFallback(ruleBasedParse(naturalLanguageRequest));
     }
 
     // Parse JSON
@@ -397,16 +469,10 @@ export async function parseAgentIntent(
     }
     return normalized;
   } catch (err: unknown) {
-    console.warn(`⚠️  Gemini call failed: ${(err instanceof Error ? err.message : String(err))}，using rule engine`);
-    const fallback = ruleBasedParse(naturalLanguageRequest);
-    if (graphDiscovery.taxonomy) {
-      return {
-        ...fallback,
-        taxonomy: normalizeTaxonomy(graphDiscovery.taxonomy, naturalLanguageRequest),
-        reasoning: `${fallback.reasoning}; ${graphDiscovery.reasoning}`,
-      };
+    if (process.env.DEBUG) {
+      console.warn(`⚠️  Gemini call failed: ${(err instanceof Error ? err.message : String(err))}, using rule engine`);
     }
-    return fallback;
+    return fuseFallback(ruleBasedParse(naturalLanguageRequest));
   }
 }
 

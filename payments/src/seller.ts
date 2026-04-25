@@ -220,7 +220,9 @@ async function initX402(): Promise<boolean> {
                 captured += typeof chunk === "string" ? chunk : Buffer.isBuffer(chunk) ? chunk.toString("utf-8") : String(chunk);
               } catch (_e) { /* ignore */ }
             }
-            if (res.statusCode >= 400) {
+            // Detailed x402 failure dump — only when DEBUG=1 is set.
+            // (Used to diagnose the original self_transfer error during setup.)
+            if (res.statusCode >= 400 && process.env.DEBUG) {
               console.log(`\n🔴 [x402] ${req.method} ${req.url} → ${res.statusCode}`);
               console.log(`   Body: ${captured.slice(0, 800)}`);
               const incoming = (req.headers["payment-signature"] as string | undefined);

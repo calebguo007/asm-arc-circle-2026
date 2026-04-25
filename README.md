@@ -57,6 +57,7 @@ cd asm-arc-circle-2026/payments && npm install && npm run dev:seller
 | **Live settlement** | **50+ USDC transactions** on Arc testnet via Circle x402 nanopayments |
 | **Registry size** | **70 real-world manifests** across **47 taxonomy categories** |
 | **Scoring methods** | TOPSIS + Weighted Average + Trust Delta (Python/TS parity verified) |
+| **LLM intent parsing** | [**AIMLAPI**](https://aimlapi.com) → Google Gemini 2.0 Flash (with deterministic rule-engine fallback) |
 | **Live demo** | [Dashboard](https://asm-arc-circle-2026.vercel.app) / [Marketplace](https://asm-arc-circle-2026.vercel.app/marketplace) |
 
 ### Architecture
@@ -92,6 +93,26 @@ Per-tx finality: 1-2s         |  vs Ethereum L1: $0.50-5.00 + 12s block time
 ```
 
 > **Tx links** (Arc testnet explorer): [tx#1](https://explorer.arc-testnet.circle.com) -- Hamza to provide specific hashes before submission.
+
+### Sponsor Stack
+
+ASM is built on top of three sponsor technologies — each one chosen because it solves a problem that has no good alternative.
+
+| Sponsor | Used for | Why this one |
+|---|---|---|
+| 🟧 **[Circle Gateway / x402](https://www.circle.com/)** | Sub-cent USDC nanopayments on Arc testnet | Off-chain batching makes $0.005 transactions economically viable — gas would have eaten 10× the principal otherwise |
+| 🟦 **[Google Gemini](https://ai.google.dev)** (`gemini-2.0-flash`) | Natural-language → structured ASM intent parsing | Function-Calling-style JSON output lets the agent pipeline stay deterministic while the entry point speaks human |
+| 🟣 **[AIMLAPI](https://aimlapi.com)** | OpenAI-compatible gateway to Gemini (and 400+ other models) | One key, one URL, one schema → swap to Claude/GPT-4 by changing one env var. Hackathon `$10` credit removes free-tier rate-limit risk during the demo |
+
+**How they connect:** an agent says *"I need a cheap and fast LLM for a customer-service chatbot"* → Gemini (via AIMLAPI) parses that into a structured ASM query (`taxonomy=ai.llm.chat, w_cost=0.7, w_speed=0.3`) → ASM Registry returns matching manifests → TOPSIS picks the winner → Circle x402 settles a $0.005 USDC payment to the winner on Arc. End-to-end in under 4 seconds per decision.
+
+**Live verification:** boot the Payment server (`npm run dev:all`) and you'll see this on stdout —
+
+```
+[Payment] 🤖 LLM provider: AIMLAPI (model=google/gemini-2.0-flash)
+```
+
+— confirming the AIMLAPI route is the one actually in flight (with rule-engine fallback only kicking in if the network drops).
 
 ### One-Command Reproduction
 

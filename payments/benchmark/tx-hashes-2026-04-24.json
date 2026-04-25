@@ -1,0 +1,310 @@
+{
+  "runDate": "2026-04-24T03:58:38.315Z",
+  "chain": "arcTestnet",
+  "network": "eip155:5042002",
+  "explorerBase": "https://testnet.arcscan.app/tx/",
+  "buyer": "0xF5d426D5cdfaeB18Ea2cDec2F7c2CB88eEe6b038",
+  "fetchedAt": "2026-04-25T07:11:39.433Z",
+  "results": [
+    {
+      "id": 1,
+      "category": "image-gen",
+      "transferId": "7ec36aac-8a52-4431-9a8c-5929a513a15f",
+      "status": "completed"
+    },
+    {
+      "id": 2,
+      "category": "copywrite",
+      "transferId": "2213d36d-55c7-4022-ab7c-0b69e7d2e990",
+      "status": "completed"
+    },
+    {
+      "id": 3,
+      "category": "translate",
+      "transferId": "076678ce-402e-4b48-944d-a86aeae597a5",
+      "status": "completed"
+    },
+    {
+      "id": 4,
+      "category": "tts",
+      "transferId": "823baf22-ee35-494b-8a5e-54bb71012e19",
+      "status": "completed"
+    },
+    {
+      "id": 5,
+      "category": "video-gen",
+      "transferId": "676b0378-bb8a-4803-be44-677e04422081",
+      "status": "completed"
+    },
+    {
+      "id": 6,
+      "category": "embed",
+      "transferId": "c20cd904-5253-4177-b417-7a97c67a38dd",
+      "status": "completed"
+    },
+    {
+      "id": 7,
+      "category": "scrape",
+      "transferId": "a84e3e62-1148-40e2-abe4-7d6943970ff7",
+      "status": "completed"
+    },
+    {
+      "id": 8,
+      "category": "browse",
+      "transferId": "fed1ea1d-7dd8-428f-b805-dabf11d9cccd",
+      "status": "completed"
+    },
+    {
+      "id": 9,
+      "category": "code-gen",
+      "transferId": "2a401b10-3d9a-4b3b-9c59-5e0c886d02a3",
+      "status": "completed"
+    },
+    {
+      "id": 10,
+      "category": "spreadsheet",
+      "transferId": "ba620c44-625e-43d2-bdff-7518dd638df9",
+      "status": "completed"
+    },
+    {
+      "id": 11,
+      "category": "transcribe",
+      "transferId": "8348de1f-366a-4980-a200-acb887a1352e",
+      "status": "completed"
+    },
+    {
+      "id": 12,
+      "category": "search",
+      "transferId": "ccb9b8d4-0a52-4ef7-8e8e-6b1bb4fe1931",
+      "status": "completed"
+    },
+    {
+      "id": 13,
+      "category": "todo",
+      "transferId": "9be4173f-a91e-4dce-98e4-0d43f8cee850",
+      "status": "completed"
+    },
+    {
+      "id": 14,
+      "category": "database",
+      "transferId": "c636e7f5-d1cb-4568-a985-96f170be95e4",
+      "status": "completed"
+    },
+    {
+      "id": 15,
+      "category": "deploy",
+      "transferId": "745f5fb7-d678-4672-a546-197d156fead0",
+      "status": "completed"
+    },
+    {
+      "id": 16,
+      "category": "image-gen",
+      "transferId": "af432851-32e6-4cc8-a2b7-da166ce56dbb",
+      "status": "completed"
+    },
+    {
+      "id": 17,
+      "category": "copywrite",
+      "transferId": "a98a546a-58d7-41a6-a9ac-c6b8f67e06a9",
+      "status": "completed"
+    },
+    {
+      "id": 18,
+      "category": "translate",
+      "transferId": "4aa79b08-2780-44f9-b867-abf77a4da006",
+      "status": "completed"
+    },
+    {
+      "id": 19,
+      "category": "tts",
+      "transferId": "28fcb96f-56e8-4bf0-9c49-573221f0d62a",
+      "status": "completed"
+    },
+    {
+      "id": 20,
+      "category": "video-gen",
+      "transferId": "bff9aa55-452f-44ca-8f8f-f38d4817a4f9",
+      "status": "completed"
+    },
+    {
+      "id": 21,
+      "category": "embed",
+      "transferId": "5f70ef7c-b8f7-4132-98a3-285fa7ca8814",
+      "status": "completed"
+    },
+    {
+      "id": 22,
+      "category": "scrape",
+      "transferId": "68b86616-9155-4341-877d-ece24af2d07b",
+      "status": "completed"
+    },
+    {
+      "id": 23,
+      "category": "browse",
+      "transferId": "89ebd100-bce2-4c4d-8c70-8a14aeeaa34c",
+      "status": "completed"
+    },
+    {
+      "id": 24,
+      "category": "code-gen",
+      "transferId": "05096b0a-f13b-4643-b81b-0071a6ea4879",
+      "status": "completed"
+    },
+    {
+      "id": 25,
+      "category": "spreadsheet",
+      "transferId": "346e3cfa-174e-4e9f-a856-b535ad53761f",
+      "status": "completed"
+    },
+    {
+      "id": 26,
+      "category": "transcribe",
+      "transferId": "31f58218-cd58-4431-869f-030c5085626f",
+      "status": "completed"
+    },
+    {
+      "id": 27,
+      "category": "search",
+      "transferId": "80e6b773-1cda-4128-a04f-c5163c809c19",
+      "status": "completed"
+    },
+    {
+      "id": 28,
+      "category": "image-gen",
+      "transferId": "14865dc4-0e48-4509-bddd-f9bcaf0b3fba",
+      "status": "completed"
+    },
+    {
+      "id": 29,
+      "category": "copywrite",
+      "transferId": "891e8db6-e39f-4e07-8449-8758d5ee91a1",
+      "status": "completed"
+    },
+    {
+      "id": 30,
+      "category": "translate",
+      "transferId": "4034dc7c-1e81-49d0-9b5f-2aab7ae71f8e",
+      "status": "completed"
+    },
+    {
+      "id": 31,
+      "category": "tts",
+      "transferId": "ed10176d-609a-4f83-b7b6-fd9f14eae552",
+      "status": "completed"
+    },
+    {
+      "id": 32,
+      "category": "video-gen",
+      "transferId": "2a97bf09-bbe0-4048-bff4-0f907d4d01d1",
+      "status": "completed"
+    },
+    {
+      "id": 33,
+      "category": "embed",
+      "transferId": "cd2256b9-99c0-46b1-b71e-c91d1c1d5aec",
+      "status": "completed"
+    },
+    {
+      "id": 34,
+      "category": "scrape",
+      "transferId": "0450c533-fa48-41ae-b584-1b8fbdfbdce8",
+      "status": "completed"
+    },
+    {
+      "id": 35,
+      "category": "code-gen",
+      "transferId": "4d736cfa-18f3-4c43-bdd0-87eea3b68a16",
+      "status": "completed"
+    },
+    {
+      "id": 36,
+      "category": "spreadsheet",
+      "transferId": "0ee156ce-76c6-4194-8eb9-998106932ee5",
+      "status": "completed"
+    },
+    {
+      "id": 37,
+      "category": "transcribe",
+      "transferId": "4afac687-9d92-4a23-89a7-f2dd44b5299c",
+      "status": "completed"
+    },
+    {
+      "id": 38,
+      "category": "search",
+      "transferId": "304ecea7-8349-479e-95c5-b2770f25a91c",
+      "status": "completed"
+    },
+    {
+      "id": 39,
+      "category": "image-gen",
+      "transferId": "a196d13f-2aff-4621-9a78-6700a1c1ff43",
+      "status": "completed"
+    },
+    {
+      "id": 40,
+      "category": "copywrite",
+      "transferId": "05c4ef5e-3c76-40a0-b699-819de71bfa18",
+      "status": "completed"
+    },
+    {
+      "id": 41,
+      "category": "translate",
+      "transferId": "f3980bf0-6253-4050-ab71-afba57ec48b9",
+      "status": "completed"
+    },
+    {
+      "id": 42,
+      "category": "embed",
+      "transferId": "7fa8ca73-d7d4-41e9-9b17-218b0a068a6f",
+      "status": "completed"
+    },
+    {
+      "id": 43,
+      "category": "scrape",
+      "transferId": "0c26ddbb-e359-4d19-b30f-27984492d9fe",
+      "status": "completed"
+    },
+    {
+      "id": 44,
+      "category": "code-gen",
+      "transferId": "dac4fa77-cfb9-495e-ab5e-4c7b83ee8965",
+      "status": "completed"
+    },
+    {
+      "id": 45,
+      "category": "copywrite",
+      "transferId": "37ef4547-70d7-4a0b-bab8-8a48cd4a523b",
+      "status": "completed"
+    },
+    {
+      "id": 46,
+      "category": "translate",
+      "transferId": "6fc4849b-0ddb-49c7-af7d-40617d4fce98",
+      "status": "completed"
+    },
+    {
+      "id": 47,
+      "category": "embed",
+      "transferId": "c44a248a-0783-42cc-b1b5-01eecf270595",
+      "status": "completed"
+    },
+    {
+      "id": 48,
+      "category": "scrape",
+      "transferId": "8ec70b27-60f0-4103-86fd-920203a7af5c",
+      "status": "completed"
+    },
+    {
+      "id": 49,
+      "category": "copywrite",
+      "transferId": "b7e37e31-e91f-4a34-8b92-9a0aeb4193d4",
+      "status": "completed"
+    },
+    {
+      "id": 50,
+      "category": "translate",
+      "transferId": "d1665d8e-7865-401d-b138-7b6799a139dd",
+      "status": "completed"
+    }
+  ]
+}

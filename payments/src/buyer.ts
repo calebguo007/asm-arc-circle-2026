@@ -35,8 +35,9 @@ export class ASMBuyerClient {
 
   /** Initialize Gateway client */
   async initialize(): Promise<boolean> {
+    const DEBUG = !!process.env.DEBUG;
     if (this.config.mode !== "live") {
-      console.log("⚠️  Buyer: Mock mode (skipping GatewayClient init)");
+      if (DEBUG) console.log("⚠️  Buyer: Mock mode (skipping GatewayClient init)");
       this.isRealMode = false;
       return false;
     }
@@ -49,11 +50,14 @@ export class ASMBuyerClient {
       });
       this.isRealMode = true;
       this.buyerAddress = this.gatewayClient.address;
-      console.log(`✅ Buyer: GatewayClient initialized`);
-      console.log(`   Address: ${this.buyerAddress}`);
-      console.log(`   Chain: ${this.config.chainName}`);
+      if (DEBUG) {
+        console.log(`✅ Buyer: GatewayClient initialized`);
+        console.log(`   Address: ${this.buyerAddress}`);
+        console.log(`   Chain: ${this.config.chainName}`);
+      }
       return true;
     } catch (err: unknown) {
+      // Always show init failures — never silently degrade in live mode.
       console.warn("⚠️  Buyer: GatewayClient init failed, falling back to mock mode");
       console.warn(`   Error: ${(err instanceof Error ? err.message : String(err))}`);
       this.isRealMode = false;
