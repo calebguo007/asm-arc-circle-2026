@@ -15,6 +15,40 @@ ASM  -> "what a service is worth"     Nobody -- until now
 
 ---
 
+<div align="center">
+
+### 🎬 [**Live Demo**](https://asm-arc-circle-2026.vercel.app/) · [Workbench](https://asm-arc-circle-2026.vercel.app/) · [Benchmark](https://asm-arc-circle-2026.vercel.app/benchmark) · [Marketplace](https://asm-arc-circle-2026.vercel.app/marketplace)
+
+**Built for [lablab × Arc × Circle Hackathon 2026](https://lablab.ai/event)** · **[2-min Demo Video](TBD-VIDEO-URL)**
+
+</div>
+
+> *"Agents shouldn't shop. They should settle."*
+>
+> ASM gives autonomous agents a structured way to compare AI services, pick a winner with explainable reasoning, and route a sub-cent USDC payment to that winner — all in one HTTP request.
+
+### 🚀 Try it in 30 seconds
+
+**Option A — click and play (no setup):**
+👉 Open the [**dashboard**](https://asm-arc-circle-2026.vercel.app/), pick a task taxonomy, hit *Run Selection*. Watch the agent route a payment in real time.
+
+**Option B — local dev (3 commands):**
+
+```bash
+git clone https://github.com/calebguo007/asm-arc-circle-2026.git
+cd asm-arc-circle-2026/payments && npm install && npm run dev:seller
+# In another terminal: cd ../registry && npm install && npx tsx src/http.ts
+# Browse to http://localhost:4402
+```
+
+### Why it matters in one screenshot
+
+[![ASM dashboard hero shot](TBD-HERO-SCREENSHOT-URL)](https://asm-arc-circle-2026.vercel.app/)
+
+*Each green flow = one autonomous agent decision. Each blue flow = a USDC nanopayment to the winning provider on Arc testnet. Powered by Circle x402.*
+
+---
+
 ## At a Glance
 
 | What | Detail |
