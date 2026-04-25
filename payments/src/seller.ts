@@ -59,6 +59,7 @@ const apiLimiter = rateLimit({
 // ── Global State ───────────────────────────────────────────
 
 let x402Initialized = false;
+let gatewayInstance: any = null;
 
 // ── Real service deviation simulation (replacing uniform jitter) ────────────────
 // Different dimensions have different deviation characteristics:
@@ -166,77 +167,54 @@ async function initX402(): Promise<boolean> {
   }
 
   try {
-    const { paymentMiddleware, x402ResourceServer } = await import("@x402/express");
-    const { BatchFacilitatorClient, GatewayEvmScheme } = await import("@circle-fin/x402-batching/server");
-    const { HTTPFacilitatorClient } = await import("@x402/core/server");
+    const { createGatewayMiddleware } = await import("@circle-fin/x402-batching/server");
+    const rawGateway = createGatewayMiddleware({ sellerAddress: config.sellerAddress });
 
-    const batchClient = new BatchFacilitatorClient();
-    const httpClient = new HTTPFacilitatorClient({
-      url: "https://x402.org/facilitator",
-    });
-
-    const resourceServer = new x402ResourceServer([httpClient, batchClient] as any);
-    resourceServer.register(config.network as `${string}:${string}`, new GatewayEvmScheme());
-    await (resourceServer as any).initialize?.();
-
-    // Dynamic payTo: route each /api/score payment to the WINNING service's
-    // on-chain address, so 50 benchmark txs fan out across ~15–20 addresses.
-    // Falls back to config.sellerAddress when body lacks taxonomy or the
-    // pick doesn't resolve — preserves backwards-compat for legacy callers.
-    const dynamicScorePayTo = (async (ctx: any) => {
-      const body = (typeof ctx?.getBody === "function" ? ctx.getBody() : undefined) as
-        | { taxonomy?: string }
-        | undefined;
-      const pick = await pickWinnerForTaxonomy(body?.taxonomy);
-      return pick?.winner?.onchain_address ?? config.sellerAddress;
-    }) as any;
-
-    const routes = {
-      "POST /api/score": {
-        accepts: [
-          {
-            scheme: "exact" as const,
-            price: config.scorePrice,
-            network: config.network as `${string}:${string}`,
-            payTo: dynamicScorePayTo,
-          },
-        ],
-        description: "ASM TOPSIS multi-criteria service scoring",
-        mimeType: "application/json",
-      },
-      "POST /api/query": {
-        accepts: [
-          {
-            scheme: "exact" as const,
-            price: config.queryPrice,
-            network: config.network as `${string}:${string}`,
-            payTo: config.sellerAddress,
-          },
-        ],
-        description: "ASM service query with filters",
-        mimeType: "application/json",
-      },
-      "POST /api/agent-decide": {
-        accepts: [
-          {
-            scheme: "exact" as const,
-            price: config.scorePrice,
-            network: config.network as `${string}:${string}`,
-            payTo: config.sellerAddress,
-          },
-        ],
-        description: "Gemini-powered semantic service selection for AI Agents",
-        mimeType: "application/json",
+    // Wrap `.require(price)` to add diagnostic logging: when Circle Gateway
+    // rejects verify/settle, the middleware responds with JSON body
+    // `{ error, reason }`. We intercept res.end/write to log the reason so
+    // we can see exactly why Circle rejected the payment.
+    gatewayInstance = {
+      ...rawGateway,
+      require: (price: string) => {
+        const inner = rawGateway.require(price);
+        return async (req: any, res: any, next: any) => {
+          const origEnd = res.end.bind(res);
+          let captured = "";
+          res.end = function (chunk?: any, ...rest: any[]) {
+            if (chunk) {
+              try {
+                captured += typeof chunk === "string" ? chunk : Buffer.isBuffer(chunk) ? chunk.toString("utf-8") : String(chunk);
+              } catch (_e) { /* ignore */ }
+            }
+            if (res.statusCode >= 400) {
+              console.log(`\n🔴 [x402] ${req.method} ${req.url} → ${res.statusCode}`);
+              console.log(`   Body: ${captured.slice(0, 800)}`);
+              const incoming = (req.headers["payment-signature"] as string | undefined);
+              if (incoming) {
+                try {
+                  const decoded = JSON.parse(Buffer.from(incoming, "base64").toString("utf-8"));
+                  console.log(`   PayerAddr:  ${decoded?.payload?.authorization?.from || decoded?.payload?.from || "?"}`);
+                  console.log(`   PayTo:      ${decoded?.accepted?.payTo || "?"}`);
+                  console.log(`   Network:    ${decoded?.accepted?.network || "?"}`);
+                  console.log(`   Amount:     ${decoded?.accepted?.amount || "?"}`);
+                  console.log(`   VerifyingContract: ${decoded?.accepted?.extra?.verifyingContract || "?"}`);
+                  console.log(`   validAfter: ${decoded?.payload?.authorization?.validAfter || "?"}`);
+                  console.log(`   validBefore:${decoded?.payload?.authorization?.validBefore || "?"}`);
+                } catch (_e) { /* ignore */ }
+              }
+            }
+            return origEnd(chunk, ...rest);
+          };
+          return inner(req, res, next);
+        };
       },
     };
-
-    // Mount x402 payment middleware — must be before route registration
-    app.use(paymentMiddleware(routes, resourceServer));
 
     console.log("✅ x402 payment middleware initialized");
     console.log(`   Seller: ${config.sellerAddress}`);
     console.log(`   Network: ${config.network} (${config.chainName})`);
-    console.log(`   Routes: ${Object.keys(routes).join(", ")}`);
+    console.log(`   Routes: POST /api/score, POST /api/query, POST /api/agent-decide`);
     x402Initialized = true;
     return true;
   } catch (err: unknown) {
@@ -510,7 +488,7 @@ function registerRoutes() {
   // ── Scoring & Ranking (paid) ──────────────────────────────────
   const scoreMiddleware = config.mode === "mock"
     ? mockPaymentMiddleware(config.scorePrice)
-    : recordPayment("/api/score", config.scorePrice);
+    : gatewayInstance.require(config.scorePrice);
 
   app.post("/api/score", apiLimiter, scoreMiddleware, async (req: Request, res: Response) => {
     try {
@@ -599,7 +577,7 @@ function registerRoutes() {
   // ── Conditional query（paid） ──────────────────────────────────
   const queryMiddleware = config.mode === "mock"
     ? mockPaymentMiddleware(config.queryPrice)
-    : recordPayment("/api/query", config.queryPrice);
+    : gatewayInstance.require(config.queryPrice);
 
   app.post("/api/query", apiLimiter, queryMiddleware, async (req: Request, res: Response) => {
     try {
@@ -670,7 +648,7 @@ function registerRoutes() {
   // ── Agent Semantic Decision (paid — Gemini + TOPSIS + Trust) ──
   const agentMiddleware = config.mode === "mock"
     ? mockPaymentMiddleware(config.scorePrice)
-    : recordPayment("/api/agent-decide", config.scorePrice);
+    : gatewayInstance.require(config.scorePrice);
 
   app.post("/api/agent-decide", apiLimiter, agentMiddleware, async (req: Request, res: Response) => {
     const startTime = Date.now();
