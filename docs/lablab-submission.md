@@ -51,9 +51,13 @@ ASM provides three layers:
 | Margin explanation provided | **PASS** | Lightning-style batching: Circle Gateway authorizes off-chain, settles on-chain in batches. Per-tx gas → ~$0. On Ethereum L1 same 50 tx would cost $25–$250 in gas alone. **~5,000× overhead eliminated.** |
 | Uses Arc + USDC + Nanopayments | **PASS** | Arc Testnet (`eip155:5042002`) · USDC · Circle GatewayWallet contract |
 
-### Track Declaration: Per-API Monetization Engine
+### Track Declaration: Per-API Monetization Engine (primary)
 
 ASM implements exactly this track: every individual API call is a monetizable event. An agent decomposes a task into 50 subtasks; each subtask triggers one `POST /api/score`; each score produces one ranked winner; each winner receives one sub-cent USDC payment. The entire loop is autonomous, auditable, and settled on-chain.
+
+**Naturally aligns with Agent-to-Agent Payment Loop** — every score call is a real-time machine-to-machine settlement with no batching delay or custodial control.
+
+**Also submitted to the Google Track**: Gemini 2.5 Flash Function Calling drives the agent reasoning loop. The agent is given a natural-language task plus 30 ASM taxonomies and emits a structured `select_taxonomy_and_score(taxonomy, reasoning)` function call that triggers Circle x402 settlement. Reproducible at `discovery/scripts/fc-test-raw.cjs` — **4/5 (80%) routing accuracy** across diverse tasks (image gen, translation, code, TTS, scraping).
 
 ### Tech Stack
 

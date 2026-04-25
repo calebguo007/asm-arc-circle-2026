@@ -1,7 +1,9 @@
 # Submission Checklist
 
 > **Deadline**: 2026-04-25 10:00 (Beijing time buffer). Official submission window Apr 25.
-> **Track**: 🤖 Agent-to-Agent Payment Loop
+> **Primary Track**: 🪙 Per-API Monetization Engine
+> **Secondary alignment**: 🤖 Agent-to-Agent Payment Loop (every score call is also an A2A settlement)
+> **Cross-submission**: 🏆 Google Track (Gemini 2.5 Flash Function Calling drives the routing loop)
 
 ---
 
@@ -32,7 +34,7 @@
 - [ ] Slide Presentation (12 pages, see `deck-outline.md` — to be drafted 4/22)
 
 ### Code
-- [ ] Public GitHub Repository URL: https://github.com/calebguo007/asm-agent-hub
+- [ ] Public GitHub Repository URL: https://github.com/calebguo007/asm-arc-circle-2026
 - [ ] Demo Application Platform
 - [ ] Application URL (live demo)
 
